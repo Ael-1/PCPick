@@ -26,3 +26,14 @@
     document.documentElement.classList.add('reduced-motion');
   }
 })();
+
+// Scroll to Products section when clicking the Products link
+const productsLink = document.querySelector('.nav a[href="#products"]');
+if (productsLink) {
+  productsLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  });
+}
+
+
