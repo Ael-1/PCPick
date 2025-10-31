@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PCPick — Pick, Customize, and Build.</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#">
+        <img src="assets/PCPick logo.png" alt="PCPick logo" class="logo-icon" width="36" height="36"/>
+
+        <span class="logo-wordmark" aria-hidden>
+          <span class="logo-pc">PC</span><span class="logo-pick">PICK</span>
+        </span>
+      </a>
+
+      <nav class="nav" id="main-nav">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">PC Builder</a></li>
+          <li><a href="#">Pre-built PCs</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <a class="login" href="#">Log In</a>
+        <a class="btn signup" href="#">Sign Up</a>
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-left">
+          <h1>Build Your Dream PC</h1>
+          <p class="lead">Choose from premium components or select a pre-configured system. PCPick makes it easy to get the perfect computer for your needs.</p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#">Custom Build</a>
+            <a class="btn outline" href="#">Pre-built PCs</a>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="hero-image-card">
+            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8b5f7b3f3a1a9db85f9b2a9b3c8f5b8d" alt="PC build"/>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="why container">
+      <h2 class="section-title">Why Choose<span class="logo-wordmark" aria-hidden>
+          <span class="logo-pc">PC</span><span class="logo-pick">PICK</span>
+        </span>?</h2> 
+      <div class="features-grid">
+        <article class="card feature">
+          <div class="icon blue">🔧</div>
+          <h3>Premium Components</h3>
+          <p>Hand-picked selection of the best PC parts from top manufacturers.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="icon green">⚡</div>
+          <h3>Easy Configuration</h3>
+          <p>Simple interface to mix and match components for your perfect build.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="icon purple">🛡️</div>
+          <h3>Quality Guaranteed</h3>
+          <p>All components come with manufacturer warranty and our support.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-box">
+        <h2>Ready to Get Started?</h2>
+        <p>Build your custom PC today or choose from our expertly configured systems</p>
+        <a class="btn cta-btn" href="#">Start Building Now</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> PCPick — All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
