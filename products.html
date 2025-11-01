@@ -147,105 +147,6 @@
         </div>
       </div>
 
-      <!-- RAM PRODUCTS -->
-      
-      <div id="mb-section" class="product-grid" style="display:none;">
-        <!-- RAM Product 1 -->
-          <div class="product-card">
-            <img src="assets/vengeance-rgb-32gb.jpg" alt="Corsair Vengeance RGB 32GB">
-            <div class="product-info">
-              <h3>Corsair Vengeance RGB 32GB</h3>
-              <ul>
-                <li>DDR5-6000</li>
-                <li>32GB (2x16GB)</li>
-                <li>RGB Lighting</li>
-              </ul>
-              <p class="price">$129</p>
-              <button class="add-cart-btn">Select</button>
-            </div>
-          </div>
-
-        <!-- RAM Product 2 -->
-        <div class="product-card">
-          <img src="assets/trident-z5-64gb.jpg" alt="G.Skill Trident Z5 64GB">
-          <div class="product-info">
-            <h3>G.Skill Trident Z5 64GB</h3>
-            <ul>
-              <li>DDR5-6400</li>
-              <li>64GB (2x32GB)</li>
-              <li>Low Latency</li>
-            </ul>
-            <p class="price">$249</p>
-            <button class="add-cart-btn">Select</button>
-          </div>
-        </div>
-
-        <!-- RAM Product 3 -->
-        <div class="product-card">
-          <img src="assets/fury-beast-32gb.jpg" alt="Kingston Fury Beast 32GB">
-          <div class="product-info">
-            <h3>Kingston Fury Beast 32GB</h3>
-            <ul>
-              <li>DDR5-5200</li>
-              <li>32GB (2x16GB)</li>
-              <li>Budget Friendly</li>
-            </ul>
-            <p class="price">$99</p>
-            <button class="add-cart-btn">Select</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MOTHERBOARD PRODUCTS -->
-
-      <div id="board-section" class="product-grid" style="display:none;">
-      <!-- Motherboard 1 -->
-      <div class="product-card">
-        <img src="assets/rog-crosshair-x670e.jpg" alt="ASUS ROG Crosshair X670E">
-        <div class="product-info">
-          <h3>ASUS ROG Crosshair X670E</h3>
-          <ul>
-            <li>AM5 Socket</li>
-            <li>PCIe 5.0</li>
-            <li>WiFi 6E</li>
-          </ul>
-          <p class="price">$499</p>
-          <button class="add-cart-btn">Select</button>
-        </div>
-      </div>
-
-      <!-- Motherboard 2 -->
-      <div class="product-card">
-        <img src="assets/z790-aorus-master.jpg" alt="Gigabyte Z790 AORUS Master">
-        <div class="product-info">
-          <h3>Gigabyte Z790 AORUS Master</h3>
-          <ul>
-            <li>LGA1700 Socket</li>
-            <li>DDR5</li>
-            <li>Thunderbolt 4</li>
-          </ul>
-          <p class="price">$449</p>
-          <button class="add-cart-btn">Select</button>
-        </div>
-      </div>
-
-      <!-- Motherboard 3 -->
-      <div class="product-card">
-        <img src="assets/b650-gaming-plus.jpg" alt="MSI B650 Gaming Plus">
-        <div class="product-info">
-          <h3>MSI B650 Gaming Plus</h3>
-          <ul>
-            <li>AM5 Socket</li>
-            <li>PCIe 4.0</li>
-            <li>M.2 Heatsink</li>
-          </ul>
-          <p class="price">$199</p>
-          <button class="add-cart-btn">Select</button>
-        </div>
-      </div>
-    </div>
-
-
     </section>
   </main>
 
@@ -255,36 +156,25 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
-  <script>
+   <script>
     const cpuBtn = document.getElementById("cpu-btn");
     const gpuBtn = document.getElementById("gpu-btn");
     const cpuSection = document.getElementById("cpu-section");
     const gpuSection = document.getElementById("gpu-section");
 
-      tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          // toggle active
-          tabs.forEach(t => t.classList.remove("active"));
-          tab.classList.add("active");
+    cpuBtn.addEventListener("click", () => {
+      cpuSection.style.display = "grid";
+      gpuSection.style.display = "none";
+      cpuBtn.classList.add("active");
+      gpuBtn.classList.remove("active");
+    });
 
-          // hide all sections
-          sections.forEach(sec => sec.style.display = "none");
-
-          // show clicked category's section
-          const targetId = tab.dataset.cat;
-          const target = document.getElementById(targetId);
-          if (target) target.style.display = "grid";
-        });
-      });
-
-      // default: show CPU only
-      const cpu = document.getElementById("cpu-section");
-      const gpu = document.getElementById("gpu-section");
-      if (cpu) cpu.style.display = "grid";
-      if (gpu) gpu.style.display = "none";
-    })();
-
+    gpuBtn.addEventListener("click", () => {
+      gpuSection.style.display = "grid";
+      cpuSection.style.display = "none";
+      gpuBtn.classList.add("active");
+      cpuBtn.classList.remove("active");
+    });
   </script>
 </body>
 </html>
