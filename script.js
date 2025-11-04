@@ -26,3 +26,36 @@
     document.documentElement.classList.add('reduced-motion');
   }
 })();
+
+// Scroll to Products section when clicking the Products link
+const productsLink = document.querySelector('.nav a[href="#products"]');
+if (productsLink) {
+  productsLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  });
+}
+
+// Graphics card button
+document.addEventListener("DOMContentLoaded", () => {
+  const cpuBtn = document.getElementById("cpu-btn");
+  const gpuBtn = document.getElementById("gpu-btn");
+  const cpuSection = document.getElementById("cpus");
+  const gpuSection = document.getElementById("graphics");
+
+  cpuBtn.addEventListener("click", () => {
+    cpuSection.style.display = "grid";
+    gpuSection.style.display = "none";
+    cpuBtn.classList.add("active");
+    gpuBtn.classList.remove("active");
+  });
+
+  gpuBtn.addEventListener("click", () => {
+    gpuSection.style.display = "grid";
+    cpuSection.style.display = "none";
+    gpuBtn.classList.add("active");
+    cpuBtn.classList.remove("active");
+  });
+});
+
+
