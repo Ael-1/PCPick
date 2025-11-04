@@ -4,7 +4,7 @@
   const nav = document.getElementById('main-nav');
   let open = false;
   if(menuToggle){
-    menuToggle.addEventListener('click', ()=>{
+    menuToggle.addEventListener('click', ()=> {
       open = !open;
       if(open){
         nav.style.display = 'block';
@@ -57,5 +57,37 @@ document.addEventListener("DOMContentLoaded", () => {
     cpuBtn.classList.remove("active");
   });
 });
+
+let slideIndex = 0;
+showSlides(); // Call showSlides to hide all slides initially
+let slideInterval = setInterval(() => {
+  plusSlides(1);
+}, 5000);
+
+function plusSlides(n) {
+  slideIndex += n;
+  showSlides();
+  resetSlideInterval(); // Reset the interval when an arrow is clicked
+}
+
+function showSlides() {
+  let i;
+  const slides = document.getElementsByClassName("mySlides");
+  if (slideIndex >= slides.length) { slideIndex = 0; }
+  if (slideIndex < 0) { slideIndex = slides.length - 1; }
+  
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  
+  slides[slideIndex].style.display = "block";  
+}
+
+function resetSlideInterval() {
+  clearInterval(slideInterval); // Clear the existing interval
+  slideInterval = setInterval(() => {
+    plusSlides(1);
+  }, 5000); // Restart the interval
+}
 
 
