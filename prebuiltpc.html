@@ -34,26 +34,46 @@
         <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
         <a class="login" href="#">Log In</a>
         <a class="btn signup" href="#">Sign Up</a>
-        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">☰</button>
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
-  </header>
+    <nav class="drawer-nav" id="mobile-drawer" aria-label="Mobile navigation" aria-hidden="true">
+    <div class="drawer-header">
+      <span class="drawer-brand">
+        <img src="assets/logo.png" alt="PCPick logo" class="logo-icon" width="36" height="36" />
+        <span class="logo-wordmark"><span class="logo-pc">PC</span><span class="logo-pick">PICK</span></span>
+      </span>
+      <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <ul class="drawer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="pcbuilder.html">PC Builder</a></li>
+      <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
+    </ul>
+    <div class="drawer-actions">
+      <a class="login" href="#">Log In</a>
+      <a class="btn signup" href="#">Sign Up</a>
+    </div>
+  </nav>
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div></header>
 
   <!-- PRODUCTS SECTION -->
   <main>
-    <section class="products container">
-      <h2 class="section-title">Browse our brand new Pre-Built PCs. No hassle!</h2>
+    <section class="container prebuiltpcs">
+      <h2 class="section-title">Pre-built PCs</h2>
+      <p class="section-description">Browse brand new and expertly configured systems. No hassle!</p>
 
       <!-- Category buttons -->
-      <div class="product-tabs" role="tablist" aria-label="product categories">
-        <button class="tab active" data-cat="cpu-section">CPUs</button>
-        <button class="tab" data-cat="gpu-section">Graphics Cards</button>
-        <button class="tab" data-cat="ram-section">Memory (RAM)</button>
-        <button class="tab" data-cat="mb-section">Motherboards</button>
-        <button class="tab" data-cat="storage-section">Storage</button>
-        <button class="tab" data-cat="psu-section">Power Supplies</button>
-        <button class="tab" data-cat="cases-section">Cases</button>
-        <button class="tab" data-cat="cooling-section">Cooling</button>
+      <div class="products-controls">
+        <div class="product-tabs" role="tablist" aria-label="product categories">
+          <button class="tab active" data-cat="Productivity PCs section">Productivity PCs</button>
+          <button class="tab" data-cat="Gaming PCs section">Gaming Pcs</button>
+          <button class="tab" data-cat="Office PCs section">Office PCs</button>
+        </div>
+        <div class="product-search">
+          <input type="search" placeholder="Search products..." aria-label="Search products">
+        </div>
       </div>
 
 
@@ -156,7 +176,8 @@
     </div>
   </footer>
 
-   <script>
+  <script src="script.js"></script>
+  <script>
     const cpuBtn = document.getElementById("cpu-btn");
     const gpuBtn = document.getElementById("gpu-btn");
     const cpuSection = document.getElementById("cpu-section");
@@ -178,3 +199,6 @@
   </script>
 </body>
 </html>
+
+
+
