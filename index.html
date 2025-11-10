@@ -6,38 +6,53 @@
   <title>PCPick — Pick, Customize, and Build.</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
   <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#">
-        <img src="assets/PCPick logo.png" alt="PCPick logo" class="logo-icon" width="36" height="36"/>
-
+      <a class="brand" href="index.html">
+        <img src="assets/logo.png" alt="PCPick logo" class="logo-icon"/>
         <span class="logo-wordmark" aria-hidden>
           <span class="logo-pc">PC</span><span class="logo-pick">PICK</span>
         </span>
       </a>
-
       <nav class="nav" id="main-nav">
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="products.html">Products</a></li>
-          <li><a href="#">PC Builder</a></li>
-          <li><a href="#">Pre-built PCs</a></li>
+          <li><a href="pcbuilder.html">PC Builder</a></li>
+          <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
         </ul>
       </nav>
-
       <div class="nav-actions">
         <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
         <a class="login" href="#">Log In</a>
         <a class="btn signup" href="#">Sign Up</a>
-        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">☰</button>
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
-  </header>
+    <nav class="drawer-nav" id="mobile-drawer" aria-label="Mobile navigation" aria-hidden="true">
+    <div class="drawer-header">
+      <span class="drawer-brand">
+        <img src="assets/logo.png" alt="PCPick logo" class="logo-icon" width="36" height="36" />
+        <span class="logo-wordmark"><span class="logo-pc">PC</span><span class="logo-pick">PICK</span></span>
+      </span>
+      <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <ul class="nav drawer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="pcbuilder.html">PC Builder</a></li>
+      <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
+    </ul>
+    <div class="drawer-actions">
+      <a class="login" href="#">Log In</a>
+      <a class="btn signup" href="#">Sign Up</a>
+    </div>
+  </nav>
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div></header>
 
   <main>
     <section class="hero">
@@ -47,21 +62,39 @@
           <p class="lead">Choose from premium components or select a pre-configured system. PCPick makes it easy to get the perfect computer for your needs.</p>
 
           <div class="hero-actions">
-            <a class="btn primary" href="#">Custom Build</a>
-            <a class="btn outline" href="#">Pre-built PCs</a>
+            <a class="btn build" href="pcbuilder.html">Custom Build</a>
+            <a class="btn prebuilt" href="prebuiltpc.html">Pre-built PCs</a>
           </div>
         </div>
 
         <div class="hero-right">
           <div class="hero-image-card">
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8b5f7b3f3a1a9db85f9b2a9b3c8f5b8d" alt="PC build"/>
+            <div class="slideshow-container">
+              <div class="mySlides fade">
+                <img src="assets/rig1.webp" alt="PC Build 1" />
+              </div>
+              <div class="mySlides fade">
+                <img src="assets/rig2.jpg" alt="PC Build 2" />
+              </div>
+              <div class="mySlides fade">
+                <img src="assets/rig4.webp" alt="PC Build 4" />
+              </div>
+              <div class="mySlides fade">
+                <img src="assets/rig5.png" alt="PC Build 5" />
+              </div>
+              <div class="mySlides fade">
+                <img src="assets/rig6.png" alt="PC Build 6" />
+              </div>
+              <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+              <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <section class="why container">
-      <h2 class="section-title">Why Choose<span class="logo-wordmark" aria-hidden>
+      <h2 class="why-section-title">Why Choose<span class="logo-wordmark" aria-hidden>
           <span class="logo-pc">PC</span><span class="logo-pick">PICK</span>
         </span>?</h2> 
       <div class="features-grid">
@@ -85,15 +118,85 @@
       </div>
     </section>
 
-    <section class="cta">
-      <div class="container cta-box">
-        <h2>Ready to Get Started?</h2>
-        <p>Build your custom PC today or choose from our expertly configured systems</p>
-        <a class="btn cta-btn" href="#">Start Building Now</a>
+    <section class="featured-section">
+      <div class="container">
+        <div class="featured-header">
+          <div>
+            <span class="featured-icon"><img src="assets/featured.png" alt="Featured Icon"></span>
+            <span class="featured-title">Featured Products</span>
+          </div>
+          <a href="products.html" class="btn view-all">View All Products</a>
+        </div>
+        <p class="featured-subtitle">Our most popular components handpicked for you.</p>
+        <div class="featured-grid">
+          <div class="featured-card">
+            <div class="featured-img-wrap">
+              <img src="assets/rig1.webp" alt="AMD Ryzen 9 7950X" />
+              <span class="badge type">CPU</span>
+              <span class="badge best">Best Seller</span>
+            </div>
+            <div class="featured-info">
+              <span class="brand">AMD</span>
+              <h3>Ryzen 9 7950X</h3>
+              <div class="rating"><span>⭐ 4.8</span> <span class="count">(128)</span></div>
+              <div class="price">$549</div>
+              <a href="#" class="btn featured-view">View</a>
+            </div>
+          </div>
+          <div class="featured-card">
+            <div class="featured-img-wrap">
+              <img src="assets/rig2.jpg" alt="NVIDIA RTX 4090" />
+              <span class="badge type">GPU</span>
+              <span class="badge top">Top Rated</span>
+            </div>
+            <div class="featured-info">
+              <span class="brand">NVIDIA</span>
+              <h3>RTX 4090</h3>
+              <div class="rating"><span>⭐ 4.9</span> <span class="count">(128)</span></div>
+              <div class="price">$1599</div>
+              <a href="#" class="btn featured-view">View</a>
+            </div>
+          </div>
+          <div class="featured-card">
+            <div class="featured-img-wrap">
+              <img src="assets/rig4.webp" alt="Corsair Vengeance RGB 32GB" />
+              <span class="badge type">RAM</span>
+              <span class="badge pop">Popular</span>
+            </div>
+            <div class="featured-info">
+              <span class="brand">Corsair</span>
+              <h3>Vengeance RGB 32GB</h3>
+              <div class="rating"><span>⭐ 4.7</span> <span class="count">(128)</span></div>
+              <div class="price">$129</div>
+              <a href="#" class="btn featured-view">View</a>
+            </div>
+          </div>
+          <div class="featured-card">
+            <div class="featured-img-wrap">
+              <img src="assets/rig5.png" alt="Samsung 990 PRO 2TB" />
+              <span class="badge type">Storage</span>
+              <span class="badge fast">Fast</span>
+            </div>
+            <div class="featured-info">
+              <span class="brand">Samsung</span>
+              <h3>990 PRO 2TB</h3>
+              <div class="rating"><span>⭐ 4.8</span> <span class="count">(128)</span></div>
+              <div class="price">$199</div>
+              <a href="#" class="btn featured-view">View</a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
-
+  
+  <section class="cta">
+      <div class="container cta-box">
+        <h2>Ready to Get Started?</h2>
+        <p>Build your custom PC today or choose from our expertly configured systems</p>
+        <a class="btn cta" href="pcbuilder.html">Start Building Now</a>
+      </div>
+  </section>
 
   <footer class="site-footer">
     <div class="container">
@@ -104,3 +207,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
