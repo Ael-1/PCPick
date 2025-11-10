@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PCPick - Sign Up</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-left">
+      <img src="assets/logo.png" alt="PCPick logo" width="56">
+      <h1>Build Your Dream PC</h1>
+      <p>Join thousands of PC enthusiasts who trust PCPick for custom builds and pre-built systems.</p>
+      <ul class="auth-benefits">
+        <li><span aria-hidden="true">&#x2705;</span> Custom PC Builder</li>
+        <li><span aria-hidden="true">&#9889;</span> Pre-built Systems</li>
+        <li><span aria-hidden="true">&#128176;</span> Best Prices</li>
+      </ul>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-tabs">
+        <a href="login.html">Log In</a>
+        <a href="signup.html" class="active">Sign Up</a>
+      </div>
+
+      <h2>Create Account</h2>
+      <p>Sign up to start building your dream PC</p>
+
+      <form class="auth-form" action="login.html" method="get">
+        <label for="signup-name">Full Name</label>
+        <input id="signup-name" type="text" placeholder="John Doe" required>
+
+        <label for="signup-email">Email Address</label>
+        <input id="signup-email" type="email" placeholder="john@example.com" required>
+
+        <label for="signup-password">Password</label>
+        <input id="signup-password" type="password" placeholder="Create a password" required>
+
+        <label for="signup-confirm">Confirm Password</label>
+        <input id="signup-confirm" type="password" placeholder="Confirm password" required>
+
+        <button type="submit" class="auth-btn">Create Account &rarr;</button>
+      </form>
+
+      <p class="auth-social-label">Or sign up with</p>
+      <div class="social-login">
+        <button type="button">Google</button>
+        <button type="button">GitHub</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
