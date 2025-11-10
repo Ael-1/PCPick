@@ -64,18 +64,19 @@
       <h1 class="section-title">Products</h1>
       <p class="section-description">Browse and Purchase Individual PC Components.</p>
 
-      <!-- Category buttons -->
+      <!-- Tabs + search (use the products-controls/product-tabs wrapper so search sits to the right) -->
       <div class="products-controls">
-        <div class="product-tabs" role="tablist" aria-label="product categories">
+        <div class="product-tabs">
           <button class="tab active" data-cat="cpu-section">CPUs</button>
           <button class="tab" data-cat="gpu-section">Graphics Cards</button>
-          <button class="tab" data-cat="ram-section">Memory (RAM)</button>
-          <button class="tab" data-cat="mb-section">Motherboards</button>
+          <button class="tab" data-cat="memory-section">Memory (RAM)</button>
+          <button class="tab" data-cat="motherboard-section">Motherboards</button>
           <button class="tab" data-cat="storage-section">Storage</button>
           <button class="tab" data-cat="psu-section">Power Supplies</button>
-          <button class="tab" data-cat="cases-section">Cases</button>
+          <button class="tab" data-cat="case-section">Cases</button>
           <button class="tab" data-cat="cooling-section">Cooling</button>
         </div>
+
         <div class="product-search">
           <input type="search" placeholder="Search products..." aria-label="Search products">
         </div>
@@ -171,8 +172,301 @@
         </div>
       </div>
 
+      <!-- RAM PRODUCTS (hidden by default) -->
+      <div id="memory-section" class="product-grid" style="display:none;">
+        <!-- RAM Product 1 -->
+        <div class="product-card">
+          <img src="assets/vengeance-rgb-32gb.jpg" alt="Corsair Vengeance RGB 32GB">
+          <div class="product-info">
+            <h3>Corsair Vengeance RGB 32GB</h3>
+            <ul>
+              <li>DDR5-6000</li>
+              <li>32GB (2x16GB)</li>
+              <li>RGB Lighting</li>
+            </ul>
+            <p class="price">$129</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- RAM Product 2 -->
+        <div class="product-card">
+          <img src="assets/trident-z5-64gb.jpg" alt="G.Skill Trident Z5 64GB">
+          <div class="product-info">
+            <h3>G.Skill Trident Z5 64GB</h3>
+            <ul>
+              <li>DDR5-6400</li>
+              <li>64GB (2x32GB)</li>
+              <li>Low Latency</li>
+            </ul>
+            <p class="price">$249</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- RAM Product 3 -->
+        <div class="product-card">
+          <img src="assets/fury-beast-32gb.jpg" alt="Kingston Fury Beast 32GB">
+          <div class="product-info">
+            <h3>Kingston Fury Beast 32GB</h3>
+            <ul>
+              <li>DDR5-5200</li>
+              <li>32GB (2x16GB)</li>
+              <li>Budget Friendly</li>
+            </ul>
+            <p class="price">$99</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOTHERBOARD PRODUCTS -->
+      <div id="motherboard-section" class="product-grid" style="display:none;">
+        <!-- Motherboard 1 -->
+        <div class="product-card">
+          <img src="assets/rog-crosshair-x670e.jpg" alt="ASUS ROG Crosshair X670E">
+          <div class="product-info">
+            <h3>ASUS ROG Crosshair X670E</h3>
+            <ul>
+              <li>AM5 Socket</li>
+              <li>PCIe 5.0</li>
+              <li>WiFi 6E</li>
+            </ul>
+            <p class="price">$499</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Motherboard 2 -->
+        <div class="product-card">
+          <img src="assets/z790-aorus-master.jpg" alt="Gigabyte Z790 AORUS Master">
+          <div class="product-info">
+            <h3>Gigabyte Z790 AORUS Master</h3>
+            <ul>
+              <li>LGA1700 Socket</li>
+              <li>DDR5</li>
+              <li>Thunderbolt 4</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Motherboard 3 -->
+        <div class="product-card">
+          <img src="assets/b650-gaming-plus.jpg" alt="MSI B650 Gaming Plus">
+          <div class="product-info">
+            <h3>MSI B650 Gaming Plus</h3>
+            <ul>
+              <li>AM5 Socket</li>
+              <li>PCIe 4.0</li>
+              <li>M.2 Heatsink</li>
+            </ul>
+            <p class="price">$199</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STORAGE PRODUCTS -->
+      <div id="storage-section" class="product-grid" style="display:none;">
+        <!-- Storage 1 -->
+        <div class="product-card">
+          <img src="assets/990-pro-2tb.jpg" alt="Samsung 990 PRO 2TB">
+          <div class="product-info">
+            <h3>Samsung 990 PRO 2TB</h3>
+            <ul>
+              <li>NVMe Gen 4</li>
+              <li>7450 MB/s Read</li>
+              <li>2TB Capacity</li>
+            </ul>
+            <p class="price">$199</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Storage 2 -->
+        <div class="product-card">
+          <img src="assets/wd-black-sn850x.jpg" alt="Western Digital WD Black SN850X 1TB">
+          <div class="product-info">
+            <h3>Western Digital WD Black SN850X 1TB</h3>
+            <ul>
+              <li>NVMe Gen 4</li>
+              <li>7300 MB/s Read</li>
+              <li>1TB Capacity</li>
+            </ul>
+            <p class="price">$129</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Storage 3 -->
+        <div class="product-card">
+          <img src="assets/crucial-p3-plus-4tb.jpg" alt="Crucial P3 Plus 4TB">
+          <div class="product-info">
+            <h3>Crucial P3 Plus 4TB</h3>
+            <ul>
+              <li>NVMe Gen 4</li>
+              <li>5000 MB/s Read</li>
+              <li>4TB Capacity</li>
+            </ul>
+            <p class="price">$299</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PSU PRODUCTS -->
+      <div id="psu-section" class="product-grid" style="display:none;">
+        <!-- PSU 1 -->
+        <div class="product-card">
+          <img src="assets/corsair-rm1000x.jpg" alt="Corsair RM1000x">
+          <div class="product-info">
+            <h3>Corsair RM1000x</h3>
+            <ul>
+              <li>1000W</li>
+              <li>80+ Gold</li>
+              <li>Fully Modular</li>
+            </ul>
+            <p class="price">$179</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- PSU 2 -->
+        <div class="product-card">
+          <img src="assets/evga-supernova-850-g6.jpg" alt="EVGA SuperNOVA 850 G6">
+          <div class="product-info">
+            <h3>EVGA SuperNOVA 850 G6</h3>
+            <ul>
+              <li>850W</li>
+              <li>80+ Gold</li>
+              <li>Fully Modular</li>
+            </ul>
+            <p class="price">$139</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- PSU 3 -->
+        <div class="product-card">
+          <img src="assets/seasonic-prime-tx-1600.jpg" alt="Seasonic PRIME TX-1600">
+          <div class="product-info">
+            <h3>Seasonic PRIME TX-1600</h3>
+            <ul>
+              <li>1600W</li>
+              <li>80+ Titanium</li>
+              <li>Fully Modular</li>
+            </ul>
+            <p class="price">$399</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASE PRODUCTS  -->
+      <div id="case-section" class="product-grid" style="display:none;">
+        <!-- Case 1 -->
+        <div class="product-card">
+          <img src="assets/corsair-5000d-airflow.webp" alt="Corsair 5000D Airflow">
+          <div class="product-info">
+            <h3>Corsair 5000D Airflow</h3>
+            <ul>
+              <li>Mid Tower</li>
+              <li>Tempered Glass</li>
+              <li>USB-C Front Panel</li>
+            </ul>
+            <p class="price">$164</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Case 2 -->
+        <div class="product-card">
+          <img src="assets/nzxt-h7-flow.jpg" alt="NZXT H7 Flow">
+          <div class="product-info">
+            <h3>NZXT H7 Flow</h3>
+            <ul>
+              <li>Mid Tower</li>
+              <li>Mesh Front</li>
+              <li>Cable Management</li>
+            </ul>
+            <p class="price">$129</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Case 3 -->
+        <div class="product-card">
+          <img src="assets/lian-li-o11-dynamic.jpg" alt="Lian Li O11 Dynamic">
+          <div class="product-info">
+            <h3>Lian Li O11 Dynamic</h3>
+            <ul>
+              <li>Mid Tower</li>
+              <li>Dual Chamber</li>
+              <li>Showcase Design</li>
+            </ul>
+            <p class="price">$159</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COOLING PRODUCTS -->
+      <div id="cooling-section" class="product-grid" style="display:none;">
+        <!-- Cooling 1 -->
+        <div class="product-card">
+          <img src="assets/nzxt-kraken-x73.webp" alt="NZXT Kraken X73">
+          <div class="product-info">
+            <h3>NZXT Kraken X73</h3>
+            <ul>
+              <li>360mm AIO</li>
+              <li>RGB Pump</li>
+              <li>Quiet Operation</li>
+            </ul>
+            <p class="price">$179</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Cooling 2 -->
+        <div class="product-card">
+          <img src="assets/noctua-nh-d15-chromax.jpg" alt="Noctua NH-D15 chromax.black">
+          <div class="product-info">
+            <h3>Noctua NH-D15 chromax.black</h3>
+            <ul>
+              <li>Dual Tower</li>
+              <li>Premium Fans</li>
+              <li>Silent</li>
+            </ul>
+            <p class="price">$109</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+
+        <!-- Cooling 3 -->
+        <div class="product-card">
+          <img src="assets/corsair-icue-h150i-elite.webp" alt="Corsair iCUE H150i Elite">
+          <div class="product-info">
+            <h3>Corsair iCUE H150i Elite</h3>
+            <ul>
+              <li>360mm AIO</li>
+              <li>LCD Display</li>
+              <li>RGB Fans</li>
+            </ul>
+            <p class="price">$189</p>
+            <button class="add-cart-btn">Select</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
     </section>
   </main>
+  
 
   <footer class="site-footer">
     <div class="container">

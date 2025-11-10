@@ -96,27 +96,35 @@
 })();
 
 (() => {
-  const cpuBtn = document.getElementById('cpu-btn');
-  const gpuBtn = document.getElementById('gpu-btn');
-  const cpuSection = document.getElementById('cpus');
-  const gpuSection = document.getElementById('graphics');
+  const tabs = document.querySelectorAll(".tab");
+  const sections = document.querySelectorAll(".product-grid");
 
-  if (!cpuBtn || !gpuBtn || !cpuSection || !gpuSection) return;
+  if (!tabs.length || !sections.length) return;
 
-  cpuBtn.addEventListener('click', () => {
-    cpuSection.style.display = 'grid';
-    gpuSection.style.display = 'none';
-    cpuBtn.classList.add('active');
-    gpuBtn.classList.remove('active');
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      // Remove active highlight from all tabs
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Hide all product sections
+      sections.forEach(sec => sec.style.display = "none");
+
+      // Show the clicked section
+      const target = document.getElementById(tab.dataset.cat);
+      if (target) target.style.display = "grid";
+    });
   });
 
-  gpuBtn.addEventListener('click', () => {
-    gpuSection.style.display = 'grid';
-    cpuSection.style.display = 'none';
-    gpuBtn.classList.add('active');
-    cpuBtn.classList.remove('active');
-  });
+  // Show only the CPU section by default
+  const cpuSection = document.getElementById("cpu-section");
+  const gpuSection = document.getElementById("gpu-section");
+  if (cpuSection && gpuSection) {
+    cpuSection.style.display = "grid";
+    gpuSection.style.display = "none";
+  }
 })();
+
 
 let slideIndex = 0;
 let slideIntervalId;
