@@ -204,4 +204,445 @@ body{
   .product-tabs { padding: 10px; margin: 20px auto; gap: 8px; }
   .product-card { max-width: 720px; }
   .product-card img { height: 180px; }
+<<<<<<< Updated upstream
+=======
+}
+
+/* Mobile drawer navigation */
+.drawer-nav {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: min(320px, 85vw);
+  height: 100vh;
+  background: #fff;
+  box-shadow: -12px 0 30px rgba(12,15,20,0.12);
+  padding: 24px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: right 0.3s ease;
+  z-index: 200;
+}
+.drawer-nav.open {
+  right: 0;
+}
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+}
+.drawer-close {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text);
+}
+.drawer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.drawer-links a {
+  color: var(--muted);
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, font-size 0.3s ease;
+}
+
+.drawer-links a:hover {
+  color: var(--accent);
+  font-size: 20px;
+}
+
+.drawer-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,36,0.4);
+  backdrop-filter: blur(2px);
+  z-index: 150;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+.drawer-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.drawer-open {
+  overflow: hidden;
+}
+@media (min-width: 901px) {
+  .drawer-nav,
+  .drawer-overlay {
+    display: none;
+  }
+}
+
+/* Tabs row: tabs on the left, search on the right */
+.tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+  flex-wrap: wrap;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* keep search compact on wide screens, full width on small screens */
+.product-search {
+  min-width: 260px;
+  max-width: 420px;
+  width: 32%;
+}
+
+.product-search input[type="search"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #e0e6ef;
+  background: #fff;
+}
+
+/* responsive: stack vertically on narrow viewports */
+@media (max-width: 720px) {
+  .tabs-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .product-search {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ================================
+   AUTH PAGE STYLES (Login / Signup)
+   ================================ */
+
+/* Default body — allow scrolling for all normal pages */
+html, body {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto; /* ✅ allows vertical scroll */
+}
+
+/* Only apply fullscreen + no-scroll to login/signup pages */
+body.auth-page {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* ✅ disables scroll just for auth pages */
+  background: #f7f9fc;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+}
+
+.auth-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===============================
+   AUTH PAGE LAYOUT
+   =============================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+}
+
+.auth-page {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.auth-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===============================
+   LEFT PANEL
+   =============================== */
+.auth-left {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3.5rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--highlight-accent) 100%);
+  position: relative;
+  overflow: hidden;
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+/* Decorative glow effect */
+.auth-left::before,
+.auth-left::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.45;
+  z-index: 0;
+}
+
+.auth-left::before {
+  width: 400px;
+  height: 400px;
+  top: -80px;
+  left: -80px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.auth-left::after {
+  width: 500px;
+  height: 500px;
+  bottom: -120px;
+  right: -100px;
+  background: rgba(11, 99, 255, 0.3);
+}
+
+/* Content */
+.auth-left img {
+  width: 56px;
+  margin-bottom: 1rem;
+  z-index: 1;
+}
+
+.auth-left h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  z-index: 1;
+}
+
+.auth-left p {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+  z-index: 1;
+}
+
+/* ===============================
+   RIGHT PANEL (Form Section)
+   =============================== */
+.auth-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 5rem;
+  background: var(--card);
+  overflow-y: auto;
+}
+
+.auth-right h2 {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+
+.auth-right p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ===============================
+   Tabs
+   =============================== */
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  background: #f1f4f8;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.tabs a {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
+}
+
+.tabs a.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* ===============================
+   Forms
+   =============================== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+input {
+  padding: 0.75rem;
+  border: 1px solid #e3e6ea;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--text);
+  transition: border-color 0.2s ease-in-out;
+}
+
+input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ===============================
+   Buttons
+   =============================== */
+button.btn-primary,
+button.btn-success {
+  background: var(--accent);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+button.btn-primary:hover,
+button.btn-success:hover {
+  background: var(--highlight-accent);
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   Options (remember/forgot)
+   =============================== */
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.options a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.options a:hover {
+  text-decoration: underline;
+}
+
+/* Terms */
+.terms {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.terms a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}
+
+/* Social Login */
+.social-login {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.social-login button {
+  flex: 1;
+  border: 1px solid #ccc;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.social-login button:hover {
+  background: #f7f9fc;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 900px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .auth-left {
+    flex: none;
+    width: 100%;
+    border-radius: 0;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .auth-right {
+    flex: none;
+    width: 100%;
+    padding: 2rem;
+  }
+>>>>>>> Stashed changes
 }

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up | PCPick</title>
+
+  <!-- Use same stylesheet as login -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <!-- LEFT SECTION (Blue Gradient with Glow) -->
+    <div class="auth-left">
+        <div class="glow"></div> <!-- ADD THIS LINE -->
+        <img src="assets/logo.png" alt="logo" width="48" style="margin-bottom:1rem">
+        <h1>Build Your Dream PC</h1>
+        <p>Join thousands of PC enthusiasts who trust PCPick for custom builds and pre-built systems.</p>
+        <ul>
+            <li>✅ Custom PC Builder</li>
+            <li>⚡ Pre-built Systems</li>
+            <li>💰 Best Prices</li>
+        </ul>
+    </div>
+
+    <!-- RIGHT SECTION (Sign Up Form) -->
+    <div class="auth-right">
+      <div class="tabs">
+        <a href="login.html">Log In</a>
+        <a href="signup.html" class="active">Sign Up</a>
+      </div>
+
+      <h2>Create Account</h2>
+      <p>Sign up to start building your dream PC</p>
+
+      <!-- Redirects to login.html after signup -->
+      <form action="login.html" method="get">
+        <label>Full Name</label>
+        <input type="text" placeholder="John Doe" required>
+
+        <label>Email Address</label>
+        <input type="email" placeholder="john@example.com" required>
+
+        <label>Password</label>
+        <input type="password" placeholder="Create a password" required>
+
+        <label>Confirm Password</label>
+        <input type="password" placeholder="Confirm password" required>
+
+        <button type="submit" class="btn-success">Create Account →</button>
+      </form>
+
+      <p style="margin-top:1rem">Or sign up with</p>
+      <div class="social-login">
+        <button>Google</button>
+        <button>GitHub</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
