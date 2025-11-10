@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PCPick — Products</title>
+  <title>PCPick — PC Builder</title>
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -60,13 +60,13 @@
 
   <!-- PRODUCTS SECTION -->
   <main>
-    <section class="container products">
-      <h1 class="section-title">Products</h1>
-      <p class="section-description">Browse and Purchase Individual PC Components.</p>
+    <section class="container pcbuilder">
+      <h1 class="section-title">PC Builder</h1>
+      <p class="section-description">Browse components, customize and build your dream PC!</p>
 
-      <!-- Tabs + search (use the products-controls/product-tabs wrapper so search sits to the right) -->
+      <!-- Category buttons -->
       <div class="products-controls">
-        <div class="product-tabs">
+        <div class="product-tabs" role="tablist" aria-label="product categories">
           <button class="tab active" data-cat="cpu-section">CPUs</button>
           <button class="tab" data-cat="gpu-section">Graphics Cards</button>
           <button class="tab" data-cat="memory-section">Memory (RAM)</button>
@@ -76,11 +76,11 @@
           <button class="tab" data-cat="case-section">Cases</button>
           <button class="tab" data-cat="cooling-section">Cooling</button>
         </div>
-
         <div class="product-search">
           <input type="search" placeholder="Search products..." aria-label="Search products">
         </div>
       </div>
+
 
       <!-- CPU PRODUCTS -->
       <div id="cpu-section" class="product-grid">
@@ -172,7 +172,7 @@
         </div>
       </div>
 
-      <!-- RAM PRODUCTS (hidden by default) -->
+      <!-- RAM PRODUCTS -->
       <div id="memory-section" class="product-grid" style="display:none;">
         <!-- RAM Product 1 -->
         <div class="product-card">
@@ -460,13 +460,8 @@
         </div>
       </div>
 
-
-
-
-
     </section>
   </main>
-  
 
   <footer class="site-footer">
     <div class="container">
