@@ -1,58 +1,55 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login | PCPick</title>
-
-  <!-- make sure this path is correct relative to login.html -->
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PCPick - Log In</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="auth-page">
   <div class="auth-container">
-    <!-- LEFT SECTION (Blue Gradient with Glow) -->
     <div class="auth-left">
-        <div class="glow"></div> <!-- ADD THIS LINE -->
-        <img src="assets/logo.png" alt="logo" width="48" style="margin-bottom:1rem">
-        <h1>Build Your Dream PC</h1>
-        <p>Join thousands of PC enthusiasts who trust PCPick for custom builds and pre-built systems.</p>
-        <ul>
-            <li>✅ Custom PC Builder</li>
-            <li>⚡ Pre-built Systems</li>
-            <li>💰 Best Prices</li>
-        </ul>
+      <img src="assets/logo.png" alt="PCPick logo" width="56">
+      <h1>Build Your Dream PC</h1>
+      <p>Join thousands of PC enthusiasts who trust PCPick for custom builds and pre-built systems.</p>
+      <ul class="auth-benefits">
+        <li><span aria-hidden="true">&#x2705;</span> Custom PC Builder</li>
+        <li><span aria-hidden="true">&#9889;</span> Pre-built Systems</li>
+        <li><span aria-hidden="true">&#128176;</span> Best Prices</li>
+      </ul>
     </div>
 
-    <!-- RIGHT SECTION (Login Form) -->
     <div class="auth-right">
-      <div class="tabs">
+      <div class="auth-tabs">
         <a href="login.html" class="active">Log In</a>
         <a href="signup.html">Sign Up</a>
       </div>
 
-      <h2>Welcome Back</h2>
+      <h2>Log In</h2>
       <p>Enter your credentials to access your account</p>
 
-      <!-- Redirects to index.html on login -->
-      <form action="index.html" method="get">
-        <label>Email Address</label>
-        <input type="email" placeholder="john@example.com" required>
+      <form class="auth-form" action="index.html" method="get">
+        <label for="login-email">Email Address</label>
+        <input id="login-email" type="email" placeholder="john@example.com" required>
 
-        <label>Password</label>
-        <input type="password" placeholder="Enter your password" required>
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" placeholder="Enter your password" required>
 
-        <div class="options">
+        <div class="auth-options">
           <label><input type="checkbox"> Remember me</label>
           <a href="#">Forgot password?</a>
         </div>
 
-        <button type="submit" class="btn-primary">Sign In →</button>
+        <button type="submit" class="auth-btn">Sign In</button>
       </form>
 
-      <p style="margin-top:1rem">Or continue with</p>
+      <p class="auth-social-label">Or continue with</p>
       <div class="social-login">
-        <button>Google</button>
-        <button>GitHub</button>
+        <button type="button">Google</button>
+        <button type="button">GitHub</button>
       </div>
     </div>
   </div>
