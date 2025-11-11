@@ -161,31 +161,54 @@ window.addEventListener('load', () => {
   resetSlideInterval();
 });
 
-(() => {
+(function () {
   const themeSwitch = document.getElementById('theme-switch');
-  if (!themeSwitch) return;
+  const root = document.documentElement;
 
-  // Load saved theme preference
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-    themeSwitch.checked = true;
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      root.classList.add('dark-mode');
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.classList.remove('dark-mode');
+      root.removeAttribute('data-theme');
+    }
   }
 
-  const toggle = document.querySelector('.theme-toggle input');
-    toggle.addEventListener('change', () => {
-      if (toggle.checked) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
+(function () {
+  const themeSwitch = document.getElementById('theme-switch');
+  const root = document.documentElement;
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      root.classList.add('dark-mode');
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.classList.remove('dark-mode');
+      root.removeAttribute('data-theme');
+    }
+  }
+
+  // ✅ Default to light mode, but remember user choice across pages
+  try {
+    const saved = localStorage.getItem('pcpick-theme'); // 'dark' or 'light' or null
+    const initial = saved ? saved : 'light'; // default to light if nothing saved
+    applyTheme(initial);
+    if (themeSwitch) themeSwitch.checked = (initial === 'dark');
+  } catch (e) {
+    // Fallback: just light
+    applyTheme('light');
+    if (themeSwitch) themeSwitch.checked = false;
+  }
+
+  // ✅ Toggle and save
+  if (themeSwitch) {
+    themeSwitch.addEventListener('change', (e) => {
+      const theme = e.target.checked ? 'dark' : 'light';
+      try { localStorage.setItem('pcpick-theme', theme); } catch (err) {}
+      applyTheme(theme);
     });
-    
-  // Toggle theme on switch
-  themeSwitch.addEventListener('change', () => {
-    const isDark = themeSwitch.checked;
-    document.body.classList.toggle('dark-mode', isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  });
+  }
 })();
 
+})();
