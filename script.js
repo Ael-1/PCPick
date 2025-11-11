@@ -96,33 +96,32 @@
 })();
 
 (() => {
-  const tabs = document.querySelectorAll(".tab");
-  const sections = document.querySelectorAll(".product-grid");
+  const setupCatalogTabs = (scopeSelector) => {
+    document.querySelectorAll(scopeSelector).forEach((scope) => {
+      const tabs = scope.querySelectorAll(".product-tabs .tab");
+      const sections = scope.querySelectorAll(".product-grid");
+      if (!tabs.length || !sections.length) return;
 
-  if (!tabs.length || !sections.length) return;
+      const showSection = (targetId) => {
+        sections.forEach((section) => {
+          section.classList.toggle("is-active", section.id === targetId);
+        });
+      };
 
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      // Remove active highlight from all tabs
-      tabs.forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((btn) => btn.classList.remove("active"));
+          tab.classList.add("active");
+          showSection(tab.dataset.cat);
+        });
+      });
 
-      // Hide all product sections
-      sections.forEach(sec => sec.style.display = "none");
-
-      // Show the clicked section
-      const target = document.getElementById(tab.dataset.cat);
-      if (target) target.style.display = "grid";
+      showSection(tabs[0]?.dataset.cat ?? sections[0]?.id);
     });
-  });
+  };
 
-  // Show only the CPU section by default
-  const cpuSection = document.getElementById("cpu-section");
-  const gpuSection = document.getElementById("gpu-section");
-  if (cpuSection && gpuSection) {
-    cpuSection.style.display = "grid";
-    gpuSection.style.display = "none";
-  }
+  setupCatalogTabs(".products");
+  setupCatalogTabs(".pcbuilder");
 })();
 
 
