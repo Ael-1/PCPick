@@ -157,81 +157,6 @@
         </div>
       </div>
 
-      <div class="product-card">
-          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
-          <div class="product-info">
-            <h3>AMD Ryzen 7 7800X3D</h3>
-            <ul>
-              <li>8 Cores / 16 Threads</li>
-              <li>5.0 GHz Boost</li>
-              <li>3D V-Cache</li>
-            </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
-          <div class="product-info">
-            <h3>AMD Ryzen 7 7800X3D</h3>
-            <ul>
-              <li>8 Cores / 16 Threads</li>
-              <li>5.0 GHz Boost</li>
-              <li>3D V-Cache</li>
-            </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
-          <div class="product-info">
-            <h3>AMD Ryzen 7 7800X3D</h3>
-            <ul>
-              <li>8 Cores / 16 Threads</li>
-              <li>5.0 GHz Boost</li>
-              <li>3D V-Cache</li>
-            </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
-          <div class="product-info">
-            <h3>AMD Ryzen 7 7800X3D</h3>
-            <ul>
-              <li>8 Cores / 16 Threads</li>
-              <li>5.0 GHz Boost</li>
-              <li>3D V-Cache</li>
-            </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
-          <div class="product-info">
-            <h3>AMD Ryzen 7 7800X3D</h3>
-            <ul>
-              <li>8 Cores / 16 Threads</li>
-              <li>5.0 GHz Boost</li>
-              <li>3D V-Cache</li>
-            </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-
       <!-- GPU PRODUCTS -->
       <div id="gpu-section" class="product-grid">
         <div class="product-card">
@@ -585,14 +510,14 @@
         </div>
       </header>
       <ul class="build-summary-list">
-        <li><span>CPU</span><strong>Not selected</strong></li>
-        <li><span>GPU</span><strong>Not selected</strong></li>
-        <li><span>RAM</span><strong>Not selected</strong></li>
-        <li><span>Motherboard</span><strong>Not selected</strong></li>
-        <li><span>Storage</span><strong>Not selected</strong></li>
-        <li><span>PSU</span><strong>Not selected</strong></li>
-        <li><span>Case</span><strong>Not selected</strong></li>
-        <li><span>Cooling</span><strong>Not selected</strong></li>
+        <li><span>CPU</span><strong data-category="cpu">Not selected</strong></li>
+        <li><span>GPU</span><strong data-category="gpu">Not selected</strong></li>
+        <li><span>RAM</span><strong data-category="ram">Not selected</strong></li>
+        <li><span>Motherboard</span><strong data-category="motherboard">Not selected</strong></li>
+        <li><span>Storage</span><strong data-category="storage">Not selected</strong></li>
+        <li><span>PSU</span><strong data-category="psu">Not selected</strong></li>
+        <li><span>Case</span><strong data-category="case">Not selected</strong></li>
+        <li><span>Cooling</span><strong data-category="cooling">Not selected</strong></li>
       </ul>
     </div>
   </aside>
@@ -628,24 +553,30 @@
     <span class="build-toggle-chevron" aria-hidden="true"></span>
   </button>
 
+  <div class="build-toast" id="build-toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
   <script src="script.js"></script>
   <script>
-    const cpuBtn = document.getElementById("cpu-btn");
-    const gpuBtn = document.getElementById("gpu-btn");
+    const cpuBtn = document.querySelector('.tab[data-cat="cpu-section"]');
+    const gpuBtn = document.querySelector('.tab[data-cat="gpu-section"]');
     const cpuSection = document.getElementById("cpu-section");
     const gpuSection = document.getElementById("gpu-section");
-    cpuBtn.addEventListener("click", () => {
-      cpuSection.style.display = "grid";
-      gpuSection.style.display = "none";
-      cpuBtn.classList.add("active");
-      gpuBtn.classList.remove("active");
-    });
-    gpuBtn.addEventListener("click", () => {
-      gpuSection.style.display = "grid";
-      cpuSection.style.display = "none";
-      gpuBtn.classList.add("active");
-      cpuBtn.classList.remove("active");
-    });
+
+    if (cpuBtn && gpuBtn && cpuSection && gpuSection) {
+      cpuBtn.addEventListener("click", () => {
+        cpuSection.style.display = "grid";
+        gpuSection.style.display = "none";
+        cpuBtn.classList.add("active");
+        gpuBtn.classList.remove("active");
+      });
+
+      gpuBtn.addEventListener("click", () => {
+        gpuSection.style.display = "grid";
+        cpuSection.style.display = "none";
+        gpuBtn.classList.add("active");
+        cpuBtn.classList.remove("active");
+      });
+    }
 
     const buildToggle = document.getElementById("build-toggle");
     const buildSummary = document.getElementById("build-summary");
@@ -660,6 +591,68 @@
         buildSummary.setAttribute("aria-hidden", expanded ? "true" : "false");
       });
     }
+
+    const summaryMap = {};
+    document.querySelectorAll(".build-summary-list strong[data-category]").forEach((entry) => {
+      summaryMap[entry.dataset.category] = entry;
+    });
+
+    const buildCountEl = document.querySelector(".build-toggle-count");
+    const toast = document.getElementById("build-toast");
+    let toastTimeout;
+
+    const sectionCategoryMap = {
+      "cpu-section": "cpu",
+      "gpu-section": "gpu",
+      "memory-section": "ram",
+      "motherboard-section": "motherboard",
+      "storage-section": "storage",
+      "psu-section": "psu",
+      "case-section": "case",
+      "cooling-section": "cooling",
+    };
+
+    function updateBuildCount() {
+      const total = Object.keys(summaryMap).length;
+      const filled = Object.values(summaryMap).filter(
+        (entry) => entry.textContent.trim().toLowerCase() !== "not selected"
+      ).length;
+      if (buildCountEl) {
+        buildCountEl.textContent = `(${filled}/${total})`;
+      }
+    }
+
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.setAttribute("aria-hidden", "false");
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast?.classList.remove("is-visible");
+        toast?.setAttribute("aria-hidden", "true");
+      }, 2200);
+    }
+
+    document.querySelectorAll(".add-cart-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const card = button.closest(".product-card");
+        const section = button.closest(".product-grid");
+        const productName =
+          card?.querySelector(".product-info h3")?.textContent?.trim() || "Item";
+        const categoryKey = sectionCategoryMap[section?.id ?? ""];
+
+        if (!categoryKey || !summaryMap[categoryKey]) {
+          showToast(`${productName} added to your cart.`);
+          return;
+        }
+
+        summaryMap[categoryKey].textContent = productName;
+        summaryMap[categoryKey].classList.add("has-selection");
+        showToast(`${productName} added to Your Build.`);
+        updateBuildCount();
+      });
+    });
   </script>
 </body>
 </html>

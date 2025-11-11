@@ -855,6 +855,8 @@ body.auth-page .auth-container{
   background:var(--text);
   color:#fff;
   padding:12px 22px;
+  width:360px;
+  max-width:calc(100% - 48px);
   font-size:15px;
   font-weight:600;
   cursor:pointer;
@@ -918,7 +920,7 @@ body.auth-page .auth-container{
   position:fixed;
   right:24px;
   bottom:110px;
-  width:320px;
+  width:360px;
   max-width:calc(100% - 48px);
   background:var(--card);
   border-radius:18px;
@@ -1026,6 +1028,7 @@ body.auth-page .auth-container{
     left:16px;
     right:16px;
     width:auto;
+    max-width:none;
     justify-content:space-between;
   }
   .build-summary-panel{
