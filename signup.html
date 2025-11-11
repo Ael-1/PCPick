@@ -5,21 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>PCPick - Sign Up</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="assets/icon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="auth-page">
+  <div class="auth-background" id="auth-background">
+    <iframe id="background-iframe" src="" frameborder="0"></iframe>
+    <div class="auth-background-overlay"></div>
+  </div>
   <div class="auth-container">
     <div class="auth-left">
-      <img src="assets/logo.png" alt="PCPick logo" width="56">
+      <div class="auth-logo">
+        <img src="assets/logo.png" alt="PCPick logo" class="logo-icon" width="56" height="56"/>
+        <span class="logo-pc">PC</span><span class="logo-pick">PICK</span>
+      </div>
       <h1>Build Your Dream PC</h1>
       <p>Join thousands of PC enthusiasts who trust PCPick for custom builds and pre-built systems.</p>
-      <ul class="auth-benefits">
-        <li><span aria-hidden="true">&#x2705;</span> Custom PC Builder</li>
-        <li><span aria-hidden="true">&#9889;</span> Pre-built Systems</li>
-        <li><span aria-hidden="true">&#128176;</span> Best Prices</li>
-      </ul>
     </div>
 
     <div class="auth-right">
@@ -54,5 +56,61 @@
       </div>
     </div>
   </div>
+  <script>
+    // Load the referrer page in the background, or default to index.html
+    const referrer = document.referrer;
+    const backgroundIframe = document.getElementById('background-iframe');
+    const authBackground = document.getElementById('auth-background');
+    const authContainer = document.querySelector('.auth-container');
+    
+    // Get the referrer URL or default to index.html
+    let sourceUrl = 'index.html';
+    if (referrer && referrer.includes(window.location.origin)) {
+      // Extract the pathname from the referrer
+      try {
+        const referrerUrl = new URL(referrer);
+        const pathname = referrerUrl.pathname.split('/').pop() || 'index.html';
+        // Only use if it's an HTML file and not the current page
+        if (pathname.endsWith('.html') && pathname !== 'login.html' && pathname !== 'signup.html') {
+          sourceUrl = pathname;
+        }
+      } catch (e) {
+        // If URL parsing fails, use default
+        sourceUrl = 'index.html';
+      }
+    }
+    
+    backgroundIframe.src = sourceUrl;
+    
+    // Function to navigate back to the previous page
+    function goBack() {
+      window.location.href = sourceUrl;
+    }
+    
+    // Click on background to go back
+    const overlay = authBackground.querySelector('.auth-background-overlay');
+    overlay.addEventListener('click', function(e) {
+      goBack();
+    });
+    
+    // Also allow clicking on the background container itself
+    authBackground.addEventListener('click', function(e) {
+      if (e.target === authBackground) {
+        goBack();
+      }
+    });
+    
+    // ESC key to go back
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        goBack();
+      }
+    });
+    
+    // Prevent clicks on auth container from bubbling to background
+    authContainer.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  </script>
 </body>
 </html>
