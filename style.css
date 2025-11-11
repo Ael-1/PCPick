@@ -842,34 +842,202 @@ body.auth-page .auth-container{
   box-shadow:0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
-.pcbuilder-chevron{
+.build-toggle{
   position:fixed;
   right:24px;
   bottom:24px;
-  width:56px;
-  height:56px;
-  border:none;
-  border-radius:50%;
-  background:var(--accent);
-  color:#fff;
-  font-size:28px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  box-shadow:0 18px 36px rgba(11,99,255,0.25);
+  justify-content:space-between;
+  gap:18px;
+  border:none;
+  border-radius:999px;
+  background:var(--text);
+  color:#fff;
+  padding:12px 22px;
+  font-size:15px;
+  font-weight:600;
   cursor:pointer;
+  box-shadow:0 16px 40px rgba(15,23,36,0.3);
   z-index:150;
   transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;
 }
-.pcbuilder-chevron:hover{
+.build-toggle:hover{
+  transform:translateY(-2px);
+  box-shadow:0 22px 46px rgba(15,23,36,0.36);
   background:var(--highlight-accent);
-  transform:translateY(-2px) scale(1.02);
-  box-shadow:0 22px 40px rgba(11,99,255,0.35);
 }
-.pcbuilder-chevron span{
-  display:inline-block;
-  transform:rotate(-90deg);
-  line-height:1;
+.build-toggle-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.build-toggle-cart{
+  width:40px;
+  height:40px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.build-toggle-cart svg{
+  width:22px;
+  height:22px;
+  color:#fff;
+}
+.build-toggle-text{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.build-toggle-title{
+  font-weight:700;
+}
+.build-toggle-count{
+  font-weight:500;
+  opacity:0.85;
+}
+.build-toggle-chevron{
+  width:14px;
+  height:14px;
+  border-top:2px solid #fff;
+  border-right:2px solid #fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:0;
+  transform:rotate(-45deg);
+  transition:transform 0.25s ease;
+}
+.build-toggle[aria-expanded="true"] .build-toggle-chevron{
+  transform:rotate(135deg);
+}
+
+.build-summary-panel{
+  position:fixed;
+  right:24px;
+  bottom:110px;
+  width:320px;
+  max-width:calc(100% - 48px);
+  background:var(--card);
+  border-radius:18px;
+  box-shadow:0 24px 60px rgba(15,23,36,0.2);
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+  transition:opacity 0.25s ease,transform 0.25s ease;
+  z-index:140;
+}
+.build-summary-panel.is-visible{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.build-summary-inner{
+  padding:24px;
+}
+.build-summary-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+}
+.build-summary-icon{
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  background:rgba(11,99,255,0.15);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.build-summary-icon svg{
+  width:22px;
+  height:22px;
+}
+.build-summary-label{
+  margin:0;
+  font-weight:700;
+  font-size:18px;
+}
+.build-summary-note{
+  margin:4px 0 0;
+  font-size:13px;
+  color:var(--muted);
+}
+.build-summary-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.build-summary-list li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(11,99,255,0.06);
+  font-size:14px;
+}
+.build-summary-list span{
+  color:var(--muted);
+}
+.build-summary-list strong{
+  font-weight:600;
+  color:var(--text);
+  font-style:italic;
+}
+.build-summary-list strong.has-selection{
+  color:var(--accent);
+  font-style:normal;
+}
+
+.build-toast{
+  position:fixed;
+  right:24px;
+  bottom:110px;
+  padding:14px 20px;
+  border-radius:14px;
+  background:var(--text);
+  color:#fff;
+  font-weight:600;
+  box-shadow:0 18px 40px rgba(15,23,36,0.3);
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity 0.25s ease,transform 0.25s ease;
+  pointer-events:none;
+  z-index:160;
+}
+.build-toast.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+.build-toast[aria-hidden="true"]{
+  opacity:0;
+}
+
+@media (max-width:600px){
+  .build-toggle{
+    left:16px;
+    right:16px;
+    width:auto;
+    justify-content:space-between;
+  }
+  .build-summary-panel{
+    left:16px;
+    right:16px;
+    width:auto;
+  }
+  .build-toast{
+    left:16px;
+    right:16px;
+    bottom:140px;
+  }
 }
 
 /* ---------- Responsive rules (updated) ---------- */
