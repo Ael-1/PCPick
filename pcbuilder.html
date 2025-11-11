@@ -469,6 +469,15 @@
     </div>
   </footer>
 
+  <button
+    type="button"
+    class="pcbuilder-chevron"
+    id="pcbuilder-chevron"
+    aria-label="Scroll back to the top of the builder"
+  >
+    <span>&rsaquo;</span>
+  </button>
+
   <script src="script.js"></script>
   <script>
     const cpuBtn = document.getElementById("cpu-btn");
@@ -489,6 +498,13 @@
       gpuBtn.classList.add("active");
       cpuBtn.classList.remove("active");
     });
+
+    const builderChevron = document.getElementById("pcbuilder-chevron");
+    if (builderChevron) {
+      builderChevron.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
   </script>
 </body>
 </html>

@@ -842,6 +842,36 @@ body.auth-page .auth-container{
   box-shadow:0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
+.pcbuilder-chevron{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  width:56px;
+  height:56px;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  font-size:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 18px 36px rgba(11,99,255,0.25);
+  cursor:pointer;
+  z-index:150;
+  transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;
+}
+.pcbuilder-chevron:hover{
+  background:var(--highlight-accent);
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 22px 40px rgba(11,99,255,0.35);
+}
+.pcbuilder-chevron span{
+  display:inline-block;
+  transform:rotate(-90deg);
+  line-height:1;
+}
+
 /* ---------- Responsive rules (updated) ---------- */
 /* Responsive */
 @media (max-width:1600px){
