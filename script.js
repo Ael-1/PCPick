@@ -160,3 +160,32 @@ window.addEventListener('load', () => {
   showSlides();
   resetSlideInterval();
 });
+
+(() => {
+  const themeSwitch = document.getElementById('theme-switch');
+  if (!themeSwitch) return;
+
+  // Load saved theme preference
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeSwitch.checked = true;
+  }
+
+  const toggle = document.querySelector('.theme-toggle input');
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    });
+    
+  // Toggle theme on switch
+  themeSwitch.addEventListener('change', () => {
+    const isDark = themeSwitch.checked;
+    document.body.classList.toggle('dark-mode', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+})();
+
