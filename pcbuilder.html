@@ -798,6 +798,19 @@
 
   <script src="script.js"></script>
   <script>
+    // Ensure price and select button share a row
+    document.querySelectorAll('.pcbuilder .product-card').forEach((card) => {
+      const info = card.querySelector('.product-info');
+      const price = info?.querySelector('.price');
+      const button = info?.querySelector('.add-cart-btn');
+      if (!info || !price || !button || button.closest('.purchase-row')) return;
+      const row = document.createElement('div');
+      row.className = 'purchase-row';
+      row.appendChild(price);
+      row.appendChild(button);
+      info.appendChild(row);
+    });
+
     const builderTabs = document.querySelectorAll(".pcbuilder .product-tabs .tab");
     const builderSections = document.querySelectorAll(".pcbuilder .product-grid");
 
@@ -830,6 +843,25 @@
         buildToggle.setAttribute("aria-expanded", String(nextState));
         buildSummary.classList.toggle("is-visible", nextState);
         buildSummary.setAttribute("aria-hidden", expanded ? "true" : "false");
+      });
+
+      // Minimize summary when clicking on the page background (not on controls)
+      const collapseSummary = () => {
+        buildToggle.setAttribute("aria-expanded", "false");
+        buildSummary.classList.remove("is-visible");
+        buildSummary.setAttribute("aria-hidden", "true");
+      };
+
+      document.addEventListener("click", (e) => {
+        // Ignore if click is inside the summary or on the toggle button
+        if (e.target.closest("#build-summary") || e.target.closest("#build-toggle")) return;
+
+        // Ignore if clicking interactive controls (buttons/links/inputs/selects/textareas)
+        if (e.target.closest("button, a, input, textarea, select, [role='button'], [contenteditable=''], [contenteditable='true']")) return;
+
+        // If summary is open, collapse it
+        const expanded = buildToggle.getAttribute("aria-expanded") === "true";
+        if (expanded) collapseSummary();
       });
     }
 
@@ -964,7 +996,7 @@
         }
 
         setSelectedCard(categoryKey, card, productName, priceValue);
-        showToast(`${productName} added to Your Build.`);
+        showToast(`${productName} added to Your Build!`);
         updateBuildCount();
         updateTotals();
       });
