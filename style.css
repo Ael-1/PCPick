@@ -1492,64 +1492,6 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 }
 
 /* ===============================
-<<<<<<< HEAD
-=======
-   DARK MODE FIXES
-   =============================== */
-body.dark-mode {
-  background-color: var(--text); /* dark navy blue background */
-  color: var(--bg); /* light text */
-}
-
-/* Navbar */
-body.dark-mode .nav {
-  background-color: var(--highlight-accent);
-}
-
-body.dark-mode a,
-body.dark-mode p,
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode span,
-body.dark-mode li {
-  color: var(--bg);
-}
-
-/* Buttons */
-body.dark-mode .btn-primary {
-  background-color: var(--accent);
-  color: var(--bg);
-}
-
-body.dark-mode .btn-primary:hover {
-  background-color: var(--highlight-accent);
-}
-
-body.dark-mode .btn-secondary {
-  background-color: var(--card);
-  color: var(--text);
-}
-
-/* Cards and sections */
-body.dark-mode .card,
-body.dark-mode section,
-body.dark-mode .feature-card {
-  background-color: #1b2233;
-  color: var(--bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-/* Carousel / slider text and arrows */
-body.dark-mode .carousel-caption,
-body.dark-mode .carousel-control-prev-icon,
-body.dark-mode .carousel-control-next-icon {
-  filter: invert(1);
-}
-
-/* ===============================
->>>>>>> 4edcfe5b7c059a29558ca88b9745ae8f9162ca4c
    DARK MODE STYLES (Improved)
    =============================== */
 [data-theme="dark"] {
