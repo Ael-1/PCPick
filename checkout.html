@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout — PCPick</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.png" alt="PCPick logo" class="logo-icon"/>
+        <span class="logo-wordmark" aria-hidden>
+          <span class="logo-pc">PC</span><span class="logo-pick">PICK</span>
+        </span>
+      </a>
+
+      <nav class="nav" id="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="pcbuilder.html">PC Builder</a></li>
+          <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="login" href="login.html">Log In</a>
+        <a class="btn signup" href="signup.html">Sign Up</a>
+
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch" />
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
+
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
+      </div>
+    </div>
+
+    <nav class="drawer-nav" id="mobile-drawer" aria-label="Mobile navigation" aria-hidden="true">
+      <div class="drawer-header">
+        <span class="drawer-brand">
+          <img src="assets/logo.png" alt="PCPick logo" class="logo-icon" width="36" height="36" />
+          <span class="logo-wordmark"><span class="logo-pc">PC</span><span class="logo-pick">PICK</span></span>
+        </span>
+        <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="pcbuilder.html">PC Builder</a></li>
+        <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
+      </ul>
+      <div class="drawer-actions">
+        <a class="login" href="login.html">Log In</a>
+        <a class="btn signup" href="signup.html">Sign Up</a>
+      </div>
+    </nav>
+    <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+  </header>
+
+  <!-- ===== MAIN CHECKOUT CONTENT ===== -->
+  <main class="checkout-container">
+    <div class="container">
+      <a href="pcbuilder.html" class="back-link">← Back to Builder</a>
+
+      <h1 class="checkout-title">Checkout</h1>
+
+      <div class="checkout-layout">
+        <!-- ===== LEFT COLUMN: FORM ===== -->
+        <div class="checkout-form">
+          <!-- Billing Information -->
+          <section class="checkout-section">
+            <h2>Billing Information</h2>
+            <div class="form-grid two-col">
+              <div>
+                <label>First Name</label>
+                <input type="text" placeholder="John">
+              </div>
+              <div>
+                <label>Last Name</label>
+                <input type="text" placeholder="Doe">
+              </div>
+            </div>
+            <div class="form-grid">
+              <label>Email Address</label>
+              <input type="email" placeholder="johndoe@email.com">
+            </div>
+            <div class="form-grid">
+              <label>Phone Number</label>
+              <input type="text" placeholder="+63 900 000 0000">
+            </div>
+          </section>
+
+          <!-- Shipping Information -->
+          <section class="checkout-section">
+            <h2>Shipping Address</h2>
+            <div class="form-grid">
+              <label>Address Line</label>
+              <input type="text" placeholder="123 Main Street">
+            </div>
+            <div class="form-grid two-col">
+              <div>
+                <label>City</label>
+                <input type="text" placeholder="Manila">
+              </div>
+              <div>
+                <label>Postal Code</label>
+                <input type="text" placeholder="1000">
+              </div>
+            </div>
+            <div class="form-grid">
+              <label>Country</label>
+              <input type="text" placeholder="Philippines">
+            </div>
+          </section>
+
+          <!-- Payment Method -->
+          <section class="checkout-section">
+            <h2>Payment Method</h2>
+            <div class="form-grid">
+              <label><input type="radio" name="payment" checked> Credit / Debit Card</label>
+              <label><input type="radio" name="payment"> Cash on Delivery</label>
+            </div>
+            <div class="form-grid two-col">
+              <div>
+                <label>Card Number</label>
+                <input type="text" placeholder="1234 5678 9012 3456">
+              </div>
+              <div>
+                <label>Expiry</label>
+                <input type="text" placeholder="MM/YY">
+              </div>
+            </div>
+            <div class="form-grid">
+              <label>CVV</label>
+              <input type="text" placeholder="123">
+            </div>
+            <button class="btn-place">Place Order</button>
+          </section>
+        </div>
+
+        <!-- ===== RIGHT COLUMN: SUMMARY ===== -->
+        <aside class="checkout-summary">
+          <h2>Order Summary</h2>
+          <p>Your selected components will appear here after cart integration.</p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> PCPick — All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
