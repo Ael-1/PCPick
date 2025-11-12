@@ -787,7 +787,7 @@
     <span class="build-toggle-left">
       <span class="build-toggle-cart" aria-hidden="true"><img src="assets/cart.png" alt="" loading="lazy"></span>
       <span class="build-toggle-text">
-        <span class="build-toggle-title">Your Build</span>
+        <span class="build-toggle-title">Build</span>
         <span class="build-toggle-count">(0/8)</span>
       </span>
     </span>
@@ -855,6 +855,9 @@
       document.addEventListener("click", (e) => {
         // Ignore if click is inside the summary or on the toggle button
         if (e.target.closest("#build-summary") || e.target.closest("#build-toggle")) return;
+
+        // Ignore clicks anywhere in the site header
+        if (e.target.closest('.site-header')) return;
 
         // Ignore if clicking interactive controls (buttons/links/inputs/selects/textareas)
         if (e.target.closest("button, a, input, textarea, select, [role='button'], [contenteditable=''], [contenteditable='true']")) return;

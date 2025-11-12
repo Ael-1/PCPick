@@ -592,7 +592,29 @@ body.auth-page{
 }
 .qty-controls .qty-plus:hover,
 .qty-controls .qty-minus:hover { background: rgba(11,99,255,0.08); }
-.qty-controls .qty-amount { min-width: 20px; text-align: center; font-weight: 700; }
+.qty-controls .qty-amount {
+  width: 48px;
+  text-align: center;
+  font-weight: 700;
+  padding: 4px 6px;
+  border: 1px solid rgba(15,23,36,0.12);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  -moz-appearance:textfield;
+  appearance: textfield;
+}
+.qty-controls .qty-amount:focus { outline: none; box-shadow: 0 0 0 2px rgba(11,99,255,0.25); }
+[data-theme="dark"] .qty-controls .qty-amount {
+  border: 1px solid #333;
+  background: #1e1e1e;
+  color: #e5e7eb;
+}
+.qty-controls .qty-amount::-webkit-outer-spin-button,
+.qty-controls .qty-amount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 [data-theme="dark"] .qty-controls .qty-plus,
 [data-theme="dark"] .qty-controls .qty-minus {
@@ -606,6 +628,65 @@ body.auth-page{
 /* Cart list quantity indicator */
 .build-summary-list .summary-qty { color: var(--muted); margin-left: 8px; }
 [data-theme="dark"] .build-summary-list .summary-qty { color: var(--muted); }
+
+.cart-qty-controls{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-left:8px;
+}
+
+.cart-qty-controls button{
+  width:24px;
+  height:24px;
+  border-radius:6px;
+  border:1px solid rgba(15,23,36,0.12);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  font-weight:700;
+}
+.cart-qty-controls button:hover{
+  background:rgba(11,99,255,0.08);
+}
+
+.cart-qty-controls .cart-qty-input{
+  width:36px;
+  text-align:center;
+  font-weight:700;
+  padding:2px 4px;
+  border:1px solid rgba(15,23,36,0.12);
+  border-radius:6px;
+  background:var(--card);
+  color:var(--text);
+  -moz-appearance:textfield;
+  appearance:textfield;
+}
+
+.cart-qty-controls .cart-qty-input:focus{
+  outline:none;
+  box-shadow:0 0 0 2px rgba(11,99,255,0.25);
+}
+
+.cart-qty-controls .cart-qty-input::-webkit-outer-spin-button,
+.cart-qty-controls .cart-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance:none;
+  margin:0;
+}
+
+[data-theme="dark"] .cart-qty-controls button{
+  border:1px solid #333;
+  color:#e5e7eb;
+}
+[data-theme="dark"] .cart-qty-controls button:hover{
+  background:rgba(11,99,255,0.22);
+}
+
+[data-theme="dark"] .cart-qty-controls .cart-qty-input{
+  border:1px solid #333;
+  background:#1e1e1e;
+  color:#e5e7eb;
+}
 
 /* Mobile drawer navigation */
 .drawer-nav {
@@ -1197,6 +1278,24 @@ body.auth-page .auth-container{
   color:var(--muted);
   flex:0 0 110px;
 }
+#cart-summary .build-summary-list li > span:first-child{
+  flex:0 0 40px;
+}
+#cart-summary .build-summary-list:empty{
+  display:none;
+}
+#cart-empty{
+  margin:0;
+}
+#cart-summary .summary-clear{
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  padding:0 4px;
+}
+#cart-summary .summary-clear:hover{
+  color:var(--accent);
+}
 .build-summary-list strong{
   font-weight:600;
   color:var(--text);
@@ -1308,6 +1407,12 @@ body.dark-mode .summary-price {
   color: var(--muted);
 }
 
+[data-theme="dark"] .summary-selection .summary-price:not(.has-selection) + .summary-qty,
+[data-theme="dark"] .summary-selection .not-selected + .summary-price,
+[data-theme="dark"] .build-summary-list .dash {
+  color: var(--muted);
+}
+
 [data-theme="dark"] .build-summary-list li.has-selection .summary-price,
 body.dark-mode .build-summary-list li.has-selection .summary-price {
   color: var(--accent);
@@ -1340,12 +1445,18 @@ body.dark-mode .build-summary-icon {
 /* Dark mode readability for totals (Subtotal, VAT, Total labels/values) */
 [data-theme="dark"] .summary-total-row,
 body.dark-mode .summary-total-row {
-  color: rgba(255,255,255,0.75);
+  color: var(--text);
 }
 
 [data-theme="dark"] .summary-total-row strong,
 body.dark-mode .summary-total-row strong {
-  color: #ffffff;
+  color: var(--text-primary);
+}
+[data-theme="dark"] #build-subtotal,
+[data-theme="dark"] #build-vat,
+body.dark-mode #build-subtotal,
+body.dark-mode #build-vat{
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] .summary-grand-total,
@@ -1412,6 +1523,109 @@ body.dark-mode .summary-grand-total strong {
     bottom:140px;
   }
 }
+
+/* ===== DARK MODE FIXES FOR BUILD SUMMARY ===== */
+
+/* Panel container */
+[data-theme="dark"] .build-summary-panel,
+body.dark-mode .build-summary-panel {
+  background: var(--card-dark, #181818) !important;
+  border: 1px solid #2e2e2e !important;
+  color: #f5f5f5 !important;
+  transition: none !important;
+}
+
+/* List items background */
+[data-theme="dark"] .build-summary-list li,
+body.dark-mode .build-summary-list li {
+  background: #1f1f1f !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e5e7eb !important;
+  transition: none !important;
+}
+
+/* Component labels (CPU, GPU, etc.) */
+[data-theme="dark"] .build-summary-list li > span:first-child,
+body.dark-mode .build-summary-list li > span:first-child {
+  color: #9ca3af !important;
+  transition: none !important;
+}
+
+/* "Not selected" text */
+[data-theme="dark"] .build-summary-list strong:not(.has-selection),
+body.dark-mode .build-summary-list strong:not(.has-selection) {
+  color: var(--muted) !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+/* Selected items stay blue */
+[data-theme="dark"] .build-summary-list strong.has-selection,
+body.dark-mode .build-summary-list strong.has-selection {
+  color: var(--accent) !important; /* stays blue */
+  font-style: normal;
+  transition: none !important;
+}
+
+/* Selected prices stay blue */
+[data-theme="dark"] .build-summary-list li.has-selection .summary-price,
+body.dark-mode .build-summary-list li.has-selection .summary-price {
+  color: var(--accent) !important; /* blue color for selected items */
+  font-weight: 600;
+  transition: none !important;
+}
+
+/* Totals section */
+[data-theme="dark"] .summary-total-row span,
+body.dark-mode .summary-total-row span {
+  color: #a1a1aa !important;
+  transition: none !important;
+}
+
+/* Dark mode: ensure divider lines are visible in build and cart */
+[data-theme="dark"] .build-summary-totals,
+body.dark-mode .build-summary-totals {
+  border-top: 1px solid var(--border); /* clearer top divider */
+}
+
+[data-theme="dark"] .summary-grand-total,
+body.dark-mode .summary-grand-total {
+  border-top: 1px dashed rgba(255,255,255,0.16); /* visible dashed divider */
+}
+
+[data-theme="dark"] .checkout-summary .summary-item.total,
+body.dark-mode .checkout-summary .summary-item.total {
+  border-top: 1px solid rgba(255,255,255,0.12); /* cart section divider */
+}
+
+[data-theme="dark"] .summary-total-row:not(.summary-grand-total) strong,
+body.dark-mode .summary-total-row:not(.summary-grand-total) strong {
+  color: var(--text-primary) !important; /* use primary text for Subtotal/VAT */
+  transition: none !important;
+}
+
+/* “×” clear button */
+[data-theme="dark"] .summary-clear,
+body.dark-mode .summary-clear {
+  color: #9ca3af !important;
+  transition: none !important;
+}
+
+[data-theme="dark"] .summary-clear:hover,
+body.dark-mode .summary-clear:hover {
+  color: var(--accent) !important;
+}
+
+/* Disable background transition delays */
+.build-summary-panel,
+.build-toggle,
+.build-summary-list li,
+input,
+textarea {
+  transition: none !important;
+}
+
+
 
 /* ---------- Responsive rules (updated) ---------- */
 /* Responsive */
@@ -2146,8 +2360,53 @@ textarea:focus {
 .checkout-benefits { margin-top: 14px; color: var(--muted); font-size: 0.95rem; list-style:none; padding-left:0; }
 .checkout-benefits li { margin-bottom:8px; }
 
-/* Responsive: collapse to single column on narrow screens */
-@media (max-width: 900px) {
-  .checkout-layout { grid-template-columns: 1fr; gap: 16px; }
-  .checkout-summary { order: -1; } /* show summary above form on small screens (optional) */
+input::placeholder {
+  color: #9ca3af;
+  transition: none !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  background: #ffffff;
+  transition: none !important;
+}
+
+/* ===== SECTION BOXES ===== */
+.checkout-section {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: none !important; /* no fade when switching themes */
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+:root.dark .checkout-section,
+[data-theme="dark"] .checkout-section {
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: none !important;
+}
+
+:root.dark input::placeholder,
+[data-theme="dark"] input::placeholder {
+  color: #9ca3af;
+  transition: none !important;
+}
+
+:root.dark input:focus,
+:root.dark select:focus,
+:root.dark textarea:focus,
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  background: var(--text);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+  transition: none !important;
 }

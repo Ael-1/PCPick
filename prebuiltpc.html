@@ -171,6 +171,276 @@
     </div>
   </footer>
 
+  <!-- Cart summary (same as products) -->
+  <aside class="build-summary-panel" id="cart-summary" aria-hidden="true">
+    <div class="build-summary-inner">
+      <header class="build-summary-header">
+        <span class="build-summary-icon" aria-hidden="true">
+          <img src="assets/cart.png" alt="">
+        </span>
+        <div>
+          <p class="build-summary-label">Your Cart</p>
+          <p class="build-summary-note">Items added to your cart</p>
+        </div>
+      </header>
+      <ul class="build-summary-list" id="cart-list"></ul>
+      <p class="build-summary-note" id="cart-empty">Your cart is empty. Add an item to see it here.</p>
+      <div class="build-summary-totals" id="cart-totals" hidden>
+        <div class="summary-total-row">
+          <span>Subtotal</span>
+          <strong id="cart-subtotal">$0.00</strong>
+        </div>
+        <div class="summary-total-row">
+          <span>VAT (12%)</span>
+          <strong id="cart-vat">$0.00</strong>
+        </div>
+        <div class="summary-total-row summary-grand-total">
+          <span>Total</span>
+          <strong id="cart-total">$0.00</strong>
+        </div>
+        <button class="btn checkout-btn" type="button">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <button
+    type="button"
+    class="build-toggle"
+    id="cart-toggle"
+    aria-label="Toggle cart summary"
+    aria-controls="cart-summary"
+    aria-expanded="false"
+  >
+    <span class="build-toggle-left">
+      <span class="build-toggle-cart" aria-hidden="true"><img src="assets/cart.png" alt="" loading="lazy"></span>
+      <span class="build-toggle-text">
+        <span class="build-toggle-title">Cart</span>
+        <span class="build-toggle-count" id="cart-count">(0)</span>
+      </span>
+    </span>
+    <span class="build-toggle-chevron" aria-hidden="true"></span>
+  </button>
+
+  <div class="build-toast" id="product-toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
   <script src="script.js"></script>
+  <script>
+    (function(){
+      const cartToggle = document.getElementById('cart-toggle');
+      const cartSummary = document.getElementById('cart-summary');
+      const cartList = document.getElementById('cart-list');
+      const cartCount = document.getElementById('cart-count');
+      const cartTotals = document.getElementById('cart-totals');
+      const cartSubtotalEl = document.getElementById('cart-subtotal');
+      const cartVatEl = document.getElementById('cart-vat');
+      const cartTotalEl = document.getElementById('cart-total');
+      const cartEmpty = document.getElementById('cart-empty');
+      const toast = document.getElementById('product-toast');
+
+      const fmt = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2});
+      const parsePrice = (t)=>{const n=Number((t||'').replace(/[^0-9.]/g,''));return Number.isFinite(n)?n:0};
+
+      const cartItems = new Map();
+      const selectedQuantities = new Map();
+
+      const VAT_RATE = 0.12;
+      const renderTotals = () => {
+        const qtyTotal = Array.from(cartItems.values()).reduce((s,i)=>s+i.qty,0);
+        const subtotal = Array.from(cartItems.values()).reduce((s,i)=>s + (i.unit*i.qty),0);
+        const vat = subtotal * VAT_RATE;
+        const total = subtotal + vat;
+        cartCount.textContent = `(${qtyTotal})`;
+        if (cartEmpty) cartEmpty.hidden = qtyTotal > 0 ? true : false;
+        if (cartTotals) {
+          cartTotals.hidden = qtyTotal === 0;
+          if (cartSubtotalEl) cartSubtotalEl.textContent = fmt.format(subtotal);
+          if (cartVatEl) cartVatEl.textContent = fmt.format(vat);
+          if (cartTotalEl) cartTotalEl.textContent = fmt.format(total);
+        }
+      };
+
+      const productKey = (name, unit)=>`${name}|${unit}`;
+
+      const updateCartRowQty = (key) => {
+        const row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (!row) return;
+        const q = cartItems.get(key)?.qty ?? 0;
+        const input = row.querySelector('.cart-qty-input');
+        if (input) input.value = String(Math.max(1, q));
+      };
+
+      const ensureCartRow = (key, name, unit) => {
+        let row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (row) return row;
+        row = document.createElement('li');
+        row.classList.add('has-selection');
+        row.dataset.key = key;
+        row.innerHTML = `
+          <span>Item</span>
+          <div class="summary-selection">
+            <strong class="has-selection">${name}</strong>
+            <span class="summary-price">${fmt.format(unit)}</span>
+          </div>
+          <div class="cart-qty-controls">
+            <button type="button" class="cart-qty-minus" aria-label="Decrease quantity">-</button>
+            <input type="number" class="cart-qty-input" aria-label="Quantity" value="1" min="1" inputmode="numeric">
+            <button type="button" class="cart-qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="summary-clear" type="button" aria-label="Remove from cart">x</button>`;
+        cartList?.appendChild(row);
+        row.querySelector('.summary-clear')?.addEventListener('click', ()=>{
+          cartItems.delete(key);
+          row.remove();
+          renderTotals();
+        });
+
+        const qtyInput = row.querySelector('.cart-qty-input');
+
+        row.querySelector('.cart-qty-plus')?.addEventListener('click', ()=>{
+          adjustCartQuantity(name, unit, 1);
+        });
+
+        row.querySelector('.cart-qty-minus')?.addEventListener('click', ()=>{
+          adjustCartQuantity(name, unit, -1);
+        });
+
+        qtyInput?.addEventListener('input', () => {
+          const value = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+          qtyInput.value = String(value);
+          const key = productKey(name, unit);
+          const current = cartItems.get(key);
+          if (!current) return;
+          const delta = value - current.qty;
+          if (delta !== 0) {
+            adjustCartQuantity(name, unit, delta);
+          }
+        });
+        return row;
+      };
+
+      const adjustCartQuantity = (name, unit, delta) => {
+        if (!delta) return;
+        const key = productKey(name, unit);
+        const current = cartItems.get(key) || { name, unit, qty: 0 };
+        current.qty = Math.max(0, current.qty + delta);
+        if (current.qty === 0) {
+          cartItems.delete(key);
+          cartList?.querySelector(`li[data-key="${key}"]`)?.remove();
+        } else {
+          cartItems.set(key, current);
+          ensureCartRow(key, name, unit);
+          updateCartRowQty(key);
+        }
+        renderTotals();
+      };
+
+      const showToast = (msg) => {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.setAttribute('aria-hidden','false');
+        toast.classList.add('is-visible');
+        clearTimeout(showToast.tid);
+        showToast.tid = setTimeout(()=>{
+          toast.classList.remove('is-visible');
+          toast.setAttribute('aria-hidden','true');
+        }, 2000);
+      };
+
+      const collapseCart = () => {
+        cartToggle?.setAttribute('aria-expanded','false');
+        cartSummary?.classList.remove('is-visible');
+        cartSummary?.setAttribute('aria-hidden','true');
+      };
+
+      cartToggle?.addEventListener('click', ()=>{
+        const expanded = cartToggle.getAttribute('aria-expanded') === 'true';
+        const next = !expanded;
+        cartToggle.setAttribute('aria-expanded', String(next));
+        cartSummary.classList.toggle('is-visible', next);
+        cartSummary.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!cartSummary || !cartToggle) return;
+        if (event.target.closest('#cart-summary') || event.target.closest('#cart-toggle')) return;
+        if (event.target.closest('.site-header')) return;
+        if (event.target.closest('button, a, input, textarea, select, [role="button"], [contenteditable=""], [contenteditable="true"]')) return;
+        if (cartToggle.getAttribute('aria-expanded') === 'true') {
+          collapseCart();
+        }
+      });
+
+      // Inject quantity controls and wire events
+      document.querySelectorAll('.add-cart-btn').forEach(btn=>{
+        const card = btn.closest('.product-card');
+        if (!card) return;
+        const row = document.createElement('div');
+        row.className = 'add-cart-row';
+        const qc = document.createElement('div');
+        qc.className = 'qty-controls';
+        qc.innerHTML = `<button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>
+                        <input type="number" class="qty-amount" value="0" min="0" inputmode="numeric" aria-label="Quantity">
+                        <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>`;
+        row.appendChild(qc);
+        row.appendChild(btn);
+
+        const info = card.querySelector('.product-info');
+        const price = card.querySelector('.price');
+        const purchaseRow = document.createElement('div');
+        purchaseRow.className = 'purchase-row';
+        if (price) purchaseRow.appendChild(price);
+        purchaseRow.appendChild(row);
+        info?.appendChild(purchaseRow);
+
+        const getData = () => {
+          const name = card.querySelector('.product-info h3')?.textContent?.trim() || 'Item';
+          const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || '$0');
+          return { name, unit };
+        };
+
+        const amountInput = qc.querySelector('.qty-amount');
+
+        const updateSelection = (key, next) => {
+          const value = Math.max(0, next);
+          selectedQuantities.set(key, value);
+          if (amountInput) amountInput.value = String(value);
+        };
+
+        btn.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const qty = selectedQuantities.get(key) ?? 0;
+          if (qty <= 0) {
+            showToast('Set a quantity first.');
+            return;
+          }
+          adjustCartQuantity(name, unit, qty);
+          showToast(`${qty} × ${name} added to cart!`);
+          updateSelection(key, 0);
+        });
+
+        qc.querySelector('.qty-plus')?.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const current = selectedQuantities.get(key) ?? 0;
+          updateSelection(key, current + 1);
+        });
+        qc.querySelector('.qty-minus')?.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const current = selectedQuantities.get(key) ?? 0;
+          updateSelection(key, current - 1);
+        });
+
+        amountInput?.addEventListener('input', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const parsed = Math.max(0, Math.floor(Number(amountInput.value) || 0));
+          amountInput.value = String(parsed);
+          updateSelection(key, parsed);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
