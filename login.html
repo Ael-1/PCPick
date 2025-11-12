@@ -38,7 +38,19 @@
         <input id="login-email" type="email" placeholder="john@example.com" required>
 
         <label for="login-password">Password</label>
-        <input id="login-password" type="password" placeholder="Enter your password" required>
+        <div class="password-field">
+          <input id="login-password" type="password" placeholder="Enter your password" required>
+          <button
+            type="button"
+            class="password-toggle"
+            data-password-toggle="#login-password"
+            data-visible-icon="assets/visible.png"
+            data-hidden-icon="assets/hidden.png"
+            aria-label="Show password"
+          >
+            <img src="assets/hidden.png" alt="" aria-hidden="true">
+          </button>
+        </div>
 
         <div class="auth-options">
           <label><input type="checkbox"> Remember me</label>
@@ -55,6 +67,7 @@
       </div>
     </div>
   </div>
+  <script src="script.js"></script>
   <script>
     // Load the referrer page in the background, or default to index.html
     const referrer = document.referrer;

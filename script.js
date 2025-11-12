@@ -162,29 +162,69 @@ window.addEventListener('load', () => {
 
 (() => {
   const themeSwitch = document.getElementById('theme-switch');
-  if (!themeSwitch) return;
+  const applyTheme = (isDark) => {
+    document.body.classList.toggle('dark-mode', isDark);
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  };
 
-  // Load saved theme preference
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-    themeSwitch.checked = true;
+  const saved = localStorage.getItem('theme') === 'dark';
+  applyTheme(saved);
+  if (themeSwitch) {
+    themeSwitch.checked = saved;
   }
 
-  const toggle = document.querySelector('.theme-toggle input');
-    toggle.addEventListener('change', () => {
-      if (toggle.checked) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
-    });
-    
-  // Toggle theme on switch
-  themeSwitch.addEventListener('change', () => {
+  themeSwitch?.addEventListener('change', () => {
     const isDark = themeSwitch.checked;
-    document.body.classList.toggle('dark-mode', isDark);
+    applyTheme(isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 })();
 
+(() => {
+  const toggles = document.querySelectorAll('.password-toggle[data-password-toggle]');
+  if (!toggles.length) return;
+
+  const updateIcon = (btn, input, icons) => {
+    const img = btn.querySelector('img');
+    if (!img) return;
+    if (input.type === 'password') {
+      img.src = icons.hidden;
+      btn.setAttribute('aria-label', 'Show password');
+    } else {
+      img.src = icons.visible;
+      btn.setAttribute('aria-label', 'Hide password');
+    }
+  };
+
+  toggles.forEach((btn) => {
+    const selector = btn.getAttribute('data-password-toggle');
+    const input = selector ? document.querySelector(selector) : null;
+    if (!input) return;
+
+    const icons = {
+      visible: btn.dataset.visibleIcon || 'assets/visible.png',
+      hidden: btn.dataset.hiddenIcon || 'assets/hidden.png',
+    };
+
+    btn.addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
+      updateIcon(btn, input, icons);
+    });
+
+    const updateThemeClass = () => {
+      const isDark = document.body.classList.contains('dark-mode');
+      btn.closest('.password-field')?.classList.toggle('dark', isDark);
+      btn.closest('.password-field')?.classList.toggle('light', !isDark);
+    };
+
+    updateThemeClass();
+    const observer = new MutationObserver(updateThemeClass);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    updateIcon(btn, input, icons);
+  });
+})();
