@@ -21,6 +21,13 @@ body{
   -moz-osx-font-smoothing:grayscale;
   padding-top:90px; /* Add padding to offset fixed header */
 }
+/* Global focus ring: use site accent color */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+/* Fallback for browsers without :focus-visible */
+:focus { outline-color: var(--accent); }
 input,button,textarea,select{
   font-family:inherit;
 }
@@ -375,6 +382,9 @@ body.auth-page{
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(11,99,255,0.15);
+  /* keep the search icon visible on focus */
+  background: #fff url("assets/search.png") no-repeat left 14px center;
+  background-size: 18px;
 }
 
 /* keep search compact on wide screens, full width on small screens */
@@ -395,6 +405,23 @@ body.auth-page{
   font-size: 15px;
   transition: all 0.15s ease;
   outline: none;
+}
+
+/* Light mode: active tab highlight (parity with dark mode) */
+.product-tabs .tab.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.product-tabs .tab:hover {
+  background: rgba(11,99,255,0.08);
+  color: var(--text);
+}
+
+/* Keep selected state on hover (light mode) */
+.product-tabs .tab.active:hover {
+  background: var(--accent);
+  color: #ffffff;
 }
 
 /* Tabs row: tabs on the left, search on the right */
@@ -519,6 +546,66 @@ body.auth-page{
   transform:none;
 }
 .add-cart-btn:hover { background: #0556d6; transform: translateY(-2px); }
+
+/* Quantity controls placed beside Add to Cart */
+.purchase-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:12px;
+}
+.purchase-row .price{
+  margin:0;
+  font-weight:700;
+}
+.purchase-row .add-cart-btn{
+  margin:0;
+}
+.add-cart-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.add-cart-row .add-cart-btn {
+  margin: 0;
+  flex: 0 0 auto;
+  padding: 10px 12px;
+}
+.add-cart-row .qty-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.qty-controls .qty-plus,
+.qty-controls .qty-minus {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(15,23,36,0.12);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+}
+.qty-controls .qty-plus:hover,
+.qty-controls .qty-minus:hover { background: rgba(11,99,255,0.08); }
+.qty-controls .qty-amount { min-width: 20px; text-align: center; font-weight: 700; }
+
+[data-theme="dark"] .qty-controls .qty-plus,
+[data-theme="dark"] .qty-controls .qty-minus {
+  border: 1px solid #333;
+  background: #1e1e1e;
+  color: #e5e7eb;
+}
+[data-theme="dark"] .qty-controls .qty-plus:hover,
+[data-theme="dark"] .qty-controls .qty-minus:hover { background: rgba(11,99,255,0.22); }
+
+/* Cart list quantity indicator */
+.build-summary-list .summary-qty { color: var(--muted); margin-left: 8px; }
+[data-theme="dark"] .build-summary-list .summary-qty { color: var(--muted); }
 
 /* Mobile drawer navigation */
 .drawer-nav {
@@ -721,14 +808,14 @@ body.auth-page .auth-container{
 .auth-left .auth-logo .logo-pc {
   color: var(--accent);
   font-weight: 900;
-  font-size: 4rem;
+  font-size: 4.5rem;
   line-height: 1;
 }
 
 .auth-left .auth-logo .logo-pick {
   color: #000;
   font-weight: 900;
-  font-size: 4rem;
+  font-size: 4.5rem;
   margin-left: -8px;
   display: inline-block;
   transform: skewX(-10deg);
@@ -1023,9 +1110,10 @@ body.auth-page .auth-container{
   bottom:110px;
   width:420px;
   max-width:calc(100% - 48px);
-  background:var(--card);
+  background:linear-gradient(135deg,#ffffff,#f3f7ff);
+  border:1px solid rgba(15,23,36,0.08);
   border-radius:18px;
-  box-shadow:0 24px 60px rgba(15,23,36,0.2);
+  box-shadow:0 24px 60px rgba(15,23,36,0.18);
   opacity:0;
   transform:translateY(10px);
   pointer-events:none;
@@ -1101,7 +1189,8 @@ body.auth-page .auth-container{
   gap:10px;
   padding:10px 12px;
   border-radius:12px;
-  background:rgba(11,99,255,0.06);
+  background:rgba(11,99,255,0.05);
+  border:1px solid rgba(15,23,36,0.05);
   font-size:14px;
 }
 .build-summary-list li > span:first-child{
@@ -1118,6 +1207,9 @@ body.auth-page .auth-container{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+.build-summary-list strong:not(.has-selection){
+  color: var(--muted);
+}
 .summary-selection{
   flex:1 1 auto;
   min-width:0;
@@ -1127,7 +1219,7 @@ body.auth-page .auth-container{
 }
 .summary-price{
   font-size:13px;
-  color:var(--text);
+  color:var(--muted);
   font-weight:600;
 }
 .summary-clear{
@@ -1202,12 +1294,68 @@ body.auth-page .auth-container{
   font-style:normal;
 }
 
-/* Make "Not selected" (build summary values) visible in dark mode */
+/* Make "Not selected" (build summary values) muted in dark mode */
 [data-theme="dark"] .build-summary-list strong:not(.has-selection),
 [data-theme="dark"] .build-summary-list .not-selected,
 body.dark-mode .build-summary-list strong:not(.has-selection) {
-  color: #ffffff !important;
+  color: var(--muted) !important;
   opacity: 1 !important;
+}
+
+/* Default summary price (dash) should be muted in dark mode too */
+[data-theme="dark"] .summary-price,
+body.dark-mode .summary-price {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .build-summary-list li.has-selection .summary-price,
+body.dark-mode .build-summary-list li.has-selection .summary-price {
+  color: var(--accent);
+}
+
+/* Give the floating build summary more contrast in dark mode */
+[data-theme="dark"] .build-summary-panel,
+body.dark-mode .build-summary-panel {
+  background: linear-gradient(135deg, #1f2637, #141a27);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 24px 60px rgba(5,8,15,0.8);
+}
+
+[data-theme="dark"] .build-summary-inner,
+body.dark-mode .build-summary-inner {
+  background: transparent;
+}
+
+[data-theme="dark"] .build-summary-list li,
+body.dark-mode .build-summary-list li {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .build-summary-icon,
+body.dark-mode .build-summary-icon {
+  background: rgba(11,99,255,0.25);
+}
+
+/* Dark mode readability for totals (Subtotal, VAT, Total labels/values) */
+[data-theme="dark"] .summary-total-row,
+body.dark-mode .summary-total-row {
+  color: rgba(255,255,255,0.75);
+}
+
+[data-theme="dark"] .summary-total-row strong,
+body.dark-mode .summary-total-row strong {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .summary-grand-total,
+body.dark-mode .summary-grand-total {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .summary-grand-total strong,
+body.dark-mode .summary-grand-total strong {
+  color: var(--accent);
 }
 
 /* Keep selected values highlighted with accent */
@@ -1218,8 +1366,8 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 
 .build-toast{
   position:fixed;
-  right:24px;
-  bottom:110px;
+  left:24px;
+  bottom:50px;
   padding:14px 20px;
   border-radius:14px;
   background:var(--accent);
@@ -1245,7 +1393,7 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
   opacity:0;
 }
 
-@media (max-width:600px){
+  @media (max-width:600px){
   .build-toggle{
     left:16px;
     right:16px;
@@ -1260,7 +1408,7 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
   }
   .build-toast{
     left:16px;
-    right:16px;
+    right:auto;
     bottom:140px;
   }
 }
@@ -1370,36 +1518,6 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
   }
 }
 
-/* ===== wordmark: remove space and increase size on auth pages ===== */
-/* remove any gap between parts globally (safe override) */
-.logo-wordmark { gap: 0 !important; }
-
-/* keep default site size for header/navigation */
-.logo-pc, .logo-pick {
-  font-size: 28px !important;
-  line-height: 1;
-}
-
-/* AUTH page: make both parts large and flush together */
-.auth-left .logo-wordmark,
-.auth-left .auth-logo { gap: 0 !important; }
-
-.auth-left .auth-logo .logo-pc,
-.auth-left .auth-logo .logo-pick {
-  font-size: 5rem !important;      /* bigger size for auth view */
-  line-height: 1 !important;
-  margin-left: 0 !important;       /* remove added spacing */
-  display: inline-block;
-  vertical-align: middle;
-  padding: 0;
-}
-
-/* if you want PICK slightly tucked under PC (no visible gap) */
-.auth-left .auth-logo .logo-pick {
-  transform: skewX(-10deg);
-  margin-left: -6px !important;    /* reduce horizontal gap to zero */
-}
-
 /* ===============================
    THEME TOGGLE (Custom Icons - PNG)
    =============================== */
@@ -1475,7 +1593,7 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 
 /* When dark mode is ON */
 .theme-toggle input:checked + .slider {
-  background-color: var(--highlight-accent);
+  background-color: var(--accent);
 }
 
 .theme-toggle input:checked + .slider::before {
@@ -1492,64 +1610,6 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 }
 
 /* ===============================
-<<<<<<< HEAD
-=======
-   DARK MODE FIXES
-   =============================== */
-body.dark-mode {
-  background-color: var(--text); /* dark navy blue background */
-  color: var(--bg); /* light text */
-}
-
-/* Navbar */
-body.dark-mode .nav {
-  background-color: var(--highlight-accent);
-}
-
-body.dark-mode a,
-body.dark-mode p,
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode span,
-body.dark-mode li {
-  color: var(--bg);
-}
-
-/* Buttons */
-body.dark-mode .btn-primary {
-  background-color: var(--accent);
-  color: var(--bg);
-}
-
-body.dark-mode .btn-primary:hover {
-  background-color: var(--highlight-accent);
-}
-
-body.dark-mode .btn-secondary {
-  background-color: var(--card);
-  color: var(--text);
-}
-
-/* Cards and sections */
-body.dark-mode .card,
-body.dark-mode section,
-body.dark-mode .feature-card {
-  background-color: #1b2233;
-  color: var(--bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-/* Carousel / slider text and arrows */
-body.dark-mode .carousel-caption,
-body.dark-mode .carousel-control-prev-icon,
-body.dark-mode .carousel-control-next-icon {
-  filter: invert(1);
-}
-
-/* ===============================
->>>>>>> 4edcfe5b7c059a29558ca88b9745ae8f9162ca4c
    DARK MODE STYLES (Improved)
    =============================== */
 [data-theme="dark"] {
@@ -1559,7 +1619,7 @@ body.dark-mode .carousel-control-next-icon {
   --text-secondary: #a0a0a0;
   --border: #333333;
   --accent: #0b63ff; /* ✅ main blue accent */
-  --highlight-accent: #1a6eff; /* ✅ lighter hover blue */
+  --highlight-accent: #0c3375; /* ✅ lighter hover blue */
   --muted: #9ca3af;
   --logo-pick: #e5e7eb; /* Light gray for visibility on dark backgrounds */
 }
@@ -1655,9 +1715,12 @@ body.dark-mode .product-card .product-name,
 body.dark-mode .product-card .product-title,
 body.dark-mode .product-card p,
 body.dark-mode .product-card span,
-body.dark-mode .product-card .price,
 body.dark-mode .product-card .rating {
   color: #eaeaea; /* bright, readable white */
+}
+
+body.dark-mode .product-card .price{
+  color: var(--accent); /* keep accent color for price */
 }
 
 body.dark-mode .product-card small {
@@ -1839,6 +1902,9 @@ body.dark-mode .featured-info .price,
   border-color: #3b82f6; /* slight blue highlight on focus only */
   outline: none;
   box-shadow: none; /* no glow, clean look */
+  /* keep the icon visible in dark focus state too */
+  background: #1e1e1e url("assets/search.png") no-repeat left 14px center;
+  background-size: 18px;
 }
 
 /* 🌙 Dark Mode — Tabs */
@@ -1851,7 +1917,14 @@ body.dark-mode .featured-info .price,
 }
 
 [data-theme="dark"] .product-tabs .tab:hover {
-  background-color: #2563eb; /* bright blue on hover */
+  /* Increase contrast so hover is visible on dark surfaces */
+  background: rgba(11,99,255,0.22);
+  color: #ffffff;
+}
+
+/* Keep selected state on hover (dark mode) */
+[data-theme="dark"] .product-tabs .tab.active:hover {
+  background-color: #2563eb;
   color: #ffffff;
 }
 

@@ -573,6 +573,58 @@
     </div>
   </footer>
 
+  <!-- Cart summary (floating panel, reuses build summary styles) -->
+  <aside class="build-summary-panel" id="cart-summary" aria-hidden="true">
+    <div class="build-summary-inner">
+      <header class="build-summary-header">
+        <span class="build-summary-icon" aria-hidden="true">
+          <img src="assets/cart.png" alt="">
+        </span>
+        <div>
+          <p class="build-summary-label">Your Cart</p>
+          <p class="build-summary-note">Items added to your cart</p>
+        </div>
+      </header>
+      <ul class="build-summary-list" id="cart-list"></ul>
+      <p class="build-summary-note" id="cart-empty">Your cart is empty. Add an item to see it here.</p>
+      <div class="build-summary-totals" id="cart-totals" hidden>
+        <div class="summary-total-row">
+          <span>Subtotal</span>
+          <strong id="cart-subtotal">$0.00</strong>
+        </div>
+        <div class="summary-total-row">
+          <span>VAT (12%)</span>
+          <strong id="cart-vat">$0.00</strong>
+        </div>
+        <div class="summary-total-row summary-grand-total">
+          <span>Total</span>
+          <strong id="cart-total">$0.00</strong>
+        </div>
+        <button class="btn checkout-btn" type="button">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <button
+    type="button"
+    class="build-toggle"
+    id="cart-toggle"
+    aria-label="Toggle cart summary"
+    aria-controls="cart-summary"
+    aria-expanded="false"
+  >
+    <span class="build-toggle-left">
+      <span class="build-toggle-cart" aria-hidden="true"><img src="assets/cart.png" alt="" loading="lazy"></span>
+      <span class="build-toggle-text">
+        <span class="build-toggle-title">Cart</span>
+        <span class="build-toggle-count" id="cart-count">(0)</span>
+      </span>
+    </span>
+    <span class="build-toggle-chevron" aria-hidden="true"></span>
+  </button>
+
+  <div class="build-toast" id="product-toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
   <script src="script.js"></script>
   <script>
     const productTabs = document.querySelectorAll(".products .product-tabs .tab");
@@ -598,26 +650,178 @@
   </script>
   <script>
     (function(){
-      const toast = document.getElementById("product-toast");
-      let tid;
-      function show(msg){ 
-        if(!toast) return; 
-        toast.textContent = msg; 
-        toast.setAttribute("aria-hidden","false"); 
-        toast.classList.add("is-visible"); clearTimeout(tid); 
-        tid=setTimeout(()=>{toast.classList.remove("is-visible"); 
-        toast.setAttribute("aria-hidden","true");
-      },
-      2000);}
-      document.querySelectorAll(".add-cart-btn").forEach(btn=>{
-        btn.addEventListener("click",()=>{
-          btn.textContent = "Added";
-          btn.disabled = true;
-          btn.setAttribute("aria-pressed","true");
-          show("Added to cart");
+      const cartToggle = document.getElementById('cart-toggle');
+      const cartSummary = document.getElementById('cart-summary');
+      const cartList = document.getElementById('cart-list');
+      const cartCount = document.getElementById('cart-count');
+      const cartTotals = document.getElementById('cart-totals');
+      const cartSubtotalEl = document.getElementById('cart-subtotal');
+      const cartVatEl = document.getElementById('cart-vat');
+      const cartTotalEl = document.getElementById('cart-total');
+      const cartEmpty = document.getElementById('cart-empty');
+      const toast = document.getElementById('product-toast');
+
+      const fmt = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2});
+      const parsePrice = (t)=>{const n=Number((t||'').replace(/[^0-9.]/g,''));return Number.isFinite(n)?n:0};
+
+      // key -> { name, unit, qty }
+      const items = new Map();
+
+      const VAT_RATE = 0.12;
+      const renderTotals = () => {
+        const qtyTotal = Array.from(items.values()).reduce((s,i)=>s+i.qty,0);
+        const subtotal = Array.from(items.values()).reduce((s,i)=>s + (i.unit*i.qty),0);
+        const vat = subtotal * VAT_RATE;
+        const total = subtotal + vat;
+        cartCount.textContent = `(${qtyTotal})`;
+        if (cartEmpty) cartEmpty.hidden = qtyTotal > 0 ? true : false;
+        if (cartTotals) {
+          cartTotals.hidden = qtyTotal === 0;
+          if (cartSubtotalEl) cartSubtotalEl.textContent = fmt.format(subtotal);
+          if (cartVatEl) cartVatEl.textContent = fmt.format(vat);
+          if (cartTotalEl) cartTotalEl.textContent = fmt.format(total);
+        }
+      };
+
+      const productKey = (name, unit)=>`${name}|${unit}`;
+
+      const updateCartRowQty = (key) => {
+        const row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (!row) return;
+        const q = items.get(key)?.qty ?? 0;
+        const qEl = row.querySelector('[data-qty]');
+        if (qEl) qEl.textContent = String(q);
+      };
+
+      const ensureCartRow = (key, name, unit) => {
+        let row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (row) return row;
+        row = document.createElement('li');
+        row.classList.add('has-selection');
+        row.dataset.key = key;
+        row.innerHTML = `
+          <span>Item</span>
+          <div class="summary-selection">
+            <strong class="has-selection">${name}</strong>
+            <span class="summary-price">${fmt.format(unit)}</span>
+          </div>
+          <span class="summary-qty">×<span data-qty>1</span></span>
+          <button class="summary-clear" type="button" aria-label="Remove from cart">x</button>`;
+        cartList?.appendChild(row);
+        row.querySelector('.summary-clear')?.addEventListener('click', ()=>{
+          // set quantity to 0
+          items.delete(key);
+          row.remove();
+          // re-enable the corresponding product button and reset qty display
+          document.querySelectorAll('.product-card').forEach(card=>{
+            const n = card.querySelector('.product-info h3')?.textContent?.trim();
+            const p = parsePrice(card.querySelector('.price')?.textContent?.trim()||'');
+            if (productKey(n,p)===key){
+              const btn = card.querySelector('.add-cart-btn');
+              const qty = card.querySelector('.qty-amount');
+              if (btn){ btn.disabled = false; btn.textContent = 'Add to Cart'; btn.removeAttribute('aria-pressed'); }
+              if (qty){ qty.textContent = '0'; }
+            }
+          });
+          renderTotals();
+        });
+        return row;
+      };
+
+      const changeQty = (name, unit, delta) => {
+        const key = productKey(name, unit);
+        const cur = items.get(key) || { name, unit, qty: 0 };
+        cur.qty = Math.max(0, cur.qty + delta);
+        if (cur.qty === 0) {
+          items.delete(key);
+          cartList?.querySelector(`li[data-key="${key}"]`)?.remove();
+        } else {
+          items.set(key, cur);
+          ensureCartRow(key, name, unit);
+          updateCartRowQty(key);
+        }
+        // Update the product card qty and Add button state
+        document.querySelectorAll('.product-card').forEach(card=>{
+          const n = card.querySelector('.product-info h3')?.textContent?.trim();
+          const p = parsePrice(card.querySelector('.price')?.textContent?.trim()||'');
+          if (productKey(n,p)===key){
+            const btn = card.querySelector('.add-cart-btn');
+            const qty = card.querySelector('.qty-amount');
+            if (qty) qty.textContent = String(cur.qty);
+            if (btn){
+              if (cur.qty>0){ btn.textContent='Added'; btn.disabled = true; btn.setAttribute('aria-pressed','true'); }
+              else { btn.textContent='Add to Cart'; btn.disabled=false; btn.removeAttribute('aria-pressed'); }
+            }
+          }
+        });
+        renderTotals();
+      };
+
+      const showToast = (msg) => {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.setAttribute('aria-hidden','false');
+        toast.classList.add('is-visible');
+        clearTimeout(showToast.tid);
+        showToast.tid = setTimeout(()=>{
+          toast.classList.remove('is-visible');
+          toast.setAttribute('aria-hidden','true');
+        }, 2000);
+      };
+
+      cartToggle?.addEventListener('click', ()=>{
+        const expanded = cartToggle.getAttribute('aria-expanded') === 'true';
+        const next = !expanded;
+        cartToggle.setAttribute('aria-expanded', String(next));
+        cartSummary.classList.toggle('is-visible', next);
+        cartSummary.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+      });
+
+      // Inject quantity controls and wire events
+      document.querySelectorAll('.add-cart-btn').forEach(btn=>{
+        const card = btn.closest('.product-card');
+        if (!card) return;
+        // create quantity controls next to the button
+        const row = document.createElement('div');
+        row.className = 'add-cart-row';
+        const qc = document.createElement('div');
+        qc.className = 'qty-controls';
+        qc.innerHTML = `<button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
+                        <span class="qty-amount">0</span>
+                        <button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>`;
+        row.appendChild(btn);
+        row.appendChild(qc);
+
+        const info = card.querySelector('.product-info');
+        const price = card.querySelector('.price');
+        const purchaseRow = document.createElement('div');
+        purchaseRow.className = 'purchase-row';
+        if (price) purchaseRow.appendChild(price);
+        purchaseRow.appendChild(row);
+        info?.appendChild(purchaseRow);
+
+        const getData = () => {
+          const name = card.querySelector('.product-info h3')?.textContent?.trim() || 'Item';
+          const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || '$0');
+          return { name, unit };
+        };
+
+        btn.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          changeQty(name, unit, 1);
+          showToast(`${name} added to cart!`);
+        });
+
+        qc.querySelector('.qty-plus')?.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          changeQty(name, unit, 1);
+        });
+        qc.querySelector('.qty-minus')?.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          changeQty(name, unit, -1);
         });
       });
-    });
+    })();
   </script>
 </body>
 </html>
