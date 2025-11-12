@@ -629,10 +629,11 @@ body.auth-page .auth-container{
   display:flex;
   width:min(1200px,94vw);
   height:min(780px,92vh);
-  background:#fff;
+  background:transparent;
   border-radius:32px;
   overflow:hidden;
-  box-shadow:0 40px 120px rgba(11,21,38,0.15);
+  box-shadow:0 40px 120px rgba(6, 12, 24, 0.5);
+  border:1px solid rgba(255,255,255,0.04);
   position: relative;
   z-index: 10;
 }
@@ -670,15 +671,15 @@ body.auth-page .auth-container{
 .auth-logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-weight: 900;
   letter-spacing: -1px;
+  gap: 10px;
 }
 
 .auth-logo .logo-icon {
-  width: 92px;
-  height: 92px;
+  width: 72px;
+  height: 72px;
   display: block;
   object-fit: contain;
   flex-shrink: 0;
@@ -687,21 +688,21 @@ body.auth-page .auth-container{
 .auth-left .auth-logo .logo-pc {
   color: var(--accent);
   font-weight: 900;
-  font-size: 4.5rem;
+  font-size: 4rem;
   line-height: 1;
 }
 
 .auth-left .auth-logo .logo-pick {
   color: #000;
   font-weight: 900;
-  font-size: 4.5rem;
-  margin-left: -10px;
+  font-size: 4rem;
+  margin-left: -8px;
   display: inline-block;
   transform: skewX(-10deg);
   line-height: 1;
 }
 
-.auth-left h1{font-size:2.4rem;margin:-1rem 0 1rem;color:var(--text)}
+.auth-left h1{font-size:2.4rem;margin:-1rem 0 0.5rem;color:var(--text)}
 .auth-left p{margin:0 0 1.5rem;font-size:1rem;color:var(--muted)}
 .auth-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:1rem}
 .auth-benefits li{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)}
@@ -782,6 +783,42 @@ body.auth-page .auth-container{
 }
 .auth-right .auth-form input::placeholder{
   color:rgba(255, 255, 255, 0.5);
+}
+.password-field{
+  position:relative;
+  width:100%;
+  /* Space + size variables keep input text away from the toggle */
+  --pwd-toggle-size: 32px; /* touch target */
+  --pwd-toggle-gap: 12px;  /* distance from right edge */
+}
+.password-field input{
+  width:100%;
+  /* Reserve space for the button no matter the text length */
+  padding-right:calc(var(--pwd-toggle-size) + var(--pwd-toggle-gap) + 8px);
+}
+.password-toggle{
+  position:absolute;
+  top:50%;
+  right:var(--pwd-toggle-gap);
+  transform:translateY(-50%);
+  background:transparent;
+  border:none;
+  width:var(--pwd-toggle-size);
+  height:var(--pwd-toggle-size);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+}
+.password-toggle img{
+  width:20px;
+  height:20px;
+  display:block;
+  filter:invert(68%) sepia(11%) saturate(512%) hue-rotate(169deg) brightness(94%) contrast(89%);
+}
+.password-field.dark .password-toggle img{
+  filter:invert(95%) sepia(4%) saturate(231%) hue-rotate(179deg) brightness(101%) contrast(96%);
 }
 .auth-form input:focus{
   border-color:var(--accent);
@@ -912,10 +949,9 @@ body.auth-page .auth-container{
   height:22px;
   object-fit:contain;
   object-position:center;
+  margin-left: -2px;
   display:block;
-  margin:0;
   pointer-events:none;
-  filter:invert(28%) sepia(93%) saturate(3660%) hue-rotate(204deg) brightness(97%) contrast(106%);
 }
 .build-toggle-cart img{width:22px;height:22px;max-width:100%;max-height:100%;object-fit:contain;display:block;pointer-events:none;}
 .build-toggle-text{
@@ -968,6 +1004,10 @@ body.auth-page .auth-container{
 }
 .build-summary-inner{
   padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  max-height:70vh;
 }
 .build-summary-header{
   display:flex;
@@ -1016,6 +1056,9 @@ body.auth-page .auth-container{
   display:flex;
   flex-direction:column;
   gap:12px;
+  max-height:320px;
+  overflow-y:auto;
+  padding-right:4px;
 }
 .build-summary-list li{
   display:flex;
@@ -1026,7 +1069,7 @@ body.auth-page .auth-container{
   background:rgba(11,99,255,0.06);
   font-size:14px;
 }
-.build-summary-list span{
+.build-summary-list li > span:first-child{
   color:var(--muted);
   flex:0 0 110px;
 }
@@ -1040,6 +1083,18 @@ body.auth-page .auth-container{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+.summary-selection{
+  flex:1 1 auto;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.summary-price{
+  font-size:13px;
+  color:var(--text);
+  font-weight:600;
+}
 .summary-clear{
   background:transparent;
   border:none;
@@ -1051,12 +1106,61 @@ body.auth-page .auth-container{
   visibility:hidden;
   transition:opacity 0.15s ease,color 0.15s ease;
 }
-.build-summary-list strong.has-selection + .summary-clear{
+.build-summary-list li.has-selection .summary-clear{
   opacity:1;
   visibility:visible;
 }
+.build-summary-list li.has-selection .summary-price{
+  color:var(--accent);
+}
 .summary-clear:hover{
   color:var(--accent);
+}
+.build-summary-totals{
+  border-top:1px solid rgba(15,23,36,0.08);
+  padding-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.summary-total-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:15px;
+  color:var(--muted);
+}
+.summary-total-row strong{
+  font-size:16px;
+  color:var(--text);
+}
+.summary-grand-total{
+  font-size:18px;
+  font-weight:400;
+  color:var(--text);
+  border-top:1px dashed rgba(15,23,36,0.1);
+  padding-top:10px;
+}
+.summary-grand-total strong{
+  font-size:18px;
+  color:var(--accent);
+}
+.checkout-btn{
+  width:100%;
+  border-radius:12px;
+  text-align:center;
+  background:var(--accent);
+  color:#fff;
+  padding:12px 0;
+  font-size:16px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(11,99,255,0.25);
+  transition:background 0.2s ease,transform 0.2s ease;
+}
+.checkout-btn:hover{
+  background:var(--highlight-accent);
+  transform:translateY(-1px);
 }
 .build-summary-list strong.has-selection{
   color:var(--accent);
@@ -1270,11 +1374,12 @@ body.auth-page .auth-container{
 .theme-toggle .moon {
   width: 16px;
   height: 16px;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.8;
+  opacity: 0.95;
   transition: opacity 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
 }
 
 /* Sun icon (default light mode) */
@@ -1286,7 +1391,7 @@ body.auth-page .auth-container{
 /* Moon icon (default hidden) */
 .theme-toggle .moon {
   background-image: url("assets/moon.png");
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 /* When dark mode is ON */
@@ -1299,196 +1404,349 @@ body.auth-page .auth-container{
 }
 
 .theme-toggle input:checked + .slider .sun {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .theme-toggle input:checked + .slider .moon {
   opacity: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25)) brightness(0) invert(1);
 }
 
 /* ===============================
-   DARK MODE FIXES
-   =============================== */
-body.dark-mode {
-  background-color: var(--text); /* dark navy blue background */
-  color: var(--bg); /* light text */
-}
-
-/* Navbar */
-body.dark-mode .nav {
-  background-color: var(--highlight-accent);
-}
-
-body.dark-mode a,
-body.dark-mode p,
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode span,
-body.dark-mode li {
-  color: var(--bg);
-}
-
-/* Buttons */
-body.dark-mode .btn-primary {
-  background-color: var(--accent);
-  color: var(--bg);
-}
-
-body.dark-mode .btn-primary:hover {
-  background-color: var(--highlight-accent);
-}
-
-body.dark-mode .btn-secondary {
-  background-color: var(--card);
-  color: var(--text);
-}
-
-/* Cards and sections */
-body.dark-mode .card,
-body.dark-mode section,
-body.dark-mode .feature-card {
-  background-color: #1b2233;
-  color: var(--bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-/* Carousel / slider text and arrows */
-body.dark-mode .carousel-caption,
-body.dark-mode .carousel-control-prev-icon,
-body.dark-mode .carousel-control-next-icon {
-  filter: invert(1);
-}
-
-/* ===============================
-   DARK MODE STYLES
+   DARK MODE STYLES (Improved)
    =============================== */
 [data-theme="dark"] {
-  --bg: #0f1724;
-  --text: #f1f5f9;
-  --muted: #94a3b8;
-  --accent: #3b82f6;
-  --highlight-accent: #60a5fa;
-  --cursor-hover: #334155;
-  --card: #1e293b;
+  --bg: #181a1f; /* slightly lighter so black logo text is visible */
+  --card: #1e1e1e;
+  --text-primary: #eaeaea;
+  --text-secondary: #a0a0a0;
+  --border: #333333;
+  --accent: #0b63ff; /* ✅ main blue accent */
+  --highlight-accent: #1a6eff; /* ✅ lighter hover blue */
+  --muted: #9ca3af;
+  --logo-pick: #e5e7eb; /* Light gray for visibility on dark backgrounds */
 }
 
-/* Adjust general elements */
+
+/* Background and text */
 [data-theme="dark"] body {
   background: var(--bg);
-  color: var(--text);
+  color: var(--text-primary);
 }
 
+/* Header and logo visibility */
 [data-theme="dark"] .site-header {
-  background: rgba(15, 23, 36, 0.85);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  backdrop-filter: blur(8px);
+  background: rgba(24, 26, 31, 0.95);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
 }
 
+[data-theme="dark"] .logo-text span {
+  color: #ffffff !important; /* Ensure 'PICK' is visible on dark bg */
+}
+
+/* Make "Your Build" label blue in dark mode */
+[data-theme="dark"] .build-summary-label,
+[data-theme="dark"] .build-toggle-title {
+  color: var(--accent);
+}
+
+
+/* Navigation links */
 [data-theme="dark"] .nav a {
-  color: var(--muted);
+  color: var(--text-secondary);
 }
 [data-theme="dark"] .nav a:hover {
   color: var(--accent);
 }
 
+/* Cards / Featured Products */
 [data-theme="dark"] .card,
 [data-theme="dark"] .product-card,
 [data-theme="dark"] .featured-card {
   background: var(--card);
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  color: var(--text-primary);
 }
 
-[data-theme="dark"] .btn.prebuilt {
-  background: var(--card);
-  color: var(--text);
-  border-color: rgba(255,255,255,0.08);
-}
-[data-theme="dark"] .btn.prebuilt:hover {
-  background: var(--cursor-hover);
+/* Featured section background fix */
+[data-theme="dark"] .featured-products-section,
+[data-theme="dark"] #featured,
+[data-theme="dark"] .featured {
+  background: var(--bg);
+  color: var(--text-primary);
 }
 
-[data-theme="dark"] .btn.build,
-[data-theme="dark"] .btn.signup {
+/* Buttons */
+[data-theme="dark"] .btn.prebuilt,
+[data-theme="dark"] .btn.view {
   background: var(--accent);
+  color: #fff;
+  border: none;
 }
-[data-theme="dark"] .btn.build:hover,
-[data-theme="dark"] .btn.signup:hover {
+[data-theme="dark"] .btn.prebuilt:hover,
+[data-theme="dark"] .btn.view:hover {
   background: var(--highlight-accent);
 }
 
-/* Search input and placeholder */
-[data-theme="dark"] .product-search input {
-  background: var(--card) url("assets/search.png") no-repeat left 14px center;
-  background-size: 18px;
-  color: var(--text);
-  border-color: rgba(255,255,255,0.08);
-}
-[data-theme="dark"] .product-search input::placeholder {
-  color: var(--muted);
-}
-
-/* Footer and CTA */
-[data-theme="dark"] .site-footer {
-  color: var(--muted);
-}
+/* CTA Section ("Ready to Get Started?") */
 [data-theme="dark"] .cta-box {
-  background: linear-gradient(90deg, var(--accent), var(--highlight-accent));
-  box-shadow: 0 30px 60px rgba(59,130,246,0.25);
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: #f1f5f9;
+}
+[data-theme="dark"] .cta-box h2,
+[data-theme="dark"] .cta-box p {
+  color: #f8fafc; /* brighter for visibility */
+}
+[data-theme="dark"] .cta-box .btn {
+  background: #3b82f6;
+  color: white;
 }
 
-/* 🌙 Dark Mode Base Styles */
-body.dark-mode {
-  background-color: #0d1117;
-  color: #ffffff; /* Make all text white by default */
+/* Footer */
+[data-theme="dark"] footer,
+[data-theme="dark"] .site-footer {
+  background: #1b1d22;
+  color: var(--text-secondary);
 }
 
-/* Navbar and header text */
-body.dark-mode header,
-body.dark-mode nav a,
-body.dark-mode .logo-text,
-body.dark-mode .nav-links a {
-  color: #ffffff;
+/* 🌙 Fix: Product text visibility in dark mode */
+body.dark-mode .product-card h3,
+body.dark-mode .product-card .product-name,
+body.dark-mode .product-card .product-title,
+body.dark-mode .product-card p,
+body.dark-mode .product-card span,
+body.dark-mode .product-card .price,
+body.dark-mode .product-card .rating {
+  color: #eaeaea; /* bright, readable white */
 }
 
-/* Hero section and headings */
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode h5,
-body.dark-mode h6,
-body.dark-mode p {
-  color: #ffffff;
+body.dark-mode .product-card small {
+  color: #a0a0a0; /* secondary muted text */
 }
 
-/* Cards, feature boxes, etc. */
-body.dark-mode .feature-card,
-body.dark-mode .card {
-  background-color: #161b22;
-  color: #ffffff;
-  border-color: #2d333b;
+/* Ensure only product titles are forced white in dark mode */
+body.dark-mode .product-card h3,
+[data-theme="dark"] .product-card h3,
+body.dark-mode .product-info h3,
+[data-theme="dark"] .product-info h3 {
+  color: #ffffff !important;
 }
 
-/* Buttons — keep readable */
-body.dark-mode button,
-body.dark-mode .btn {
-  background-color: #007bff;
-  color: #ffffff;
+/* Ensure featured product titles are white in dark mode (only titles) */
+body.dark-mode .featured-info h3,
+[data-theme="dark"] .featured-info h3,
+body.dark-mode .featured-card h3,
+[data-theme="dark"] .featured-card h3 {
+  color: #ffffff !important;
+}
+/* keep featured price color unchanged */
+body.dark-mode .featured-info .price,
+[data-theme="dark"] .featured-info .price {
+  color: var(--accent) !important;
+}
+
+/* 🌙 Dark mode — make "View All Products" button blue with white text */
+[data-theme="dark"] .btn.view-all {
+  background-color: #3b82f6; /* bright blue */
+  color: #ffffff; /* white text */
   border: none;
 }
 
-/* Footer or smaller text sections */
-body.dark-mode footer,
-body.dark-mode .footer-text {
-  color: #cccccc;
+[data-theme="dark"] .btn.view-all:hover {
+  background-color: #60a5fa; /* lighter blue on hover */
+  color: #ffffff; /* keep text white */
 }
 
-/* Links hover effect */
-body.dark-mode a:hover {
-  color: #58a6ff;
+
+/* 🌙 Dark Mode for Login/Signup Page */
+[data-theme="dark"] .auth-left {
+  background: linear-gradient(135deg, #0f172a, #1e293b); /* keep the nice blue gradient */
+  color: #f1f5f9;
 }
+
+/* ✅ Only change the main heading to white */
+[data-theme="dark"] .auth-left h1 {
+  color: #ffffff;
+}
+
+/* ✅ Make paragraph gray instead of white */
+[data-theme="dark"] .auth-left p {
+  color: #94a3b8;
+}
+
+
+
+/* ✅ Right side dark theme — keep nice contrast */
+[data-theme="dark"] .auth-right {
+  background: linear-gradient(135deg, #0b1120, #1e293b); /* smooth deep blue gradient */
+  color: #f1f5f9;
+}
+
+/* Form + text elements inside */
+[data-theme="dark"] .auth-right input,
+[data-theme="dark"] .auth-right label,
+[data-theme="dark"] .auth-right p,
+[data-theme="dark"] .auth-right h2,
+[data-theme="dark"] .auth-right a {
+  color: #e2e8f0;
+}
+
+/* Inputs */
+[data-theme="dark"] .auth-right input {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .auth-right input::placeholder {
+  color: #94a3b8;
+}
+
+/* Buttons */
+[data-theme="dark"] .auth-btn {
+  background-color: #0b63ff;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .auth-btn:hover {
+  background-color: #0c3375;
+}
+
+/* Social buttons */
+[data-theme="dark"] .social-login button {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+}
+
+[data-theme="dark"] .social-login button:hover {
+  background-color: #1e293b;
+}
+
+/* 🌙 Dark Mode - Hamburger Menu */
+[data-theme="dark"] #menu-toggle {
+  background-color: #111827; /* match dark container */
+  color: #f1f5f9; /* icon color */
+  border: 1px solid #1e293b; /* subtle border to match theme */
+}
+
+/* Optional: hover state for nice effect */
+[data-theme="dark"] #menu-toggle:hover {
+  background-color: #1e293b;
+}
+
+/* 🌙 Dark Mode — Mobile Drawer */
+[data-theme="dark"] #mobile-drawer {
+  background-color: #111827; /* Matches dark background */
+  color: #f1f5f9;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Drawer links (Home, Products, PC Builder, etc.) */
+[data-theme="dark"] #mobile-drawer a {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] #mobile-drawer a:hover {
+  color: #60a5fa; /* Soft blue hover */
+}
+
+/* Drawer actions (Log In / Sign Up section) */
+[data-theme="dark"] .drawer-actions {
+  background-color: #1e293b;
+  border-top: 1px solid #334155;
+  padding: 1rem;
+}
+
+/* Log In link */
+[data-theme="dark"] .drawer-actions .login {
+  color: #e2e8f0;
+}
+
+/* Sign Up button */
+[data-theme="dark"] .drawer-actions .signup {
+  background-color: #2563eb;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+}
+
+[data-theme="dark"] .drawer-actions .signup:hover {
+  background-color: #1d4ed8;
+}
+
+/* Default light theme */
+.search-bar input {
+  background-color: #fff;
+  color: #000;
+}
+
+/* 🌙 Dark Mode — Search Bar (Match Tabs Color) */
+[data-theme="dark"] .product-search input {
+  background-color: #1e1e1e; /* same gray as tabs */
+  color: #f1f5f9; /* white text */
+  border: 1px solid #333333; /* subtle dark border */
+}
+
+[data-theme="dark"] .product-search input::placeholder {
+  color: #9ca3af; /* soft gray placeholder */
+}
+
+[data-theme="dark"] .product-search input:focus {
+  border-color: #3b82f6; /* slight blue highlight on focus only */
+  outline: none;
+  box-shadow: none; /* no glow, clean look */
+}
+
+/* 🌙 Dark Mode — Tabs */
+[data-theme="dark"] .product-tabs .tab {
+  background-color: #1e1e1e; /* same gray as other sections */
+  color: #e5e7eb; /* light gray text */
+  border: none;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .product-tabs .tab:hover {
+  background-color: #2563eb; /* bright blue on hover */
+  color: #ffffff;
+}
+
+/* ✅ Active tab in dark mode */
+[data-theme="dark"] .product-tabs .tab.active {
+  background-color: #2563eb; /* bright blue like Add to Cart */
+  color: #ffffff;
+}
+
+/* Optional: smooth hover effect in light mode too */
+.product-tabs .tab {
+  transition: all 0.2s ease;
+}
+
+/* Light theme */
+.build-summary {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Dark mode */
+body.dark .build-summary {
+  background-color: #1c1c1c; /* Same tone as product cards */
+  color: #fff;
+  border: 1px solid #2e2e2e;
+}
+
+/* "Your Build" title and section headers */
+body.dark .build-summary h3,
+body.dark .build-summary p {
+  color: #fff;
+}
+
+
 
