@@ -212,3 +212,22 @@ window.addEventListener('load', () => {
 })();
 
 })();
+
+(function () {
+  // Find buttons/links whose visible text includes "checkout" (case-insensitive)
+  const candidates = Array.from(document.querySelectorAll('a,button'))
+    .filter(el => el.textContent && /checkout/i.test(el.textContent.trim()));
+
+  if (candidates.length === 0) return;
+
+  candidates.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      // prevent default form submission or link navigation so we can route to checkout page
+      e.preventDefault();
+      // navigate to checkout page
+      window.location.href = 'checkout.html';
+    });
+  });
+})();
+
+
