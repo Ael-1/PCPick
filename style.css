@@ -2185,19 +2185,37 @@ body.dark .build-summary p {
   filter: none !important;
 }
 
+/* ===== Checkout headings dark-mode fixes (append only) ===== */
+/* Make the main Checkout title visible (white) in dark mode */
+[data-theme="dark"] .checkout-title,
+body.dark-mode .checkout-title,
+[data-theme="dark"] .checkout-container h1,
+body.dark-mode .checkout-container h1 {
+  color: #ffffff !important;
+}
 
+/* Make Order Summary heading match the billing/section accent in dark mode */
+[data-theme="dark"] .checkout-summary h2,
+body.dark-mode .checkout-summary h2 {
+  color: var(--accent) !important;
+  font-weight: 700;
+}
 
+/* Ensure left-side section headings (Billing / Shipping) remain accent colored in dark mode */
+[data-theme="dark"] .checkout-section h2,
+body.dark-mode .checkout-section h2 {
+  color: var(--accent) !important;
+  font-weight: 700;
+}
 
-/* ---------- CHECKOUT LAYOUT (desktop: two columns, mobile: single column) ---------- */
+/* ---------- CHECKOUT LAYOUT ---------- */
 
-/* wrapper that centers the whole checkout area */
 .checkout-container {
-  max-width: 1200px;       /* same max width as the rest of the site */
-  margin: 6rem auto 2rem;  /* keep header spacing */
+  max-width: 1200px;
+  margin: 6rem auto 2rem;
   padding: 0 20px;
 }
 
-/* page title + back link area (keeps things full width inside container) */
 .back-link {
   display: inline-block;
   margin-bottom: 1rem;
@@ -2205,7 +2223,9 @@ body.dark .build-summary p {
   text-decoration: none;
   font-weight: 500;
 }
-.back-link:hover { text-decoration: underline; }
+.back-link:hover {
+  text-decoration: underline;
+}
 
 .checkout-title {
   font-size: 1.9rem;
@@ -2214,74 +2234,91 @@ body.dark .build-summary p {
   margin: 0 0 1.25rem;
 }
 
-/* core 2-column layout: form (fluid) | summary (fixed width) */
+/* === TWO-COLUMN CHECKOUT LAYOUT === */
 .checkout-layout {
   display: grid;
-  grid-template-columns: 1fr 360px; /* left is flexible, right is fixed summary */
-  gap: 32px;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
   align-items: start;
 }
 
-/* left column: stacked form sections */
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+  .checkout-summary {
+    margin-top: 2rem;
+  }
+}
+
+/* left column */
 .checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 28px;
 }
 
-/* each section card */
+/* === SECTION BOXES === */
 .checkout-section {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
 }
 
-/* section heading */
+.checkout-section:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
 .checkout-section h2 {
   font-size: 1.05rem;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   color: var(--accent);
   font-weight: 700;
 }
 
-/* ====== FORM SPACING & INPUTS ====== */
-.form-group {
+/* ===== FORM FIELDS ===== */
+.form-grid {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.25rem; /* more breathing room between fields */
+  margin-bottom: 1.75rem;
 }
 
-.form-group label {
+.form-grid label {
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 0.4rem; /* space between label and input */
+  margin-bottom: 0.75rem;
+  display: block;
 }
 
-.form-row {
-  display: flex;
-  gap: 1rem;
+.form-grid.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
 }
 
+/* ===== INPUT BOXES ===== */
 input[type="text"],
 input[type="email"],
 input[type="number"],
 select,
 textarea {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: #f9fafb; /* light background */
+  border: 1.5px solid #d1d5db; /* subtle outline */
   border-radius: 8px;
-  padding: 0.9rem 0.9rem; /* taller and more comfortable */
+  padding: 0.7rem 1rem;
   font-size: 0.95rem;
   color: var(--text-primary);
   transition: all 0.2s ease;
+  line-height: 1.4;
 }
 
 input::placeholder {
-  color: var(--text-secondary);
+  color: #9ca3af; /* grayish placeholder */
 }
 
 input:focus,
@@ -2289,70 +2326,67 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  background: var(--card);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  background: #ffffff;
 }
 
-
-/* right column: order summary card */
+/* === RIGHT COLUMN: SUMMARY === */
 .checkout-summary {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
   height: fit-content;
 }
 
-/* summary heading */
 .checkout-summary h2 {
   font-size: 1.05rem;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   color: var(--text);
   font-weight: 700;
 }
 
-/* empty placeholder styling (so visually matches screenshot even when blank) */
-.checkout-summary .empty-placeholder {
+.checkout-summary p {
   color: var(--muted);
-  padding: 12px;
-  border-radius: 8px;
-  background: rgba(15,23,36,0.02);
   font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-/* summary item rows */
+/* === SUMMARY ITEMS === */
 .summary-item {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: var(--muted);
   font-size: 0.95rem;
 }
+
 .summary-item.total {
-  font-weight:700;
+  font-weight: 700;
   color: var(--accent);
-  margin-top: 8px;
+  margin-top: 10px;
   border-top: 1px solid var(--border);
-  padding-top: 12px;
+  padding-top: 14px;
 }
 
-/* Place Order button (left column bottom) */
+/* === BUTTON === */
 .place-order,
 .btn-place {
-  display:block;
-  width:100%;
+  display: block;
+  width: 100%;
   background: var(--accent);
-  color:#fff;
-  border:none;
-  padding: 12px 14px;
+  color: #fff;
+  border: none;
+  padding: 14px 16px;
   border-radius: 10px;
-  font-weight:700;
-  cursor:pointer;
-  transition: background .12s ease, transform .08s ease;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.08s ease;
 }
+
 .place-order:hover,
 .btn-place:hover { background: var(--highlight-accent); transform: translateY(-2px); }
 
