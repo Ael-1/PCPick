@@ -162,54 +162,71 @@ window.addEventListener('load', () => {
 
 (function () {
   const themeSwitch = document.getElementById('theme-switch');
-  const root = document.documentElement;
-
-  function applyTheme(theme) {
-    if (theme === 'dark') {
-      root.classList.add('dark-mode');
-      root.setAttribute('data-theme', 'dark');
+  const applyTheme = (isDark) => {
+    document.body.classList.toggle('dark-mode', isDark);
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
     } else {
-      root.classList.remove('dark-mode');
-      root.removeAttribute('data-theme');
+      document.documentElement.removeAttribute('data-theme');
     }
-  }
+  };
 
-(function () {
-  const themeSwitch = document.getElementById('theme-switch');
-  const root = document.documentElement;
-
-  function applyTheme(theme) {
-    if (theme === 'dark') {
-      root.classList.add('dark-mode');
-      root.setAttribute('data-theme', 'dark');
-    } else {
-      root.classList.remove('dark-mode');
-      root.removeAttribute('data-theme');
-    }
-  }
-
-  // ✅ Default to light mode, but remember user choice across pages
-  try {
-    const saved = localStorage.getItem('pcpick-theme'); // 'dark' or 'light' or null
-    const initial = saved ? saved : 'light'; // default to light if nothing saved
-    applyTheme(initial);
-    if (themeSwitch) themeSwitch.checked = (initial === 'dark');
-  } catch (e) {
-    // Fallback: just light
-    applyTheme('light');
-    if (themeSwitch) themeSwitch.checked = false;
-  }
-
-  // ✅ Toggle and save
+  const saved = localStorage.getItem('theme') === 'dark';
+  applyTheme(saved);
   if (themeSwitch) {
-    themeSwitch.addEventListener('change', (e) => {
-      const theme = e.target.checked ? 'dark' : 'light';
-      try { localStorage.setItem('pcpick-theme', theme); } catch (err) {}
-      applyTheme(theme);
-    });
+    themeSwitch.checked = saved;
   }
+
+  themeSwitch?.addEventListener('change', () => {
+    const isDark = themeSwitch.checked;
+    applyTheme(isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
 })();
 
+(() => {
+  const toggles = document.querySelectorAll('.password-toggle[data-password-toggle]');
+  if (!toggles.length) return;
+
+  const updateIcon = (btn, input, icons) => {
+    const img = btn.querySelector('img');
+    if (!img) return;
+    if (input.type === 'password') {
+      img.src = icons.hidden;
+      btn.setAttribute('aria-label', 'Show password');
+    } else {
+      img.src = icons.visible;
+      btn.setAttribute('aria-label', 'Hide password');
+    }
+  };
+
+  toggles.forEach((btn) => {
+    const selector = btn.getAttribute('data-password-toggle');
+    const input = selector ? document.querySelector(selector) : null;
+    if (!input) return;
+
+    const icons = {
+      visible: btn.dataset.visibleIcon || 'assets/visible.png',
+      hidden: btn.dataset.hiddenIcon || 'assets/hidden.png',
+    };
+
+    btn.addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
+      updateIcon(btn, input, icons);
+    });
+
+    const updateThemeClass = () => {
+      const isDark = document.body.classList.contains('dark-mode');
+      btn.closest('.password-field')?.classList.toggle('dark', isDark);
+      btn.closest('.password-field')?.classList.toggle('light', !isDark);
+    };
+
+    updateThemeClass();
+    const observer = new MutationObserver(updateThemeClass);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    updateIcon(btn, input, icons);
+  });
 })();
 
 (function () {
