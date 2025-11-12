@@ -160,7 +160,7 @@ window.addEventListener('load', () => {
   resetSlideInterval();
 });
 
-(() => {
+(function () {
   const themeSwitch = document.getElementById('theme-switch');
   const applyTheme = (isDark) => {
     document.body.classList.toggle('dark-mode', isDark);

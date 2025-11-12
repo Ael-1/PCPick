@@ -8,6 +8,7 @@
   --card:#ffffff;
   --radius:18px;
   --container:1440px;
+  --logo-pick: #000; /* Black for light mode */
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -161,10 +162,11 @@ body.auth-page{
 
 /* --- Featured Section --- */
 .featured-section {
-  background: #fafbfc;
+  background: var(--bg);
   padding: 48px 0 32px 0;
   margin-bottom: 32px;
 }
+
 .featured-header {
   display: flex;
   justify-content: space-between;
@@ -405,14 +407,6 @@ body.auth-page{
   flex-wrap: wrap;
 }
 
-.tab:hover { transform: translateY(-2px); color:var(--text); }
-
-.tab.active {
-  background: linear-gradient(90deg,var(--accent),#0665d9);
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(11,99,255,0.12);
-}
-
 .category-tabs {
   display: flex;
   gap: 0.5rem;
@@ -456,6 +450,37 @@ body.auth-page{
 .product-card.is-selected{
   border:2px solid var(--accent);
   box-shadow:0 24px 55px rgba(11,99,255,0.18);
+}
+
+/* Dark-mode: ensure selected product keeps blue highlight and selected button is dark bg + white text */
+[data-theme="dark"] .product-card.is-selected {
+  border: 2px solid var(--accent) !important;
+  box-shadow: 0 24px 55px rgba(11,99,255,0.18) !important;
+  position: relative;
+}
+
+/* Add a subtle inner blue stroke (keeps corners visible on dark backgrounds) */
+[data-theme="dark"] .product-card.is-selected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(11,99,255,0.12);
+}
+
+/* Selected "Add to cart" / Selected button: match card bg and show white text */
+[data-theme="dark"] .product-card.is-selected .add-cart-btn.is-selected {
+  background: var(--card) !important; /* same dark card background */
+  color: #ffffff !important;           /* white label */
+  border: 2px solid var(--accent) !important;
+  box-shadow: none !important;
+}
+
+/* Keep hover behaviour subtle but not invert colors */
+[data-theme="dark"] .product-card.is-selected .add-cart-btn.is-selected:hover {
+  background: color-mix(in srgb, var(--card) 90%, black 10%) !important;
+  filter: none !important;
 }
 
 .product-card img {
@@ -559,6 +584,14 @@ body.auth-page{
   flex-direction: column;
   gap: 12px;
 }
+
+/* Rounded corners for the drawer actions box (light + dark) */
+.drawer-actions,
+[data-theme="dark"] .drawer-actions {
+  border-radius: 12px;
+  overflow: hidden; /* prevent children spilling outside the radius */
+}
+
 .drawer-overlay {
   position: fixed;
   inset: 0;
@@ -699,7 +732,9 @@ body.auth-page .auth-container{
   margin-left: -8px;
   display: inline-block;
   transform: skewX(-10deg);
+  display: inline-block;
   line-height: 1;
+  font-weight: 900;
 }
 
 .auth-left h1{font-size:2.4rem;margin:-1rem 0 0.5rem;color:var(--text)}
@@ -1167,6 +1202,20 @@ body.auth-page .auth-container{
   font-style:normal;
 }
 
+/* Make "Not selected" (build summary values) visible in dark mode */
+[data-theme="dark"] .build-summary-list strong:not(.has-selection),
+[data-theme="dark"] .build-summary-list .not-selected,
+body.dark-mode .build-summary-list strong:not(.has-selection) {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Keep selected values highlighted with accent */
+[data-theme="dark"] .build-summary-list strong.has-selection {
+  color: var(--accent) !important;
+  font-style: normal;
+}
+
 .build-toast{
   position:fixed;
   right:24px;
@@ -1321,6 +1370,36 @@ body.auth-page .auth-container{
   }
 }
 
+/* ===== wordmark: remove space and increase size on auth pages ===== */
+/* remove any gap between parts globally (safe override) */
+.logo-wordmark { gap: 0 !important; }
+
+/* keep default site size for header/navigation */
+.logo-pc, .logo-pick {
+  font-size: 28px !important;
+  line-height: 1;
+}
+
+/* AUTH page: make both parts large and flush together */
+.auth-left .logo-wordmark,
+.auth-left .auth-logo { gap: 0 !important; }
+
+.auth-left .auth-logo .logo-pc,
+.auth-left .auth-logo .logo-pick {
+  font-size: 5rem !important;      /* bigger size for auth view */
+  line-height: 1 !important;
+  margin-left: 0 !important;       /* remove added spacing */
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0;
+}
+
+/* if you want PICK slightly tucked under PC (no visible gap) */
+.auth-left .auth-logo .logo-pick {
+  transform: skewX(-10deg);
+  margin-left: -6px !important;    /* reduce horizontal gap to zero */
+}
+
 /* ===============================
    THEME TOGGLE (Custom Icons - PNG)
    =============================== */
@@ -1413,6 +1492,64 @@ body.auth-page .auth-container{
 }
 
 /* ===============================
+<<<<<<< HEAD
+=======
+   DARK MODE FIXES
+   =============================== */
+body.dark-mode {
+  background-color: var(--text); /* dark navy blue background */
+  color: var(--bg); /* light text */
+}
+
+/* Navbar */
+body.dark-mode .nav {
+  background-color: var(--highlight-accent);
+}
+
+body.dark-mode a,
+body.dark-mode p,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode span,
+body.dark-mode li {
+  color: var(--bg);
+}
+
+/* Buttons */
+body.dark-mode .btn-primary {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+body.dark-mode .btn-primary:hover {
+  background-color: var(--highlight-accent);
+}
+
+body.dark-mode .btn-secondary {
+  background-color: var(--card);
+  color: var(--text);
+}
+
+/* Cards and sections */
+body.dark-mode .card,
+body.dark-mode section,
+body.dark-mode .feature-card {
+  background-color: #1b2233;
+  color: var(--bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Carousel / slider text and arrows */
+body.dark-mode .carousel-caption,
+body.dark-mode .carousel-control-prev-icon,
+body.dark-mode .carousel-control-next-icon {
+  filter: invert(1);
+}
+
+/* ===============================
+>>>>>>> 4edcfe5b7c059a29558ca88b9745ae8f9162ca4c
    DARK MODE STYLES (Improved)
    =============================== */
 [data-theme="dark"] {
@@ -1748,5 +1885,196 @@ body.dark .build-summary p {
   color: #fff;
 }
 
+/* Keep "Your Build" toggle text white in dark mode */
+[data-theme="dark"] .build-toggle,
+[data-theme="dark"] .build-toggle .build-toggle-text,
+[data-theme="dark"] .build-toggle .build-toggle-title,
+[data-theme="dark"] .build-toggle .build-toggle-count {
+  color: #ffffff !important;
+}
+
+/* Ensure the cart icon contrast stays readable (remove color inversion if applied) */
+[data-theme="dark"] .build-toggle-cart img {
+  filter: none !important;
+}
 
 
+
+
+/* ---------- CHECKOUT LAYOUT (desktop: two columns, mobile: single column) ---------- */
+
+/* wrapper that centers the whole checkout area */
+.checkout-container {
+  max-width: 1200px;       /* same max width as the rest of the site */
+  margin: 6rem auto 2rem;  /* keep header spacing */
+  padding: 0 20px;
+}
+
+/* page title + back link area (keeps things full width inside container) */
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.back-link:hover { text-decoration: underline; }
+
+.checkout-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 1.25rem;
+}
+
+/* core 2-column layout: form (fluid) | summary (fixed width) */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px; /* left is flexible, right is fixed summary */
+  gap: 32px;
+  align-items: start;
+}
+
+/* left column: stacked form sections */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* each section card */
+.checkout-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* section heading */
+.checkout-section h2 {
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ====== FORM SPACING & INPUTS ====== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem; /* more breathing room between fields */
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem; /* space between label and input */
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 0.9rem; /* taller and more comfortable */
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+input::placeholder {
+  color: var(--text-secondary);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  background: var(--card);
+}
+
+
+/* right column: order summary card */
+.checkout-summary {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  height: fit-content;
+}
+
+/* summary heading */
+.checkout-summary h2 {
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* empty placeholder styling (so visually matches screenshot even when blank) */
+.checkout-summary .empty-placeholder {
+  color: var(--muted);
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(15,23,36,0.02);
+  font-size: 0.95rem;
+}
+
+/* summary item rows */
+.summary-item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.summary-item.total {
+  font-weight:700;
+  color: var(--accent);
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+/* Place Order button (left column bottom) */
+.place-order,
+.btn-place {
+  display:block;
+  width:100%;
+  background: var(--accent);
+  color:#fff;
+  border:none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-weight:700;
+  cursor:pointer;
+  transition: background .12s ease, transform .08s ease;
+}
+.place-order:hover,
+.btn-place:hover { background: var(--highlight-accent); transform: translateY(-2px); }
+
+/* small helper list under summary */
+.checkout-benefits { margin-top: 14px; color: var(--muted); font-size: 0.95rem; list-style:none; padding-left:0; }
+.checkout-benefits li { margin-bottom:8px; }
+
+/* Responsive: collapse to single column on narrow screens */
+@media (max-width: 900px) {
+  .checkout-layout { grid-template-columns: 1fr; gap: 16px; }
+  .checkout-summary { order: -1; } /* show summary above form on small screens (optional) */
+}
