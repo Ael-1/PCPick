@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PCPick — Products</title>
+  <title>PCPick � Products</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="assets/icon.ico">
@@ -41,6 +41,7 @@
             <span class="moon"></span>
           </span>
         </label>
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
     <nav class="drawer-nav" id="mobile-drawer" aria-label="Mobile navigation" aria-hidden="true">
@@ -89,7 +90,7 @@
       </div>
 
       <!-- CPU PRODUCTS -->
-      <div id="cpu-section" class="product-grid">
+      <div id="cpu-section" class="product-grid is-active">
         <div class="product-card">
           <img src="assets/Ryzen9_7950X.jpg" alt="Ryzen 9 7950X">
           <div class="product-info">
@@ -114,6 +115,104 @@
               <li>LGA1700 Socket</li>
             </ul>
             <p class="price">$589</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
+            <button class="add-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
+          <div class="product-info">
+            <h3>AMD Ryzen 7 7800X3D</h3>
+            <ul>
+              <li>8 Cores / 16 Threads</li>
+              <li>5.0 GHz Boost</li>
+              <li>3D V-Cache</li>
+            </ul>
+            <p class="price">$449</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -179,7 +278,7 @@
       </div>
 
       <!-- RAM PRODUCTS (hidden by default) -->
-      <div id="memory-section" class="product-grid" style="display:none;">
+      <div id="memory-section" class="product-grid">
         <!-- RAM Product 1 -->
         <div class="product-card">
           <img src="assets/vengeance-rgb-32gb.jpg" alt="Corsair Vengeance RGB 32GB">
@@ -227,7 +326,7 @@
       </div>
 
       <!-- MOTHERBOARD PRODUCTS -->
-      <div id="motherboard-section" class="product-grid" style="display:none;">
+      <div id="motherboard-section" class="product-grid">
         <!-- Motherboard 1 -->
         <div class="product-card">
           <img src="assets/rog-crosshair-x670e.jpg" alt="ASUS ROG Crosshair X670E">
@@ -275,7 +374,7 @@
       </div>
 
       <!-- STORAGE PRODUCTS -->
-      <div id="storage-section" class="product-grid" style="display:none;">
+      <div id="storage-section" class="product-grid">
         <!-- Storage 1 -->
         <div class="product-card">
           <img src="assets/990-pro-2tb.jpg" alt="Samsung 990 PRO 2TB">
@@ -323,7 +422,7 @@
       </div>
 
       <!-- PSU PRODUCTS -->
-      <div id="psu-section" class="product-grid" style="display:none;">
+      <div id="psu-section" class="product-grid">
         <!-- PSU 1 -->
         <div class="product-card">
           <img src="assets/corsair-rm1000x.jpg" alt="Corsair RM1000x">
@@ -371,7 +470,7 @@
       </div>
 
       <!-- CASE PRODUCTS  -->
-      <div id="case-section" class="product-grid" style="display:none;">
+      <div id="case-section" class="product-grid">
         <!-- Case 1 -->
         <div class="product-card">
           <img src="assets/corsair-5000d-airflow.webp" alt="Corsair 5000D Airflow">
@@ -419,7 +518,7 @@
       </div>
 
       <!-- COOLING PRODUCTS -->
-      <div id="cooling-section" class="product-grid" style="display:none;">
+      <div id="cooling-section" class="product-grid">
         <!-- Cooling 1 -->
         <div class="product-card">
           <img src="assets/nzxt-kraken-x73.webp" alt="NZXT Kraken X73">
@@ -468,7 +567,6 @@
     </section>
   </main>
   
-
   <footer class="site-footer">
     <div class="container">
       <p>© 2025 PCPick — All rights reserved.</p>
@@ -477,24 +575,52 @@
 
   <script src="script.js"></script>
   <script>
-    const cpuBtn = document.getElementById("cpu-btn");
-    const gpuBtn = document.getElementById("gpu-btn");
-    const cpuSection = document.getElementById("cpu-section");
-    const gpuSection = document.getElementById("gpu-section");
+    const productTabs = document.querySelectorAll(".products .product-tabs .tab");
+    const productSections = document.querySelectorAll(".products .product-grid");
 
-    cpuBtn.addEventListener("click", () => {
-      cpuSection.style.display = "grid";
-      gpuSection.style.display = "none";
-      cpuBtn.classList.add("active");
-      gpuBtn.classList.remove("active");
-    });
+    if (productTabs.length && productSections.length) {
+      const showProductSection = (targetId) => {
+        productSections.forEach((section) => {
+          section.style.display = section.id === targetId ? "grid" : "none";
+        });
+      };
 
-    gpuBtn.addEventListener("click", () => {
-      gpuSection.style.display = "grid";
-      cpuSection.style.display = "none";
-      gpuBtn.classList.add("active");
-      cpuBtn.classList.remove("active");
+      productTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          productTabs.forEach((btn) => btn.classList.remove("active"));
+          tab.classList.add("active");
+          showProductSection(tab.dataset.cat);
+        });
+      });
+
+      showProductSection(productTabs[0]?.dataset.cat ?? productSections[0]?.id);
+    }
+  </script>
+  <script>
+    (function(){
+      const toast = document.getElementById("product-toast");
+      let tid;
+      function show(msg){ 
+        if(!toast) return; 
+        toast.textContent = msg; 
+        toast.setAttribute("aria-hidden","false"); 
+        toast.classList.add("is-visible"); clearTimeout(tid); 
+        tid=setTimeout(()=>{toast.classList.remove("is-visible"); 
+        toast.setAttribute("aria-hidden","true");
+      },
+      2000);}
+      document.querySelectorAll(".add-cart-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          btn.textContent = "Added";
+          btn.disabled = true;
+          btn.setAttribute("aria-pressed","true");
+          show("Added to cart");
+        });
+      });
     });
   </script>
 </body>
 </html>
+
+
+

@@ -42,6 +42,7 @@
             <span class="moon"></span>
           </span>
         </label>
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
     <nav class="drawer-nav" id="mobile-drawer" aria-label="Mobile navigation" aria-hidden="true">
@@ -171,25 +172,5 @@
   </footer>
 
   <script src="script.js"></script>
-  <script>
-    const cpuBtn = document.getElementById("cpu-btn");
-    const gpuBtn = document.getElementById("gpu-btn");
-    const cpuSection = document.getElementById("cpu-section");
-    const gpuSection = document.getElementById("gpu-section");
-
-    cpuBtn.addEventListener("click", () => {
-      cpuSection.style.display = "grid";
-      gpuSection.style.display = "none";
-      cpuBtn.classList.add("active");
-      gpuBtn.classList.remove("active");
-    });
-
-    gpuBtn.addEventListener("click", () => {
-      gpuSection.style.display = "grid";
-      cpuSection.style.display = "none";
-      gpuBtn.classList.add("active");
-      cpuBtn.classList.remove("active");
-    });
-  </script>
 </body>
 </html>
