@@ -662,10 +662,11 @@ body.auth-page .auth-container{
   display:flex;
   width:min(1200px,94vw);
   height:min(780px,92vh);
-  background:#fff;
+  background:transparent;
   border-radius:32px;
   overflow:hidden;
-  box-shadow:0 40px 120px rgba(11,21,38,0.15);
+  box-shadow:0 40px 120px rgba(6, 12, 24, 0.5);
+  border:1px solid rgba(255,255,255,0.04);
   position: relative;
   z-index: 10;
 }
@@ -703,35 +704,40 @@ body.auth-page .auth-container{
 .auth-logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-weight: 900;
   letter-spacing: -1px;
+  gap: 10px;
 }
 
 .auth-logo .logo-icon {
-  width: 92px;
-  height: 92px;
+  width: 72px;
+  height: 72px;
   display: block;
   object-fit: contain;
   flex-shrink: 0;
 }
 
 .auth-left .auth-logo .logo-pc {
-  font-size: 4.5rem;       /* keep large PC size for auth */
+  color: var(--accent);
+  font-weight: 900;
+  font-size: 4rem;
   line-height: 1;
 }
 
 .auth-left .auth-logo .logo-pick {
-  font-size: 4.5rem;       /* match PICK to PC so they look balanced */
-  margin-left: 4px;        /* small gap to tuck PICK closer */
+  color: #000;
+  font-weight: 900;
+  font-size: 4rem;
+  margin-left: -8px;
+  display: inline-block;
   transform: skewX(-10deg);
   display: inline-block;
   line-height: 1;
   font-weight: 900;
 }
 
-.auth-left h1{font-size:2.4rem;margin:-1rem 0 1rem;color:var(--text)}
+.auth-left h1{font-size:2.4rem;margin:-1rem 0 0.5rem;color:var(--text)}
 .auth-left p{margin:0 0 1.5rem;font-size:1rem;color:var(--muted)}
 .auth-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:1rem}
 .auth-benefits li{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)}
@@ -812,6 +818,42 @@ body.auth-page .auth-container{
 }
 .auth-right .auth-form input::placeholder{
   color:rgba(255, 255, 255, 0.5);
+}
+.password-field{
+  position:relative;
+  width:100%;
+  /* Space + size variables keep input text away from the toggle */
+  --pwd-toggle-size: 32px; /* touch target */
+  --pwd-toggle-gap: 12px;  /* distance from right edge */
+}
+.password-field input{
+  width:100%;
+  /* Reserve space for the button no matter the text length */
+  padding-right:calc(var(--pwd-toggle-size) + var(--pwd-toggle-gap) + 8px);
+}
+.password-toggle{
+  position:absolute;
+  top:50%;
+  right:var(--pwd-toggle-gap);
+  transform:translateY(-50%);
+  background:transparent;
+  border:none;
+  width:var(--pwd-toggle-size);
+  height:var(--pwd-toggle-size);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+}
+.password-toggle img{
+  width:20px;
+  height:20px;
+  display:block;
+  filter:invert(68%) sepia(11%) saturate(512%) hue-rotate(169deg) brightness(94%) contrast(89%);
+}
+.password-field.dark .password-toggle img{
+  filter:invert(95%) sepia(4%) saturate(231%) hue-rotate(179deg) brightness(101%) contrast(96%);
 }
 .auth-form input:focus{
   border-color:var(--accent);
@@ -942,10 +984,9 @@ body.auth-page .auth-container{
   height:22px;
   object-fit:contain;
   object-position:center;
+  margin-left: -2px;
   display:block;
-  margin:0;
   pointer-events:none;
-  filter:invert(28%) sepia(93%) saturate(3660%) hue-rotate(204deg) brightness(97%) contrast(106%);
 }
 .build-toggle-cart img{width:22px;height:22px;max-width:100%;max-height:100%;object-fit:contain;display:block;pointer-events:none;}
 .build-toggle-text{
@@ -998,6 +1039,10 @@ body.auth-page .auth-container{
 }
 .build-summary-inner{
   padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  max-height:70vh;
 }
 .build-summary-header{
   display:flex;
@@ -1046,6 +1091,9 @@ body.auth-page .auth-container{
   display:flex;
   flex-direction:column;
   gap:12px;
+  max-height:320px;
+  overflow-y:auto;
+  padding-right:4px;
 }
 .build-summary-list li{
   display:flex;
@@ -1056,7 +1104,7 @@ body.auth-page .auth-container{
   background:rgba(11,99,255,0.06);
   font-size:14px;
 }
-.build-summary-list span{
+.build-summary-list li > span:first-child{
   color:var(--muted);
   flex:0 0 110px;
 }
@@ -1070,6 +1118,18 @@ body.auth-page .auth-container{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+.summary-selection{
+  flex:1 1 auto;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.summary-price{
+  font-size:13px;
+  color:var(--text);
+  font-weight:600;
+}
 .summary-clear{
   background:transparent;
   border:none;
@@ -1081,12 +1141,61 @@ body.auth-page .auth-container{
   visibility:hidden;
   transition:opacity 0.15s ease,color 0.15s ease;
 }
-.build-summary-list strong.has-selection + .summary-clear{
+.build-summary-list li.has-selection .summary-clear{
   opacity:1;
   visibility:visible;
 }
+.build-summary-list li.has-selection .summary-price{
+  color:var(--accent);
+}
 .summary-clear:hover{
   color:var(--accent);
+}
+.build-summary-totals{
+  border-top:1px solid rgba(15,23,36,0.08);
+  padding-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.summary-total-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:15px;
+  color:var(--muted);
+}
+.summary-total-row strong{
+  font-size:16px;
+  color:var(--text);
+}
+.summary-grand-total{
+  font-size:18px;
+  font-weight:400;
+  color:var(--text);
+  border-top:1px dashed rgba(15,23,36,0.1);
+  padding-top:10px;
+}
+.summary-grand-total strong{
+  font-size:18px;
+  color:var(--accent);
+}
+.checkout-btn{
+  width:100%;
+  border-radius:12px;
+  text-align:center;
+  background:var(--accent);
+  color:#fff;
+  padding:12px 0;
+  font-size:16px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(11,99,255,0.25);
+  transition:background 0.2s ease,transform 0.2s ease;
+}
+.checkout-btn:hover{
+  background:var(--highlight-accent);
+  transform:translateY(-1px);
 }
 .build-summary-list strong.has-selection{
   color:var(--accent);
@@ -1344,11 +1453,12 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 .theme-toggle .moon {
   width: 16px;
   height: 16px;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.8;
+  opacity: 0.95;
   transition: opacity 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
 }
 
 /* Sun icon (default light mode) */
@@ -1360,7 +1470,7 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 /* Moon icon (default hidden) */
 .theme-toggle .moon {
   background-image: url("assets/moon.png");
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 /* When dark mode is ON */
@@ -1373,14 +1483,17 @@ body.dark-mode .build-summary-list strong:not(.has-selection) {
 }
 
 .theme-toggle input:checked + .slider .sun {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .theme-toggle input:checked + .slider .moon {
   opacity: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25)) brightness(0) invert(1);
 }
 
 /* ===============================
+<<<<<<< HEAD
+=======
    DARK MODE FIXES
    =============================== */
 body.dark-mode {
@@ -1436,6 +1549,7 @@ body.dark-mode .carousel-control-next-icon {
 }
 
 /* ===============================
+>>>>>>> 4edcfe5b7c059a29558ca88b9745ae8f9162ca4c
    DARK MODE STYLES (Improved)
    =============================== */
 [data-theme="dark"] {
@@ -1704,47 +1818,6 @@ body.dark-mode .featured-info .price,
   background-color: #1d4ed8;
 }
 
-/* Keep PCPick wordmark colors the same in all themes */
-.logo-pc { color: #0b63ff !important; }   /* PC stays blue */
-.logo-pick { color: #000 !important; } /* PICK original dark color */
-
-/* Ensure PCPICK wordmark keeps the same size across pages (login/signup included) */
-.logo-wordmark { font-size: 28px; line-height: 1; display: inline-flex; align-items: center; gap: 4px; }
-.logo-pc, .logo-pick {
-  font-size: 28px !important;
-  font-weight: 900;
-  line-height: 1;
-  vertical-align: middle;
-  display: inline-block;
-}
-
-/* Also force on auth pages in case they override font-size */
-.auth-page .logo-wordmark,
-.auth-page .logo-pc,
-.auth-page .logo-pick {
-  font-size: 28px !important;
-}
-
-/* Make the wordmark balanced on auth (bigger PICK, tighter spacing) */
-.auth-left .logo-wordmark {
-  gap: 0px;                /* reduce spacing between PC and PICK on auth page */
-  align-items: center;
-}
-
-.auth-left .auth-logo .logo-pc {
-  font-size: 4.5rem;       /* keep large PC size for auth */
-  line-height: 1;
-}
-
-.auth-left .auth-logo .logo-pick {
-  font-size: 4.5rem;       /* match PICK to PC so they look balanced */
-  margin-left: 4px;        /* small gap to tuck PICK closer */
-  transform: skewX(-10deg);
-  display: inline-block;
-  line-height: 1;
-  font-weight: 900;
-}
-
 /* Default light theme */
 .search-bar input {
   background-color: #fff;
@@ -1773,9 +1846,7 @@ body.dark-mode .featured-info .price,
   background-color: #1e1e1e; /* same gray as other sections */
   color: #e5e7eb; /* light gray text */
   border: none;
-  padding: 0.6rem 1.2rem;
   border-radius: 9999px;
-  font-weight: 500;
   transition: all 0.2s ease;
 }
 

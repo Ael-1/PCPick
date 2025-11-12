@@ -687,15 +687,86 @@
         </div>
       </header>
       <ul class="build-summary-list">
-        <li><span>CPU</span><strong data-category="cpu">Not selected</strong><button class="summary-clear" type="button" data-category="cpu" aria-label="Clear CPU selection">×</button></li>
-        <li><span>GPU</span><strong data-category="gpu">Not selected</strong><button class="summary-clear" type="button" data-category="gpu" aria-label="Clear GPU selection">×</button></li>
-        <li><span>RAM</span><strong data-category="ram">Not selected</strong><button class="summary-clear" type="button" data-category="ram" aria-label="Clear RAM selection">×</button></li>
-        <li><span>Motherboard</span><strong data-category="motherboard">Not selected</strong><button class="summary-clear" type="button" data-category="motherboard" aria-label="Clear Motherboard selection">×</button></li>
-        <li><span>Storage</span><strong data-category="storage">Not selected</strong><button class="summary-clear" type="button" data-category="storage" aria-label="Clear Storage selection">×</button></li>
-        <li><span>PSU</span><strong data-category="psu">Not selected</strong><button class="summary-clear" type="button" data-category="psu" aria-label="Clear PSU selection">×</button></li>
-        <li><span>Case</span><strong data-category="case">Not selected</strong><button class="summary-clear" type="button" data-category="case" aria-label="Clear Case selection">×</button></li>
-        <li><span>Cooling</span><strong data-category="cooling">Not selected</strong><button class="summary-clear" type="button" data-category="cooling" aria-label="Clear Cooling selection">×</button></li>
+        <li data-summary-item="cpu">
+          <span>CPU</span>
+          <div class="summary-selection">
+            <strong data-category="cpu">Not selected</strong>
+            <span class="summary-price" data-price-category="cpu">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="cpu" aria-label="Clear CPU selection">×</button>
+        </li>
+        <li data-summary-item="gpu">
+          <span>GPU</span>
+          <div class="summary-selection">
+            <strong data-category="gpu">Not selected</strong>
+            <span class="summary-price" data-price-category="gpu">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="gpu" aria-label="Clear GPU selection">×</button>
+        </li>
+        <li data-summary-item="ram">
+          <span>RAM</span>
+          <div class="summary-selection">
+            <strong data-category="ram">Not selected</strong>
+            <span class="summary-price" data-price-category="ram">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="ram" aria-label="Clear RAM selection">×</button>
+        </li>
+        <li data-summary-item="motherboard">
+          <span>Motherboard</span>
+          <div class="summary-selection">
+            <strong data-category="motherboard">Not selected</strong>
+            <span class="summary-price" data-price-category="motherboard">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="motherboard" aria-label="Clear Motherboard selection">×</button>
+        </li>
+        <li data-summary-item="storage">
+          <span>Storage</span>
+          <div class="summary-selection">
+            <strong data-category="storage">Not selected</strong>
+            <span class="summary-price" data-price-category="storage">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="storage" aria-label="Clear Storage selection">×</button>
+        </li>
+        <li data-summary-item="psu">
+          <span>PSU</span>
+          <div class="summary-selection">
+            <strong data-category="psu">Not selected</strong>
+            <span class="summary-price" data-price-category="psu">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="psu" aria-label="Clear PSU selection">×</button>
+        </li>
+        <li data-summary-item="case">
+          <span>Case</span>
+          <div class="summary-selection">
+            <strong data-category="case">Not selected</strong>
+            <span class="summary-price" data-price-category="case">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="case" aria-label="Clear Case selection">×</button>
+        </li>
+        <li data-summary-item="cooling">
+          <span>Cooling</span>
+          <div class="summary-selection">
+            <strong data-category="cooling">Not selected</strong>
+            <span class="summary-price" data-price-category="cooling">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="cooling" aria-label="Clear Cooling selection">×</button>
+        </li>
       </ul>
+      <div class="build-summary-totals">
+        <div class="summary-total-row">
+          <span>Subtotal</span>
+          <strong id="build-subtotal">$0.00</strong>
+        </div>
+        <div class="summary-total-row">
+          <span>VAT (12%)</span>
+          <strong id="build-vat">$0.00</strong>
+        </div>
+        <div class="summary-total-row summary-grand-total">
+          <span>Total</span>
+          <strong id="build-total">$0.00</strong>
+        </div>
+        <button class="btn checkout-btn" type="button">Checkout</button>
+      </div>
     </div>
   </aside>
 
@@ -766,14 +837,32 @@
     document.querySelectorAll(".build-summary-list strong[data-category]").forEach((entry) => {
       summaryMap[entry.dataset.category] = entry;
     });
+    const summaryPriceMap = {};
+    document.querySelectorAll(".summary-price[data-price-category]").forEach((entry) => {
+      summaryPriceMap[entry.dataset.priceCategory] = entry;
+    });
+    const summaryItems = {};
+    document.querySelectorAll(".build-summary-list li[data-summary-item]").forEach((item) => {
+      summaryItems[item.dataset.summaryItem] = item;
+    });
     const clearButtons = {};
     document.querySelectorAll(".summary-clear[data-category]").forEach((btn) => {
       clearButtons[btn.dataset.category] = btn;
     });
     const selectedCards = {};
+    const selectedPrices = {};
     const buildCountEl = document.querySelector(".build-toggle-count");
+    const subtotalEl = document.getElementById("build-subtotal");
+    const vatEl = document.getElementById("build-vat");
+    const totalEl = document.getElementById("build-total");
     const toast = document.getElementById("build-toast");
     let toastTimeout;
+    const VAT_RATE = 0.12;
+    const currencyFormatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    });
 
     const sectionCategoryMap = {
       "cpu-section": "cpu",
@@ -796,6 +885,26 @@
       }
     }
 
+    function parsePrice(value) {
+      if (!value) return 0;
+      const numeric = Number(value.replace(/[^0-9.]/g, ""));
+      return Number.isFinite(numeric) ? numeric : 0;
+    }
+
+    function formatCurrency(value) {
+      return currencyFormatter.format(value);
+    }
+
+    function updateTotals() {
+      const subtotal = Object.values(selectedPrices).reduce((sum, price) => sum + price, 0);
+      const vat = subtotal * VAT_RATE;
+      const total = subtotal + vat;
+
+      if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
+      if (vatEl) vatEl.textContent = formatCurrency(vat);
+      if (totalEl) totalEl.textContent = formatCurrency(total);
+    }
+
     function showToast(message) {
       if (!toast) return;
       toast.textContent = message;
@@ -808,7 +917,7 @@
       }, 2200);
     }
 
-    function setSelectedCard(categoryKey, card, productName) {
+    function setSelectedCard(categoryKey, card, productName, priceValue) {
       if (!categoryKey || !card) return;
 
       const previous = selectedCards[categoryKey];
@@ -829,11 +938,14 @@
       }
       summaryMap[categoryKey].textContent = productName;
       summaryMap[categoryKey].classList.add("has-selection");
-      const clearBtnCurrent = clearButtons[categoryKey];
-      if (clearBtnCurrent) {
-        clearBtnCurrent.classList.add("is-visible");
+      if (summaryPriceMap[categoryKey]) {
+        summaryPriceMap[categoryKey].textContent = formatCurrency(priceValue);
+      }
+      if (summaryItems[categoryKey]) {
+        summaryItems[categoryKey].classList.add("has-selection");
       }
       selectedCards[categoryKey] = card;
+      selectedPrices[categoryKey] = priceValue;
     }
 
     document.querySelectorAll(".add-cart-btn").forEach((button) => {
@@ -842,6 +954,8 @@
         const section = button.closest(".product-grid");
         const productName =
           card?.querySelector(".product-info h3")?.textContent?.trim() || "Item";
+        const priceText = card?.querySelector(".price")?.textContent?.trim() || "$0";
+        const priceValue = parsePrice(priceText);
         const categoryKey = sectionCategoryMap[section?.id ?? ""];
 
         if (!categoryKey || !summaryMap[categoryKey]) {
@@ -849,9 +963,10 @@
           return;
         }
 
-        setSelectedCard(categoryKey, card, productName);
+        setSelectedCard(categoryKey, card, productName, priceValue);
         showToast(`${productName} added to Your Build.`);
         updateBuildCount();
+        updateTotals();
       });
     });
 
@@ -868,18 +983,27 @@
             btn.classList.remove("is-selected");
             btn.textContent = "Select";
           }
-          selectedCards[categoryKey] = null;
+          delete selectedCards[categoryKey];
         }
 
         summaryMap[categoryKey].textContent = "Not selected";
         summaryMap[categoryKey].classList.remove("has-selection");
-        button.classList.remove("is-visible");
+        if (summaryPriceMap[categoryKey]) {
+          summaryPriceMap[categoryKey].textContent = "—";
+        }
+        if (summaryItems[categoryKey]) {
+          summaryItems[categoryKey].classList.remove("has-selection");
+        }
+        delete selectedPrices[categoryKey];
         updateBuildCount();
+        updateTotals();
       });
     });
   </script>
 </body>
 </html>
+
+
 
 
 
