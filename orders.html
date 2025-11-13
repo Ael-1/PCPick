@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Orders — PCPick</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.png" alt="PCPick logo" class="logo-icon" />
+        <span class="logo-wordmark"><span class="logo-pc">PC</span><span class="logo-pick">PICK</span></span>
+      </a>
+      <nav class="nav" id="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="pcbuilder.html">PC Builder</a></li>
+          <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a class="login" href="login.html">Log In</a>
+        <a class="btn signup" href="signup.html">Sign Up</a>
+
+        <!-- Theme Toggle -->
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch" />
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
+        <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
+      </div>
+    </div>
+    <nav class="drawer-nav" id="mobile-drawer" aria-label="Mobile navigation" aria-hidden="true">
+      <div class="drawer-header">
+        <span class="drawer-brand">
+          <img src="assets/logo.png" alt="PCPick logo" class="logo-icon" width="36" height="36" />
+          <span class="logo-wordmark"><span class="logo-pc">PC</span><span class="logo-pick">PICK</span></span>
+        </span>
+        <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="pcbuilder.html">PC Builder</a></li>
+        <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
+      </ul>
+      <div class="drawer-actions">
+        <a class="login" href="login.html">Log In</a>
+        <a class="btn signup" href="signup.html">Sign Up</a>
+      </div>
+    </nav>
+    <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+  </header>
+
+  <!-- MAIN ORDERS SECTION -->
+  <main class="orders-page container">
+    <h1 class="orders-title">My Orders</h1>
+    <p class="orders-subtitle">Track and manage your orders</p>
+
+    <!-- Tabs -->
+    <div class="orders-tabs">
+      <button class="tab active" id="current-orders-tab">Current Orders (2)</button>
+      <button class="tab" id="order-history-tab">Order History (3)</button>
+    </div>
+
+    <!-- Current Orders -->
+    <div class="orders-list" id="current-orders">
+      <div class="order-card">
+        <div class="order-header">
+          <div>
+            <h3>ORD-2024-001</h3>
+            <p>Placed on November 10, 2025</p>
+          </div>
+          <span class="status shipped">Shipped</span>
+        </div>
+        <div class="order-items">
+          <p>1x AMD Ryzen 9 7950X - $549.99</p>
+          <p>1x NVIDIA RTX 4080 - $1199.99</p>
+          <p>1x Corsair Vengeance RGB 32GB - $149.99</p>
+        </div>
+        <div class="order-summary">
+          <p><strong>Total:</strong> $1899.99</p>
+          <p><strong>Estimated Delivery:</strong> November 14, 2025</p>
+          <p><strong>Tracking Number:</strong> TRK123456789</p>
+        </div>
+        <div class="order-actions">
+          <a href="#" class="btn view">View Details</a>
+          <a href="#" class="btn track">Track Order</a>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div>
+            <h3>ORD-2024-002</h3>
+            <p>Placed on November 11, 2025</p>
+          </div>
+          <span class="status processing">Processing</span>
+        </div>
+        <div class="order-items">
+          <p>1x Gaming Beast Pro - $2499.99</p>
+        </div>
+        <div class="order-summary">
+          <p><strong>Total:</strong> $2499.99</p>
+          <p><strong>Estimated Delivery:</strong> November 16, 2025</p>
+        </div>
+        <div class="order-actions">
+          <a href="#" class="btn view">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order History -->
+    <div class="orders-list hidden" id="order-history">
+      <div class="order-card">
+        <div class="order-header">
+          <div>
+            <h3>ORD-2024-003</h3>
+            <p>Placed on October 28, 2025</p>
+          </div>
+          <span class="status delivered">Delivered</span>
+        </div>
+        <div class="order-items">
+          <p>1x Logitech G Pro Wireless - $129.99</p>
+          <p>1x HyperX Cloud II - $99.99</p>
+          <p>1x SteelSeries QcK - $69.99</p>
+        </div>
+        <div class="order-summary">
+          <p><strong>Total:</strong> $299.99</p>
+        </div>
+        <div class="order-actions">
+          <a href="#" class="btn view">View Details</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> PCPick — All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Toggle between tabs
+    const currentTab = document.getElementById("current-orders-tab");
+    const historyTab = document.getElementById("order-history-tab");
+    const currentOrders = document.getElementById("current-orders");
+    const historyOrders = document.getElementById("order-history");
+
+    currentTab.addEventListener("click", () => {
+      currentTab.classList.add("active");
+      historyTab.classList.remove("active");
+      currentOrders.classList.remove("hidden");
+      historyOrders.classList.add("hidden");
+    });
+
+    historyTab.addEventListener("click", () => {
+      historyTab.classList.add("active");
+      currentTab.classList.remove("active");
+      historyOrders.classList.remove("hidden");
+      currentOrders.classList.add("hidden");
+    });
+  </script>
+</body>
+</html>
