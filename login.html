@@ -68,6 +68,74 @@
     </div>
   </div>
   <script src="script.js"></script>
+  <!-- Supabase login wiring -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const SUPABASE_URL = 'https://wuxcglaecmmpdtoxgchu.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1eGNnbGFlY21tcGR0b3hnY2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MjYsImV4cCI6MjA3NzQ1NDQyNn0.9yPYnqnTmc_aIES9GhwYK2tC5SVgp8D3J-iZYZ7hpvU';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // If already signed in, bounce to home
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        window.location.href = 'index.html';
+      }
+    })();
+
+    const form = document.querySelector('.auth-form');
+    const emailInput = document.getElementById('login-email');
+    const passwordInput = document.getElementById('login-password');
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_ANON_PUBLIC_KEY_HERE') {
+          alert('Supabase anon key not set. Please add your anon public key.');
+          return;
+        }
+
+        const email = emailInput?.value?.trim();
+        const password = passwordInput?.value ?? '';
+        if (!email || !password) {
+          alert('Please provide email and password.');
+          return;
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        // Upsert user profile on first login as a fallback
+        try {
+          const session = data?.session;
+          const user = session?.user;
+          if (user?.id) {
+            const fullName = user.user_metadata?.full_name ?? null;
+            const { error: upsertError } = await supabase
+              .from('users')
+              .upsert(
+                [{ id: user.id, email: user.email, full_name: fullName }],
+                { onConflict: 'id' }
+              );
+            if (upsertError) {
+              console.warn('Profile upsert on login failed:', upsertError.message);
+            }
+          }
+        } catch (e) {
+          console.warn('Profile upsert exception:', e);
+        }
+
+        // Redirect to home when signed in
+        window.location.href = 'index.html';
+      });
+    }
+  </script>
   <script>
     // Load the referrer page in the background, or default to index.html
     const referrer = document.referrer;
@@ -129,3 +197,4 @@
 
 </body>
 </html>
+

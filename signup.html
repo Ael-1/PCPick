@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>PCPick - Sign Up</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="assets/icon.ico">
@@ -81,6 +80,61 @@
     </div>
   </div>
   <script src="script.js"></script>
+  <!-- Supabase signup wiring -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+    const SUPABASE_URL = 'https://wuxcglaecmmpdtoxgchu.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1eGNnbGFlY21tcGR0b3hnY2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MjYsImV4cCI6MjA3NzQ1NDQyNn0.9yPYnqnTmc_aIES9GhwYK2tC5SVgp8D3J-iZYZ7hpvU';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.querySelector('.auth-form');
+    const nameInput = document.getElementById('signup-name');
+    const emailInput = document.getElementById('signup-email');
+    const passwordInput = document.getElementById('signup-password');
+    const confirmInput = document.getElementById('signup-confirm');
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fullName = nameInput?.value?.trim();
+        const email = emailInput?.value?.trim();
+        const password = passwordInput?.value ?? '';
+        const confirm = confirmInput?.value ?? '';
+
+        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1eGNnbGFlY21tcGR0b3hnY2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MjYsImV4cCI6MjA3NzQ1NDQyNn0.9yPYnqnTmc_aIES9GhwYK2tC5SVgp8D3J-iZYZ7hpvU') {
+          alert('Supabase anon key not set. Please add your anon public key.');
+          return;
+        }
+
+        if (!email || !password) {
+          alert('Please provide email and password.');
+          return;
+        }
+        if (password !== confirm) {
+          alert('Passwords do not match.');
+          return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: fullName ? { full_name: fullName } : undefined,
+          },
+        });
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        alert('Account created successfully.');
+        window.location.href = 'index.html';
+      });
+    }
+  </script>
   <script>
     // Load the referrer page in the background, or default to index.html
     const referrer = document.referrer;
@@ -137,8 +191,5 @@
       e.stopPropagation();
     });
   </script>
-
-  <script src="script.js"></script>
-
 </body>
 </html>
