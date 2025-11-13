@@ -2281,6 +2281,7 @@ body.dark-mode .checkout-section h2 {
   font-weight: 700;
 }
 
+
 /* ---------- CHECKOUT LAYOUT ---------- */
 
 .checkout-container {
@@ -2333,12 +2334,12 @@ body.dark-mode .checkout-section h2 {
 
 /* === SECTION BOXES === */
 .checkout-section {
-  background: var(--card);
+  background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   padding: 28px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  transition: box-shadow 0.2s ease;
+  transition: none !important; /* no fade when switching themes */
 }
 
 .checkout-section:hover {
@@ -2380,18 +2381,18 @@ body.dark-mode .checkout-section h2 {
 .checkout-section select,
 .checkout-section textarea {
   width: 100%;
-  background: #f9fafb; /* light background */
-  border: 1.5px solid #d1d5db; /* subtle outline */
+  background: #f9fafb;
+  border: 1.5px solid #d1d5db;
   border-radius: 8px;
   padding: 0.7rem 1rem;
   font-size: 0.95rem;
   color: var(--text-primary);
-  transition: all 0.2s ease;
   line-height: 1.4;
+  transition: none !important;
 }
 
 input::placeholder {
-  color: #9ca3af; /* grayish placeholder */
+  color: #9ca3af;
 }
 
 input:focus,
@@ -2401,6 +2402,7 @@ textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
   background: #ffffff;
+  transition: none !important;
 }
 
 /* === RIGHT COLUMN: SUMMARY === */
@@ -2461,62 +2463,103 @@ textarea:focus {
 }
 
 .place-order:hover,
-.btn-place:hover { background: var(--highlight-accent); transform: translateY(-2px); }
+.btn-place:hover {
+  background: var(--highlight-accent);
+  transform: translateY(-2px);
+}
 
-/* small helper list under summary */
-.checkout-benefits { margin-top: 14px; color: var(--muted); font-size: 0.95rem; list-style:none; padding-left:0; }
-.checkout-benefits li { margin-bottom:8px; }
+/* === SMALL BENEFITS UNDER SUMMARY === */
+.checkout-benefits {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  list-style: none;
+  padding-left: 0;
+}
+.checkout-benefits li {
+  margin-bottom: 8px;
+}
+/* ===============================
+   DARK MODE STYLES
+   =============================== */
 
-input::placeholder {
-  color: #9ca3af;
+/* Card containers */
+[data-theme="dark"] .checkout-section,
+body.dark-mode .checkout-section {
+  background: #181818 !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
   transition: none !important;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-  background: #ffffff;
+/* Input fields */
+[data-theme="dark"] .checkout-section input,
+[data-theme="dark"] .checkout-section textarea,
+body.dark-mode .checkout-section input,
+body.dark-mode .checkout-section textarea {
+  background-color: #1e1e1e !important;
+  border: 1px solid #333 !important;
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  min-height: 44px;
   transition: none !important;
 }
 
-/* ===== SECTION BOXES ===== */
-.checkout-section {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-  padding: 28px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  transition: none !important; /* no fade when switching themes */
-}
-
-/* ===== DARK MODE SUPPORT ===== */
-:root.dark .checkout-section,
-[data-theme="dark"] .checkout-section {
-  background: #181818;
-  border: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+/* ✅ Placeholder (edited to be gray, not white) */
+[data-theme="dark"] .checkout-section input::placeholder,
+[data-theme="dark"] .checkout-section textarea::placeholder,
+body.dark-mode .checkout-section input::placeholder,
+body.dark-mode .checkout-section textarea::placeholder {
+  color: #9ca3af !important; /* subtle gray tone */
+  opacity: 1 !important;
   transition: none !important;
 }
 
-:root.dark input::placeholder,
-[data-theme="dark"] input::placeholder {
-  color: #9ca3af;
-  transition: none !important;
+/* Focus state */
+[data-theme="dark"] .checkout-section input:focus,
+[data-theme="dark"] .checkout-section textarea:focus,
+body.dark-mode .checkout-section input:focus,
+body.dark-mode .checkout-section textarea:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+  background-color: #222 !important;
 }
 
-:root.dark input:focus,
-:root.dark select:focus,
-:root.dark textarea:focus,
-[data-theme="dark"] input:focus,
-[data-theme="dark"] select:focus,
-[data-theme="dark"] textarea:focus {
-  background: var(--text);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
-  transition: none !important;
+/* Autofill Fix (Chrome/Safari) */
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] input:-webkit-autofill:hover,
+[data-theme="dark"] input:-webkit-autofill:focus,
+body.dark-mode input:-webkit-autofill,
+body.dark-mode input:-webkit-autofill:hover,
+body.dark-mode input:-webkit-autofill:focus {
+  background-color: #1e1e1e !important;
+  -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s !important;
 }
+
+/* ✅ FINAL FIX: manually typed text always visible */
+[data-theme="dark"] .checkout-section input,
+[data-theme="dark"] .checkout-section textarea,
+body.dark-mode .checkout-section input,
+body.dark-mode .checkout-section textarea {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .form-grid.two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 
 /* ===============================

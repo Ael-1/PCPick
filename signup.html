@@ -103,10 +103,7 @@
         const password = passwordInput?.value ?? '';
         const confirm = confirmInput?.value ?? '';
 
-        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1eGNnbGFlY21tcGR0b3hnY2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MjYsImV4cCI6MjA3NzQ1NDQyNn0.9yPYnqnTmc_aIES9GhwYK2tC5SVgp8D3J-iZYZ7hpvU') {
-          alert('Supabase anon key not set. Please add your anon public key.');
-          return;
-        }
+    
 
         if (!email || !password) {
           alert('Please provide email and password.');

@@ -494,5 +494,74 @@
       window.pcpickGetCartSnapshot?.().then(applyCartSnapshot);
     })();
   </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const checkoutBtn = document.querySelector(".checkout-btn");
+
+    if (!checkoutBtn) return;
+
+    checkoutBtn.addEventListener("click", async () => {
+
+      // 1️⃣ CHECK IF USER IS LOGGED IN
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("Please log in before checking out.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      // 2️⃣ CHECK IF CART HAS ITEMS
+      const cartIsEmpty = (Array.from(cartItems.values()).length === 0);
+
+      if (cartIsEmpty) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      // 3️⃣ EVERYTHING OK → GO TO CHECKOUT PAGE
+      window.location.href = "checkout.html";
+    });
+  });
+  </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const checkoutBtn = document.querySelector(".checkout-btn");
+
+    if (!checkoutBtn) return;
+
+    checkoutBtn.addEventListener("click", async () => {
+
+      // 1️⃣ CHECK IF USER IS LOGGED IN
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("Please log in before checking out.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      // 2️⃣ CHECK IF CART HAS ITEMS (LOCAL CART)
+      const cartIsEmpty = (Array.from(cartItems.values()).length === 0);
+
+      if (cartIsEmpty) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      // 3️⃣ LOAD USER CART FROM DATABASE (user_cart table)
+      if (window.pcpickLoadUserCartForCheckout) {
+        await window.pcpickLoadUserCartForCheckout();
+      }
+
+      // 4️⃣ GO TO CHECKOUT PAGE
+      window.location.href = "checkout.html";
+    });
+  });
+  </script>
+
+
 </body>
 </html>

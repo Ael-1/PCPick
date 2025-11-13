@@ -93,10 +93,7 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_ANON_PUBLIC_KEY_HERE') {
-          alert('Supabase anon key not set. Please add your anon public key.');
-          return;
-        }
+
 
         const email = emailInput?.value?.trim();
         const password = passwordInput?.value ?? '';
