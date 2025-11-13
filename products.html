@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PCPick — Products</title>
+  <title>PCPick � Products</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -31,9 +31,17 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
-        <a class="login" href="login.html">Log In</a>
-        <a class="btn signup" href="signup.html">Sign Up</a>
+        <a class="login" data-auth-visible="signed-out" href="login.html">Log In</a>
+        <a class="btn signup" data-auth-visible="signed-out" href="signup.html">Sign Up</a>
+
+        <!-- Custom Icon Toggle -->
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch" />
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
         <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
@@ -52,8 +60,8 @@
       <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
     </ul>
     <div class="drawer-actions">
-      <a class="login" href="login.html">Log In</a>
-      <a class="btn signup" href="signup.html">Sign Up</a>
+      <a class="login" data-auth-visible="signed-out" href="login.html">Log In</a>
+      <a class="btn signup" data-auth-visible="signed-out" href="signup.html">Sign Up</a>
     </div>
   </nav>
   <div class="drawer-overlay" id="drawer-overlay" hidden></div></header>
@@ -75,7 +83,7 @@
           <button class="tab" data-cat="storage-section">Storage</button>
           <button class="tab" data-cat="psu-section">Power Supplies</button>
           <button class="tab" data-cat="case-section">Cases</button>
-          <button class="tab" data-cat="cooling-section">Cooling</button>
+          <button class="tab" data-cat="cooler-section">Cooler</button>
         </div>
 
         <div class="product-search">
@@ -133,7 +141,7 @@
       </div>
 
       <!-- RAM PRODUCTS (hidden by default) -->
-      <div id="memory-section" class="product-grid" style="display:none;">
+      <div id="memory-section" class="product-grid">
         <!-- RAM Product 1 -->
         <div class="product-card">
           <img src="assets/vengeance-rgb-32gb.jpg" alt="Corsair Vengeance RGB 32GB">
@@ -181,7 +189,7 @@
       </div>
 
       <!-- MOTHERBOARD PRODUCTS -->
-      <div id="motherboard-section" class="product-grid" style="display:none;">
+      <div id="motherboard-section" class="product-grid">
         <!-- Motherboard 1 -->
         <div class="product-card">
           <img src="assets/rog-crosshair-x670e.jpg" alt="ASUS ROG Crosshair X670E">
@@ -229,7 +237,7 @@
       </div>
 
       <!-- STORAGE PRODUCTS -->
-      <div id="storage-section" class="product-grid" style="display:none;">
+      <div id="storage-section" class="product-grid">
         <!-- Storage 1 -->
         <div class="product-card">
           <img src="assets/990-pro-2tb.jpg" alt="Samsung 990 PRO 2TB">
@@ -277,7 +285,7 @@
       </div>
 
       <!-- PSU PRODUCTS -->
-      <div id="psu-section" class="product-grid" style="display:none;">
+      <div id="psu-section" class="product-grid">
         <!-- PSU 1 -->
         <div class="product-card">
           <img src="assets/corsair-rm1000x.jpg" alt="Corsair RM1000x">
@@ -325,7 +333,7 @@
       </div>
 
       <!-- CASE PRODUCTS  -->
-      <div id="case-section" class="product-grid" style="display:none;">
+      <div id="case-section" class="product-grid">
         <!-- Case 1 -->
         <div class="product-card">
           <img src="assets/corsair-5000d-airflow.webp" alt="Corsair 5000D Airflow">
@@ -372,9 +380,9 @@
         </div>
       </div>
 
-      <!-- COOLING PRODUCTS -->
-      <div id="cooling-section" class="product-grid" style="display:none;">
-        <!-- Cooling 1 -->
+      <!-- COOLER PRODUCTS -->
+      <div id="cooler-section" class="product-grid">
+        <!-- Cooler 1 -->
         <div class="product-card">
           <img src="assets/nzxt-kraken-x73.webp" alt="NZXT Kraken X73">
           <div class="product-info">
@@ -389,7 +397,7 @@
           </div>
         </div>
 
-        <!-- Cooling 2 -->
+        <!-- Cooler 2 -->
         <div class="product-card">
           <img src="assets/noctua-nh-d15-chromax.jpg" alt="Noctua NH-D15 chromax.black">
           <div class="product-info">
@@ -404,7 +412,7 @@
           </div>
         </div>
 
-        <!-- Cooling 3 -->
+        <!-- Cooler 3 -->
         <div class="product-card">
           <img src="assets/corsair-icue-h150i-elite.webp" alt="Corsair iCUE H150i Elite">
           <div class="product-info">
@@ -422,7 +430,6 @@
     </section>
   </main>
   
-
   <footer class="site-footer">
     <div class="container">
       <p>© 2025 PCPick — All rights reserved.</p>
@@ -482,6 +489,9 @@
   <div class="build-toast" id="product-toast" role="status" aria-live="polite" aria-hidden="true"></div>
 
   <script src="script.js"></script>
+  <!-- Supabase client (UMD) and data loader -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-data.js"></script>
   <script>
     const productTabs = document.querySelectorAll(".products .product-tabs .tab");
     const productSections = document.querySelectorAll(".products .product-grid");

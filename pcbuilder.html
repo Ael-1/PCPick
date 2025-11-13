@@ -31,9 +31,17 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
-        <a class="login" href="login.html">Log In</a>
-        <a class="btn signup" href="signup.html">Sign Up</a>
+        <a class="login" data-auth-visible="signed-out" href="login.html">Log In</a>
+        <a class="btn signup" data-auth-visible="signed-out" href="signup.html">Sign Up</a>
+
+        <!-- Custom Icon Toggle -->
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch" />
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
         <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
@@ -52,13 +60,13 @@
       <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
     </ul>
     <div class="drawer-actions">
-      <a class="login" href="login.html">Log In</a>
-      <a class="btn signup" href="signup.html">Sign Up</a>
+      <a class="login" data-auth-visible="signed-out" href="login.html">Log In</a>
+      <a class="btn signup" data-auth-visible="signed-out" href="signup.html">Sign Up</a>
     </div>
   </nav>
   <div class="drawer-overlay" id="drawer-overlay" hidden></div></header>
 
-  <!-- PRODUCTS SECTION -->
+    <!-- PRODUCTS SECTION -->
   <main>
     <section class="container pcbuilder">
       <h1 class="section-title">PC Builder</h1>
@@ -75,7 +83,7 @@
           <button class="tab" data-cat="storage-section">Storage</button>
           <button class="tab" data-cat="psu-section">Power Supplies</button>
           <button class="tab" data-cat="case-section">Cases</button>
-          <button class="tab" data-cat="cooling-section">Cooling</button>
+          <button class="tab" data-cat="cooler-section">Cooler</button>
         </div>
         <div class="product-search">
           <input type="search" placeholder="Search products..." aria-label="Search products">
@@ -147,8 +155,7 @@
       </div>
 
       <!-- RAM PRODUCTS -->
-      <div id="memory-section" class="product-grid" style="display:none;">
-        <!-- RAM Product 1 -->
+      <div id="memory-section" class="product-grid">
         <div class="product-card">
           <img src="assets/vengeance-rgb-32gb.jpg" alt="Corsair Vengeance RGB 32GB">
           <div class="product-info">
@@ -163,7 +170,6 @@
           </div>
         </div>
 
-        <!-- RAM Product 2 -->
         <div class="product-card">
           <img src="assets/trident-z5-64gb.jpg" alt="G.Skill Trident Z5 64GB">
           <div class="product-info">
@@ -178,7 +184,6 @@
           </div>
         </div>
 
-        <!-- RAM Product 3 -->
         <div class="product-card">
           <img src="assets/fury-beast-32gb.jpg" alt="Kingston Fury Beast 32GB">
           <div class="product-info">
@@ -195,8 +200,7 @@
       </div>
 
       <!-- MOTHERBOARD PRODUCTS -->
-      <div id="motherboard-section" class="product-grid" style="display:none;">
-        <!-- Motherboard 1 -->
+      <div id="motherboard-section" class="product-grid">
         <div class="product-card">
           <img src="assets/rog-crosshair-x670e.jpg" alt="ASUS ROG Crosshair X670E">
           <div class="product-info">
@@ -211,11 +215,10 @@
           </div>
         </div>
 
-        <!-- Motherboard 2 -->
         <div class="product-card">
           <img src="assets/z790-aorus-master.jpg" alt="Gigabyte Z790 AORUS Master">
           <div class="product-info">
-            <h3>Gigabyte Z790 AORUS Master</h3>
+            <h3>Gigabyte Z790 AORUS Master Ultra Giga Pro</h3>
             <ul>
               <li>LGA1700 Socket</li>
               <li>DDR5</li>
@@ -226,7 +229,6 @@
           </div>
         </div>
 
-        <!-- Motherboard 3 -->
         <div class="product-card">
           <img src="assets/b650-gaming-plus.jpg" alt="MSI B650 Gaming Plus">
           <div class="product-info">
@@ -243,8 +245,7 @@
       </div>
 
       <!-- STORAGE PRODUCTS -->
-      <div id="storage-section" class="product-grid" style="display:none;">
-        <!-- Storage 1 -->
+      <div id="storage-section" class="product-grid">
         <div class="product-card">
           <img src="assets/990-pro-2tb.jpg" alt="Samsung 990 PRO 2TB">
           <div class="product-info">
@@ -259,7 +260,6 @@
           </div>
         </div>
 
-        <!-- Storage 2 -->
         <div class="product-card">
           <img src="assets/wd-black-sn850x.jpg" alt="Western Digital WD Black SN850X 1TB">
           <div class="product-info">
@@ -274,7 +274,6 @@
           </div>
         </div>
 
-        <!-- Storage 3 -->
         <div class="product-card">
           <img src="assets/crucial-p3-plus-4tb.jpg" alt="Crucial P3 Plus 4TB">
           <div class="product-info">
@@ -291,8 +290,7 @@
       </div>
 
       <!-- PSU PRODUCTS -->
-      <div id="psu-section" class="product-grid" style="display:none;">
-        <!-- PSU 1 -->
+      <div id="psu-section" class="product-grid">
         <div class="product-card">
           <img src="assets/corsair-rm1000x.jpg" alt="Corsair RM1000x">
           <div class="product-info">
@@ -307,7 +305,6 @@
           </div>
         </div>
 
-        <!-- PSU 2 -->
         <div class="product-card">
           <img src="assets/evga-supernova-850-g6.jpg" alt="EVGA SuperNOVA 850 G6">
           <div class="product-info">
@@ -322,7 +319,6 @@
           </div>
         </div>
 
-        <!-- PSU 3 -->
         <div class="product-card">
           <img src="assets/seasonic-prime-tx-1600.jpg" alt="Seasonic PRIME TX-1600">
           <div class="product-info">
@@ -338,9 +334,8 @@
         </div>
       </div>
 
-      <!-- CASE PRODUCTS  -->
-      <div id="case-section" class="product-grid" style="display:none;">
-        <!-- Case 1 -->
+      <!-- CASE PRODUCTS -->
+      <div id="case-section" class="product-grid">
         <div class="product-card">
           <img src="assets/corsair-5000d-airflow.webp" alt="Corsair 5000D Airflow">
           <div class="product-info">
@@ -355,7 +350,6 @@
           </div>
         </div>
 
-        <!-- Case 2 -->
         <div class="product-card">
           <img src="assets/nzxt-h7-flow.jpg" alt="NZXT H7 Flow">
           <div class="product-info">
@@ -370,7 +364,6 @@
           </div>
         </div>
 
-        <!-- Case 3 -->
         <div class="product-card">
           <img src="assets/lian-li-o11-dynamic.jpg" alt="Lian Li O11 Dynamic">
           <div class="product-info">
@@ -386,9 +379,8 @@
         </div>
       </div>
 
-      <!-- COOLING PRODUCTS -->
-      <div id="cooling-section" class="product-grid" style="display:none;">
-        <!-- Cooling 1 -->
+      <!-- COOLER PRODUCTS -->
+      <div id="cooler-section" class="product-grid">
         <div class="product-card">
           <img src="assets/nzxt-kraken-x73.webp" alt="NZXT Kraken X73">
           <div class="product-info">
@@ -403,7 +395,6 @@
           </div>
         </div>
 
-        <!-- Cooling 2 -->
         <div class="product-card">
           <img src="assets/noctua-nh-d15-chromax.jpg" alt="Noctua NH-D15 chromax.black">
           <div class="product-info">
@@ -418,7 +409,6 @@
           </div>
         </div>
 
-        <!-- Cooling 3 -->
         <div class="product-card">
           <img src="assets/corsair-icue-h150i-elite.webp" alt="Corsair iCUE H150i Elite">
           <div class="product-info">
@@ -540,19 +530,44 @@
 
   <button
     type="button"
-    class="pcbuilder-chevron"
-    id="pcbuilder-chevron"
-    aria-label="Scroll back to the top of the builder"
+    class="build-toggle"
+    id="build-toggle"
+    aria-label="Toggle Your Build summary"
+    aria-controls="build-summary"
+    aria-expanded="false"
   >
-    <span>&rsaquo;</span>
+    <span class="build-toggle-left">
+      <span class="build-toggle-cart" aria-hidden="true"><img src="assets/cart.png" alt="" loading="lazy"></span>
+      <span class="build-toggle-text">
+        <span class="build-toggle-title">Build</span>
+        <span class="build-toggle-count">(0/8)</span>
+      </span>
+    </span>
+    <span class="build-toggle-chevron" aria-hidden="true"></span>
   </button>
 
+  <div class="build-toast" id="build-toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
   <script src="script.js"></script>
+  <!-- Supabase client (UMD) and data loader -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-data.js"></script>
   <script>
-    const cpuBtn = document.getElementById("cpu-btn");
-    const gpuBtn = document.getElementById("gpu-btn");
-    const cpuSection = document.getElementById("cpu-section");
-    const gpuSection = document.getElementById("gpu-section");
+    // Ensure price and select button share a row
+    const ensurePurchaseRow = () => {
+      document.querySelectorAll('.pcbuilder .product-card').forEach((card) => {
+        const info = card.querySelector('.product-info');
+        const price = info?.querySelector('.price');
+        const button = info?.querySelector('.add-cart-btn');
+        if (!info || !price || !button || button.closest('.purchase-row')) return;
+        const row = document.createElement('div');
+        row.className = 'purchase-row';
+        row.appendChild(price);
+        row.appendChild(button);
+        info.appendChild(row);
+      });
+    };
+    ensurePurchaseRow();
 
     const builderTabs = document.querySelectorAll(".pcbuilder .product-tabs .tab");
     const builderSections = document.querySelectorAll(".pcbuilder .product-grid");
@@ -571,10 +586,50 @@
         });
       };
 
-    const builderChevron = document.getElementById("pcbuilder-chevron");
-    if (builderChevron) {
-      builderChevron.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      builderTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          builderTabs.forEach((btn) => btn.classList.remove("active"));
+          tab.classList.add("active");
+          showSection(tab.dataset.cat);
+        });
+      });
+
+      showSection(builderTabs[0]?.dataset.cat ?? builderSections[0]?.id);
+    }
+
+    const buildToggle = document.getElementById("build-toggle");
+    const buildSummary = document.getElementById("build-summary");
+
+    if (buildToggle && buildSummary) {
+      buildToggle.addEventListener("click", () => {
+        const expanded = buildToggle.getAttribute("aria-expanded") === "true";
+        const nextState = !expanded;
+
+        buildToggle.setAttribute("aria-expanded", String(nextState));
+        buildSummary.classList.toggle("is-visible", nextState);
+        buildSummary.setAttribute("aria-hidden", expanded ? "true" : "false");
+      });
+
+      // Minimize summary when clicking on the page background (not on controls)
+      const collapseSummary = () => {
+        buildToggle.setAttribute("aria-expanded", "false");
+        buildSummary.classList.remove("is-visible");
+        buildSummary.setAttribute("aria-hidden", "true");
+      };
+
+      document.addEventListener("click", (e) => {
+        // Ignore if click is inside the summary or on the toggle button
+        if (e.target.closest("#build-summary") || e.target.closest("#build-toggle")) return;
+
+        // Ignore clicks anywhere in the site header
+        if (e.target.closest('.site-header')) return;
+
+        // Ignore if clicking interactive controls (buttons/links/inputs/selects/textareas)
+        if (e.target.closest("button, a, input, textarea, select, [role='button'], [contenteditable=''], [contenteditable='true']")) return;
+
+        // If summary is open, collapse it
+        const expanded = buildToggle.getAttribute("aria-expanded") === "true";
+        if (expanded) collapseSummary();
       });
     }
 
@@ -780,7 +835,7 @@
         updateTotals();
         try { if (uid) window.pcpickBuildDelete?.({ product_uid: uid }); } catch {}
       });
-    });}
+    });
   </script>
 </body>
 </html>

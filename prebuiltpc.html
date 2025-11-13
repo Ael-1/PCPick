@@ -31,9 +31,17 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
-        <a class="login" href="login.html">Log In</a>
-        <a class="btn signup" href="signup.html">Sign Up</a>
+        <a class="login" data-auth-visible="signed-out" href="login.html">Log In</a>
+        <a class="btn signup" data-auth-visible="signed-out" href="signup.html">Sign Up</a>
+
+        <!-- Custom Icon Toggle -->
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch" />
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
         <button class="menu-toggle" aria-label="Open menu" id="menu-toggle">&#9776;</button>
       </div>
     </div>
@@ -52,8 +60,8 @@
       <li><a href="prebuiltpc.html">Pre-built PCs</a></li>
     </ul>
     <div class="drawer-actions">
-      <a class="login" href="login.html">Log In</a>
-      <a class="btn signup" href="signup.html">Sign Up</a>
+      <a class="login" data-auth-visible="signed-out" href="login.html">Log In</a>
+      <a class="btn signup" data-auth-visible="signed-out" href="signup.html">Sign Up</a>
     </div>
   </nav>
   <div class="drawer-overlay" id="drawer-overlay" hidden></div></header>
@@ -65,6 +73,7 @@
       <p class="section-description">Browse brand new and expertly configured systems. No hassle!</p>
 
       <!-- CPU PRODUCTS -->
+       <div id="prebuilt-section" class="product-grid"></div>
       <div id="cpu-section" class="product-grid">
         <div class="product-card">
           <img src="assets/Ryzen9_7950X.jpg" alt="Ryzen 9 7950X">
@@ -216,6 +225,9 @@
   <div class="build-toast" id="product-toast" role="status" aria-live="polite" aria-hidden="true"></div>
 
   <script src="script.js"></script>
+  <!-- Supabase client (UMD) and data loader -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-data.js"></script>
   <script>
     (function(){
       const cartToggle = document.getElementById('cart-toggle');

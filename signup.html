@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>PCPick - Sign Up</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="assets/icon.ico">
@@ -41,12 +40,36 @@
         <input id="signup-email" type="email" placeholder="john@example.com" required>
 
         <label for="signup-password">Password</label>
-        <input id="signup-password" type="password" placeholder="Create a password" required>
+        <div class="password-field">
+          <input id="signup-password" type="password" placeholder="Create a password" required>
+          <button
+            type="button"
+            class="password-toggle"
+            data-password-toggle="#signup-password"
+            data-visible-icon="assets/visible.png"
+            data-hidden-icon="assets/hidden.png"
+            aria-label="Show password"
+          >
+            <img src="assets/hidden.png" alt="" aria-hidden="true">
+          </button>
+        </div>
 
         <label for="signup-confirm">Confirm Password</label>
-        <input id="signup-confirm" type="password" placeholder="Confirm password" required>
+        <div class="password-field">
+          <input id="signup-confirm" type="password" placeholder="Confirm password" required>
+          <button
+            type="button"
+            class="password-toggle"
+            data-password-toggle="#signup-confirm"
+            data-visible-icon="assets/visible.png"
+            data-hidden-icon="assets/hidden.png"
+            aria-label="Show password"
+          >
+            <img src="assets/hidden.png" alt="" aria-hidden="true">
+          </button>
+        </div>
 
-        <button type="submit" class="auth-btn">Create Account &rarr;</button>
+        <button type="submit" class="auth-btn">Create Account</button>
       </form>
 
       <p class="auth-social-label">Or sign up with</p>

@@ -4,10 +4,13 @@
   --muted:#6b7280;
   --accent:#0b63ff;
   --highlight-accent:#0c3375;
+  /* Unified focus ring color for light mode */
+  --focus-ring: rgba(11,99,255,0.15);
   --cursor-hover:#c9c9c9;
   --card:#ffffff;
   --radius:18px;
   --container:1440px;
+  --logo-pick: #000; /* Black for light mode */
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -20,6 +23,13 @@ body{
   -moz-osx-font-smoothing:grayscale;
   padding-top:90px; /* Add padding to offset fixed header */
 }
+/* Global focus ring: use site accent color */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+/* Fallback for browsers without :focus-visible */
+:focus { outline-color: var(--accent); }
 input,button,textarea,select{
   font-family:inherit;
 }
@@ -55,7 +65,7 @@ body.auth-page{
 .nav a {color: var(--muted);font-size: 18px;text-decoration: none;font-weight: 500;transition: color 0.3s ease, font-size 0.3s ease}
 .nav a:hover {color: var(--accent);font-size: 20px}
 .nav-actions{display:flex;align-items:center;margin-left:auto;margin-right:-120px;gap:12px}
-.theme-toggle{background:transparent;border:0;font-size:18px;cursor:pointer}
+.theme-toggle{background:transparent;border:0;font-size:18px;cursor:pointer;margin-left:12px}
 .login{color: var(--muted);font-size:18px;text-decoration:none;font-weight:500;margin-right:6px;}
 .login:hover {color: var(--accent);transform: translateY(-2px);}
 .btn{display:inline-block;font-size:18px;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600}
@@ -66,6 +76,40 @@ body.auth-page{
 .btn.signup{background:var(--accent);color:#fff;padding:8px 14px;border-radius:10px}
 .btn.signup:hover{background:var(--highlight-accent); transform: translateY(-2px)}
 .menu-toggle{display:none;background:transparent;border:0;font-size:22px}
+
+.user-badge{position:relative;display:inline-flex;align-items:center}
+.user-badge__toggle{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;border:1px solid rgba(15,23,36,0.12);background:#fff;cursor:pointer;transition:border-color .2s ease,box-shadow .2s ease}
+.user-badge__toggle:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(0,102,255,0.2);border-color:var(--accent)}
+.user-badge__avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.user-badge__caret{font-size:12px;color:var(--muted);transition:transform .2s ease}
+.user-badge.is-open .user-badge__caret{transform:rotate(180deg)}
+.user-badge__menu{position:absolute;top:calc(100% + 10px);left:0;min-width:220px;border-radius:14px;border:1px solid rgba(15,23,36,0.1);background:var(--card,#fff);box-shadow:0 20px 40px rgba(15,23,36,0.18);padding:14px;z-index:400}
+.user-badge__menu-header{font-weight:600;color:var(--text);padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid rgba(15,23,36,0.08)}
+.user-badge__name{font-size:16px}
+.user-badge__menu-list{display:flex;flex-direction:column;gap:8px}
+.user-badge__menu-item{width:100%;text-align:left;border:0;border-radius:10px;padding:10px 12px;background:rgba(15,23,36,0.03);font-size:15px;font-weight:500;color:var(--text);cursor:pointer;transition:background .2s ease,color .2s ease}
+.user-badge__menu-item:hover{background:rgba(0,102,255,0.08);color:var(--accent)}
+.dark-mode .user-badge__toggle{background:var(--card-dark, #181818);border:1px solid #2e2e2e;box-shadow:0 0 0 1px rgba(255,255,255,0.06)}
+/* Support attribute-based dark theme too */
+[data-theme="dark"] .user-badge__toggle{background:var(--card, #1e1e1e);border:1px solid #2e2e2e;box-shadow:0 0 0 1px rgba(255,255,255,0.06)}
+/* Improve focus/hover visibility in dark mode */
+.dark-mode .user-badge__toggle:hover,
+[data-theme="dark"] .user-badge__toggle:hover{border-color:rgba(255,255,255,0.22)}
+.dark-mode .user-badge__toggle:focus-visible,
+[data-theme="dark"] .user-badge__toggle:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus-ring);border-color:rgba(255,255,255,0.22)}
+.dark-mode .user-badge__menu{
+  background: var(--card-dark, #181818);
+  border: 1px solid #2e2e2e;
+  color: #f5f5f5;
+}
+.dark-mode .user-badge__menu-header{border-color:rgba(255,255,255,0.08);color:#f8fafc}
+.dark-mode .user-badge__menu-item{background:rgba(255,255,255,0.04);color:#f1f5f9}
+.dark-mode .user-badge__menu-item:hover{background:rgba(59,130,246,0.25);color:#fff}
+.drawer-actions .user-badge{width:100%;justify-content:flex-start;margin-top:10px}
+.drawer-actions .user-badge__menu{position:static;margin-top:10px;box-shadow:0 8px 18px rgba(15,23,36,0.12)}
+.drawer-actions .user-badge__toggle{width:100%;justify-content:space-between}
+.drawer-actions .user-badge__menu-item{background:rgba(15,23,36,0.04)}
+.dark-mode .drawer-actions .user-badge__menu-item{background:rgba(255,255,255,0.06)}
 
 /* Hero */
 .hero{padding:56px 0 40px}
@@ -161,10 +205,11 @@ body.auth-page{
 
 /* --- Featured Section --- */
 .featured-section {
-  background: #fafbfc;
+  background: var(--bg);
   padding: 48px 0 32px 0;
   margin-bottom: 32px;
 }
+
 .featured-header {
   display: flex;
   justify-content: space-between;
@@ -371,6 +416,9 @@ body.auth-page{
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(11,99,255,0.15);
+  /* keep the search icon visible on focus */
+  background: #fff url("assets/search.png") no-repeat left 14px center;
+  background-size: 18px;
 }
 
 .tab {
@@ -386,6 +434,23 @@ body.auth-page{
   outline: none;
 }
 
+/* Light mode: active tab highlight (parity with dark mode) */
+.product-tabs .tab.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.product-tabs .tab:hover {
+  background: rgba(11,99,255,0.08);
+  color: var(--text);
+}
+
+/* Keep selected state on hover (light mode) */
+.product-tabs .tab.active:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
+
 /* Tabs row: tabs on the left, search on the right */
 .tabs-row {
   display: flex;
@@ -396,14 +461,6 @@ body.auth-page{
   flex-wrap: wrap;
 }
 
-.tab:hover { transform: translateY(-2px); color:var(--text); }
-
-.tab.active {
-  background: linear-gradient(90deg,var(--accent),#0665d9);
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(11,99,255,0.12);
-}
-
 .category-tabs {
   display: flex;
   gap: 0.5rem;
@@ -411,7 +468,7 @@ body.auth-page{
   flex-wrap: wrap;
 }
 
-/* Product grid layout (3 columns desktop, responsive below) */
+/* Ensure 3 columns on desktops and tablets */
 .product-grid {
   display: grid;
   gap: 28px;
@@ -455,14 +512,49 @@ body.auth-page{
   border-radius: 18px;
   overflow: hidden;
   width: 100%;
-  max-width: 420px;
+  max-width: none;
   box-shadow: 0 10px 30px rgba(12,15,20,0.06);
-  transition: transform .18s ease, box-shadow .18s ease;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, border-width .18s ease;
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(12,15,20,0.04);
 }
 .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(12,15,20,0.08); }
+.product-card.is-selected{
+  border:2px solid var(--accent);
+  box-shadow:0 24px 55px rgba(11,99,255,0.18);
+}
+
+/* Dark-mode: ensure selected product keeps blue highlight and selected button is dark bg + white text */
+[data-theme="dark"] .product-card.is-selected {
+  border: 2px solid var(--accent) !important;
+  box-shadow: 0 24px 55px rgba(11,99,255,0.18) !important;
+  position: relative;
+}
+
+/* Add a subtle inner blue stroke (keeps corners visible on dark backgrounds) */
+[data-theme="dark"] .product-card.is-selected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(11,99,255,0.12);
+}
+
+/* Selected "Add to cart" / Selected button: match card bg and show white text */
+[data-theme="dark"] .product-card.is-selected .add-cart-btn.is-selected {
+  background: var(--card) !important; /* same dark card background */
+  color: #ffffff !important;           /* white label */
+  border: 2px solid var(--accent) !important;
+  box-shadow: none !important;
+}
+
+/* Keep hover behaviour subtle but not invert colors */
+[data-theme="dark"] .product-card.is-selected .add-cart-btn.is-selected:hover {
+  background: color-mix(in srgb, var(--card) 90%, black 10%) !important;
+  filter: none !important;
+}
 
 .product-card img {
   width: 100%;
@@ -489,7 +581,158 @@ body.auth-page{
   font-weight: 700;
   transition: background .12s ease, transform .12s ease;
 }
+.add-cart-btn.is-selected{
+  background:#fff;
+  color:var(--accent);
+  border:2px solid var(--accent);
+  box-shadow:0 8px 24px rgba(11,99,255,0.16);
+}
+.add-cart-btn.is-selected:hover{
+  background:#f0f6ff;
+  transform:none;
+}
 .add-cart-btn:hover { background: #0556d6; transform: translateY(-2px); }
+
+/* Quantity controls placed beside Add to Cart */
+.purchase-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:12px;
+}
+.purchase-row .price{
+  margin:0;
+  font-weight:700;
+}
+.purchase-row .add-cart-btn{
+  margin:0;
+}
+.add-cart-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.add-cart-row .add-cart-btn {
+  margin: 0;
+  flex: 0 0 auto;
+  padding: 10px 12px;
+}
+.add-cart-row .qty-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.qty-controls .qty-plus,
+.qty-controls .qty-minus {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(15,23,36,0.12);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+}
+.qty-controls .qty-plus:hover,
+.qty-controls .qty-minus:hover { background: rgba(11,99,255,0.08); }
+.qty-controls .qty-amount {
+  width: 48px;
+  text-align: center;
+  font-weight: 700;
+  padding: 4px 6px;
+  border: 1px solid rgba(15,23,36,0.12);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  -moz-appearance:textfield;
+  appearance: textfield;
+}
+.qty-controls .qty-amount:focus { outline: none; box-shadow: 0 0 0 2px rgba(11,99,255,0.25); }
+[data-theme="dark"] .qty-controls .qty-amount {
+  border: 1px solid #333;
+  background: #1e1e1e;
+  color: #e5e7eb;
+}
+.qty-controls .qty-amount::-webkit-outer-spin-button,
+.qty-controls .qty-amount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+[data-theme="dark"] .qty-controls .qty-plus,
+[data-theme="dark"] .qty-controls .qty-minus {
+  border: 1px solid #333;
+  background: #1e1e1e;
+  color: #e5e7eb;
+}
+[data-theme="dark"] .qty-controls .qty-plus:hover,
+[data-theme="dark"] .qty-controls .qty-minus:hover { background: rgba(11,99,255,0.22); }
+
+/* Cart list quantity indicator */
+.build-summary-list .summary-qty { color: var(--muted); margin-left: 8px; }
+[data-theme="dark"] .build-summary-list .summary-qty { color: var(--muted); }
+
+.cart-qty-controls{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-left:8px;
+}
+
+.cart-qty-controls button{
+  width:24px;
+  height:24px;
+  border-radius:6px;
+  border:1px solid rgba(15,23,36,0.12);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  font-weight:700;
+}
+.cart-qty-controls button:hover{
+  background:rgba(11,99,255,0.08);
+}
+
+.cart-qty-controls .cart-qty-input{
+  width:36px;
+  text-align:center;
+  font-weight:700;
+  padding:2px 4px;
+  border:1px solid rgba(15,23,36,0.12);
+  border-radius:6px;
+  background:var(--card);
+  color:var(--text);
+  -moz-appearance:textfield;
+  appearance:textfield;
+}
+
+.cart-qty-controls .cart-qty-input:focus{
+  outline:none;
+  box-shadow:0 0 0 2px rgba(11,99,255,0.25);
+}
+
+.cart-qty-controls .cart-qty-input::-webkit-outer-spin-button,
+.cart-qty-controls .cart-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance:none;
+  margin:0;
+}
+
+[data-theme="dark"] .cart-qty-controls button{
+  border:1px solid #333;
+  color:#e5e7eb;
+}
+[data-theme="dark"] .cart-qty-controls button:hover{
+  background:rgba(11,99,255,0.22);
+}
+
+[data-theme="dark"] .cart-qty-controls .cart-qty-input{
+  border:1px solid #333;
+  background:#1e1e1e;
+  color:#e5e7eb;
+}
 
 /* Mobile drawer navigation */
 .drawer-nav {
@@ -555,6 +798,14 @@ body.auth-page{
   flex-direction: column;
   gap: 12px;
 }
+
+/* Rounded corners for the drawer actions box (light + dark) */
+.drawer-actions,
+[data-theme="dark"] .drawer-actions {
+  border-radius: 12px;
+  overflow: hidden; /* prevent children spilling outside the radius */
+}
+
 .drawer-overlay {
   position: fixed;
   inset: 0;
@@ -625,10 +876,11 @@ body.auth-page .auth-container{
   display:flex;
   width:min(1200px,94vw);
   height:min(780px,92vh);
-  background:#fff;
+  background:transparent;
   border-radius:32px;
   overflow:hidden;
-  box-shadow:0 40px 120px rgba(11,21,38,0.15);
+  box-shadow:0 40px 120px rgba(6, 12, 24, 0.5);
+  border:1px solid rgba(255,255,255,0.04);
   position: relative;
   z-index: 10;
 }
@@ -666,15 +918,15 @@ body.auth-page .auth-container{
 .auth-logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-weight: 900;
   letter-spacing: -1px;
+  gap: 10px;
 }
 
 .auth-logo .logo-icon {
-  width: 92px;
-  height: 92px;
+  width: 72px;
+  height: 72px;
   display: block;
   object-fit: contain;
   flex-shrink: 0;
@@ -691,13 +943,15 @@ body.auth-page .auth-container{
   color: #000;
   font-weight: 900;
   font-size: 4.5rem;
-  margin-left: -10px;
+  margin-left: -8px;
   display: inline-block;
   transform: skewX(-10deg);
+  display: inline-block;
   line-height: 1;
+  font-weight: 900;
 }
 
-.auth-left h1{font-size:2.4rem;margin:-1rem 0 1rem;color:var(--text)}
+.auth-left h1{font-size:2.4rem;margin:-1rem 0 0.5rem;color:var(--text)}
 .auth-left p{margin:0 0 1.5rem;font-size:1rem;color:var(--muted)}
 .auth-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:1rem}
 .auth-benefits li{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)}
@@ -768,25 +1022,83 @@ body.auth-page .auth-container{
 }
 .auth-right .auth-form label{font-size:0.9rem;font-weight:600;color:rgba(255, 255, 255, 0.9)}
 .auth-right .auth-form input{
+  --auth-input-text: #111827;
+  --auth-input-bg: #ffffff;
+  --auth-input-border: #e5e7eb;
   padding:0.85rem;
-  border:1px solid rgba(255, 255, 255, 0.2);
-  background:rgba(255, 255, 255, 0.1);
-  color:#fff;
+  border:1px solid var(--auth-input-border, #e5e7eb);
+  background:var(--auth-input-bg, #ffffff);
+  color:var(--auth-input-text, #111827);
   border-radius:12px;
   font-size:0.95rem;
   transition:border-color 0.2s ease,box-shadow 0.2s ease;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
 }
 .auth-right .auth-form input::placeholder{
-  color:rgba(255, 255, 255, 0.5);
+  color:#6b7280;
+}
+
+/* Autofill fixes — light mode */
+.auth-right .auth-form input:-webkit-autofill,
+.auth-right .auth-form input:-webkit-autofill:hover {
+  -webkit-text-fill-color: var(--auth-input-text, #111827);
+  caret-color: var(--auth-input-text, #111827);
+  /* Replace Chrome's yellow with our bg */
+  -webkit-box-shadow: 0 0 0px 1000px var(--auth-input-bg, #ffffff) inset;
+  box-shadow: 0 0 0px 1000px var(--auth-input-bg, #ffffff) inset;
+  border: 1px solid var(--auth-input-border, #e5e7eb);
+}
+.auth-right .auth-form input:-webkit-autofill:focus {
+  /* Keep inset bg AND add focus ring */
+  -webkit-box-shadow: 0 0 0px 1000px var(--auth-input-bg, #ffffff) inset, 0 0 0 3px var(--focus-ring);
+  box-shadow: 0 0 0px 1000px var(--auth-input-bg, #ffffff) inset, 0 0 0 3px var(--focus-ring);
+  border-color: var(--accent);
+}
+.password-field{
+  position:relative;
+  width:100%;
+  /* Space + size variables keep input text away from the toggle */
+  --pwd-toggle-size: 32px; /* touch target */
+  --pwd-toggle-gap: 12px;  /* distance from right edge */
+}
+.password-field input{
+  width:100%;
+  /* Reserve space for the button no matter the text length */
+  padding-right:calc(var(--pwd-toggle-size) + var(--pwd-toggle-gap) + 8px);
+}
+.password-toggle{
+  position:absolute;
+  top:50%;
+  right:var(--pwd-toggle-gap);
+  transform:translateY(-50%);
+  background:transparent;
+  border:none;
+  width:var(--pwd-toggle-size);
+  height:var(--pwd-toggle-size);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+}
+.password-toggle img{
+  width:20px;
+  height:20px;
+  display:block;
+  filter:invert(68%) sepia(11%) saturate(512%) hue-rotate(169deg) brightness(94%) contrast(89%);
+}
+.password-field.dark .password-toggle img{
+  filter:invert(95%) sepia(4%) saturate(231%) hue-rotate(179deg) brightness(101%) contrast(96%);
 }
 .auth-form input:focus{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(11,99,255,0.15);
+  box-shadow:0 0 0 3px var(--focus-ring);
   outline:none;
 }
 .auth-right .auth-form input:focus{
   border-color:rgba(255, 255, 255, 0.4);
-  box-shadow:0 0 0 3px rgba(255, 255, 255, 0.1);
+  box-shadow:0 0 0 3px var(--focus-ring);
   outline:none;
 }
 
@@ -860,35 +1172,520 @@ body.auth-page .auth-container{
   box-shadow:0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
-.pcbuilder-chevron{
+.build-toggle{
   position:fixed;
   right:24px;
   bottom:24px;
-  width:56px;
-  height:56px;
-  border:none;
-  border-radius:50%;
-  background:var(--accent);
-  color:#fff;
-  font-size:28px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  box-shadow:0 18px 36px rgba(11,99,255,0.25);
+  justify-content:space-between;
+  gap:18px;
+  border:none;
+  border-radius:999px;
+  background:var(--accent);
+  color:#fff;
+  padding:12px 22px;
+  width:420px;
+  max-width:calc(100% - 48px);
+  font-size:15px;
+  font-weight:600;
   cursor:pointer;
+  box-shadow:0 16px 40px rgba(15,23,36,0.3);
   z-index:150;
   transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;
 }
-.pcbuilder-chevron:hover{
+.build-toggle:hover{
+  transform:translateY(-2px);
+  box-shadow:0 22px 46px rgba(15,23,36,0.36);
   background:var(--highlight-accent);
-  transform:translateY(-2px) scale(1.02);
-  box-shadow:0 22px 40px rgba(11,99,255,0.35);
 }
-.pcbuilder-chevron span{
-  display:inline-block;
-  transform:rotate(-90deg);
-  line-height:1;
+.build-toggle-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
+.build-toggle-cart{
+  width:40px;
+  height:40px;
+  border-radius:20px;
+  background:#fff;
+  display:grid;
+  place-items:center;
+  line-height:0;
+  overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+.build-toggle-cart img{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  object-position:center;
+  margin-left: -2px;
+  display:block;
+  pointer-events:none;
+}
+.build-toggle-cart img{width:22px;height:22px;max-width:100%;max-height:100%;object-fit:contain;display:block;pointer-events:none;}
+.build-toggle-text{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.build-toggle-title{
+  font-weight:700;
+}
+.build-toggle-count{
+  font-weight:500;
+  opacity:0.85;
+}
+.build-toggle-chevron{
+  width:14px;
+  height:14px;
+  border-top:2px solid #fff;
+  border-right:2px solid #fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:0;
+  transform:rotate(-45deg);
+  transition:transform 0.25s ease;
+}
+.build-toggle[aria-expanded="true"] .build-toggle-chevron{
+  transform:rotate(135deg);
+}
+
+.build-summary-panel{
+  position:fixed;
+  right:24px;
+  bottom:110px;
+  width:420px;
+  max-width:calc(100% - 48px);
+  background:linear-gradient(135deg,#ffffff,#f3f7ff);
+  border:1px solid rgba(15,23,36,0.08);
+  border-radius:18px;
+  box-shadow:0 24px 60px rgba(15,23,36,0.18);
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+  transition:opacity 0.25s ease,transform 0.25s ease;
+  z-index:140;
+}
+.build-summary-panel.is-visible{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.build-summary-inner{
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  max-height:70vh;
+}
+.build-summary-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+}
+.build-summary-icon{
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  background:rgba(11,99,255,0.15);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.build-summary-icon img{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  object-position:center;
+  display:block;
+  margin:0;
+  pointer-events:none;
+  filter:invert(28%) sepia(93%) saturate(3660%) hue-rotate(204deg) brightness(97%) contrast(106%);
+}
+.build-summary-icon svg{
+  width:22px;
+  height:22px;
+}
+.build-summary-label{
+  margin:0;
+  font-weight:700;
+  font-size:18px;
+}
+.build-summary-note{
+  margin:4px 0 0;
+  font-size:13px;
+  color:var(--muted);
+}
+.build-summary-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  max-height:320px;
+  overflow-y:auto;
+  padding-right:4px;
+}
+.build-summary-list li{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(11,99,255,0.05);
+  border:1px solid rgba(15,23,36,0.05);
+  font-size:14px;
+}
+.build-summary-list li > span:first-child{
+  color:var(--muted);
+  flex:0 0 110px;
+}
+#cart-summary .build-summary-list li > span:first-child{
+  flex:0 0 40px;
+}
+#cart-summary .build-summary-list:empty{
+  display:none;
+}
+#cart-empty{
+  margin:0;
+}
+#cart-summary .summary-clear{
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  padding:0 4px;
+}
+#cart-summary .summary-clear:hover{
+  color:var(--accent);
+}
+.build-summary-list strong{
+  font-weight:600;
+  color:var(--text);
+  font-style:italic;
+  flex:1 1 auto;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.build-summary-list strong:not(.has-selection){
+  color: var(--muted);
+}
+.summary-selection{
+  flex:1 1 auto;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.summary-price{
+  font-size:13px;
+  color:var(--muted);
+  font-weight:600;
+}
+.summary-clear{
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  font-size:18px;
+  cursor:pointer;
+  padding:0 4px;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.15s ease,color 0.15s ease;
+}
+.build-summary-list li.has-selection .summary-clear{
+  opacity:1;
+  visibility:visible;
+}
+.build-summary-list li.has-selection .summary-price{
+  color:var(--accent);
+}
+.summary-clear:hover{
+  color:var(--accent);
+}
+.build-summary-totals{
+  border-top:1px solid rgba(15,23,36,0.08);
+  padding-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.summary-total-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:15px;
+  color:var(--muted);
+}
+.summary-total-row strong{
+  font-size:16px;
+  color:var(--text);
+}
+.summary-grand-total{
+  font-size:18px;
+  font-weight:400;
+  color:var(--text);
+  border-top:1px dashed rgba(15,23,36,0.1);
+  padding-top:10px;
+}
+.summary-grand-total strong{
+  font-size:18px;
+  color:var(--accent);
+}
+.checkout-btn{
+  width:100%;
+  border-radius:12px;
+  text-align:center;
+  background:var(--accent);
+  color:#fff;
+  padding:12px 0;
+  font-size:16px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(11,99,255,0.25);
+  transition:background 0.2s ease,transform 0.2s ease;
+}
+.checkout-btn:hover{
+  background:var(--highlight-accent);
+  transform:translateY(-1px);
+}
+.build-summary-list strong.has-selection{
+  color:var(--accent);
+  font-style:normal;
+}
+
+/* Make "Not selected" (build summary values) muted in dark mode */
+[data-theme="dark"] .build-summary-list strong:not(.has-selection),
+[data-theme="dark"] .build-summary-list .not-selected,
+body.dark-mode .build-summary-list strong:not(.has-selection) {
+  color: var(--muted) !important;
+  opacity: 1 !important;
+}
+
+/* Default summary price (dash) should be muted in dark mode too */
+[data-theme="dark"] .summary-price,
+body.dark-mode .summary-price {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .summary-selection .summary-price:not(.has-selection) + .summary-qty,
+[data-theme="dark"] .summary-selection .not-selected + .summary-price,
+[data-theme="dark"] .build-summary-list .dash {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .build-summary-list li.has-selection .summary-price,
+body.dark-mode .build-summary-list li.has-selection .summary-price {
+  color: var(--accent);
+}
+
+[data-theme="dark"] .build-summary-inner,
+body.dark-mode .build-summary-inner {
+  background: transparent;
+}
+
+[data-theme="dark"] .build-summary-list li,
+body.dark-mode .build-summary-list li {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .build-summary-icon,
+body.dark-mode .build-summary-icon {
+  background: rgba(11,99,255,0.25);
+}
+
+/* Dark mode readability for totals (Subtotal, VAT, Total labels/values) */
+[data-theme="dark"] .summary-total-row,
+body.dark-mode .summary-total-row {
+  color: var(--text);
+}
+
+[data-theme="dark"] .summary-total-row strong,
+body.dark-mode .summary-total-row strong {
+  color: var(--text-primary);
+}
+[data-theme="dark"] #build-subtotal,
+[data-theme="dark"] #build-vat,
+body.dark-mode #build-subtotal,
+body.dark-mode #build-vat{
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .summary-grand-total,
+body.dark-mode .summary-grand-total {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .summary-grand-total strong,
+body.dark-mode .summary-grand-total strong {
+  color: var(--accent);
+}
+
+/* Keep selected values highlighted with accent */
+[data-theme="dark"] .build-summary-list strong.has-selection {
+  color: var(--accent) !important;
+  font-style: normal;
+}
+
+.build-toast{
+  position:fixed;
+  left:24px;
+  bottom:50px;
+  padding:14px 20px;
+  border-radius:14px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  box-shadow:0 18px 40px rgba(15,23,36,0.3);
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity 0.25s ease,transform 0.25s ease;
+  pointer-events:none;
+  z-index:160;
+  max-width:420px;
+  width:calc(100% - 48px);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.build-toast.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+.build-toast[aria-hidden="true"]{
+  opacity:0;
+}
+
+  @media (max-width:600px){
+  .build-toggle{
+    left:16px;
+    right:16px;
+    width:auto;
+    max-width:none;
+    justify-content:space-between;
+  }
+  .build-summary-panel{
+    left:16px;
+    right:16px;
+    width:auto;
+  }
+  .build-toast{
+    left:16px;
+    right:auto;
+    bottom:140px;
+  }
+}
+
+/* ===== DARK MODE FIXES FOR BUILD SUMMARY ===== */
+
+/* Panel container */
+[data-theme="dark"] .build-summary-panel,
+body.dark-mode .build-summary-panel {
+  background: var(--card-dark, #181818) !important;
+  border: 1px solid #2e2e2e !important;
+  color: #f5f5f5 !important;
+  transition: none !important;
+}
+
+/* List items background */
+[data-theme="dark"] .build-summary-list li,
+body.dark-mode .build-summary-list li {
+  background: #1f1f1f !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e5e7eb !important;
+  transition: none !important;
+}
+
+/* Component labels (CPU, GPU, etc.) */
+[data-theme="dark"] .build-summary-list li > span:first-child,
+body.dark-mode .build-summary-list li > span:first-child {
+  color: #9ca3af !important;
+  transition: none !important;
+}
+
+/* "Not selected" text */
+[data-theme="dark"] .build-summary-list strong:not(.has-selection),
+body.dark-mode .build-summary-list strong:not(.has-selection) {
+  color: var(--muted) !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+/* Selected items stay blue */
+[data-theme="dark"] .build-summary-list strong.has-selection,
+body.dark-mode .build-summary-list strong.has-selection {
+  color: var(--accent) !important; /* stays blue */
+  font-style: normal;
+  transition: none !important;
+}
+
+/* Selected prices stay blue */
+[data-theme="dark"] .build-summary-list li.has-selection .summary-price,
+body.dark-mode .build-summary-list li.has-selection .summary-price {
+  color: var(--accent) !important; /* blue color for selected items */
+  font-weight: 600;
+  transition: none !important;
+}
+
+/* Totals section */
+[data-theme="dark"] .summary-total-row span,
+body.dark-mode .summary-total-row span {
+  color: #a1a1aa !important;
+  transition: none !important;
+}
+
+/* Dark mode: ensure divider lines are visible in build and cart */
+[data-theme="dark"] .build-summary-totals,
+body.dark-mode .build-summary-totals {
+  border-top: 1px solid var(--border); /* clearer top divider */
+}
+
+[data-theme="dark"] .summary-grand-total,
+body.dark-mode .summary-grand-total {
+  border-top: 1px dashed rgba(255,255,255,0.16); /* visible dashed divider */
+}
+
+[data-theme="dark"] .checkout-summary .summary-item.total,
+body.dark-mode .checkout-summary .summary-item.total {
+  border-top: 1px solid rgba(255,255,255,0.12); /* cart section divider */
+}
+
+[data-theme="dark"] .summary-total-row:not(.summary-grand-total) strong,
+body.dark-mode .summary-total-row:not(.summary-grand-total) strong {
+  color: var(--text-primary) !important; /* use primary text for Subtotal/VAT */
+  transition: none !important;
+}
+
+/* “×” clear button */
+[data-theme="dark"] .summary-clear,
+body.dark-mode .summary-clear {
+  color: #9ca3af !important;
+  transition: none !important;
+}
+
+[data-theme="dark"] .summary-clear:hover,
+body.dark-mode .summary-clear:hover {
+  color: var(--accent) !important;
+}
+
+/* Disable background transition delays */
+.build-summary-panel,
+.build-toggle,
+.build-summary-list li,
+input,
+textarea {
+  transition: none !important;
+}
+
+
 
 /* ---------- Responsive rules (updated) ---------- */
 /* Responsive */
@@ -912,7 +1709,7 @@ body.auth-page .auth-container{
   .nav-actions .login{display:none;}
   .nav-actions .btn.signup{display:none;}
   .nav{display:none}
-  .menu-toggle{display:inline-flex;align-items:center;justify-content:center;margin-right:36px;font-size:26px;padding:6px 10px;border-radius:10px;border:1px solid rgba(15,23,36,0.08);background:#fff;color:var(--text);box-shadow:0 4px 12px rgba(12,15,20,0.08)}
+  .menu-toggle{display:inline-flex;align-items:center;justify-content:center;margin-right:0;font-size:26px;padding:6px 10px;border-radius:10px;border:1px solid rgba(15,23,36,0.08);background:#fff;color:var(--text);box-shadow:0 4px 12px rgba(12,15,20,0.08)}
   .menu-toggle:focus{outline:none;box-shadow:0 0 0 3px rgba(var(--accent),0.15)}
   .hero-grid{grid-template-columns:1fr;gap:28px}
   .hero-right{justify-content:center}
@@ -995,4 +1792,738 @@ body.auth-page .auth-container{
   }
 }
 
+/* ===============================
+   THEME TOGGLE (Custom Icons - PNG)
+   =============================== */
+.theme-toggle {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  height: 30px;
+  margin-left: 1rem;
+}
 
+.theme-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Background pill */
+.theme-toggle .slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--muted);
+  border-radius: 34px;
+  transition: background-color 0.4s, box-shadow 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+/* The circle knob */
+.theme-toggle .slider::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 4px;
+  background-color: var(--card);
+  border-radius: 50%;
+  transition: transform 0.4s ease, background 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Sun & Moon icons as background images */
+.theme-toggle .sun,
+.theme-toggle .moon {
+  width: 16px;
+  height: 16px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* Sun icon (default light mode) */
+.theme-toggle .sun {
+  background-image: url("assets/sun.png");
+  opacity: 1;
+}
+
+/* Moon icon (default hidden) */
+.theme-toggle .moon {
+  background-image: url("assets/moon.png");
+  opacity: 0.5;
+}
+
+/* When dark mode is ON */
+.theme-toggle input:checked + .slider {
+  background-color: var(--accent);
+}
+
+.theme-toggle input:checked + .slider::before {
+  transform: translateX(26px);
+}
+
+.theme-toggle input:checked + .slider .sun {
+  opacity: 0.5;
+}
+
+.theme-toggle input:checked + .slider .moon {
+  opacity: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25)) brightness(0) invert(1);
+}
+
+/* ===============================
+   DARK MODE STYLES (Improved)
+   =============================== */
+[data-theme="dark"] {
+  --bg: #181a1f; /* slightly lighter so black logo text is visible */
+  --card: #1e1e1e;
+  --text-primary: #eaeaea;
+  --text-secondary: #a0a0a0;
+  --border: #333333;
+  --accent: #0b63ff; /* ✅ main blue accent */
+  --highlight-accent: #0c3375; /* ✅ lighter hover blue */
+  --muted: #9ca3af;
+  --logo-pick: #e5e7eb; /* Light gray for visibility on dark backgrounds */
+  /* Unified focus ring color for dark mode */
+  --focus-ring: rgba(255, 255, 255, 0.10);
+}
+
+
+/* Background and text */
+[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* Header and logo visibility */
+[data-theme="dark"] .site-header {
+  background: rgba(24, 26, 31, 0.95);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+}
+
+[data-theme="dark"] .logo-text span {
+  color: #ffffff !important; /* Ensure 'PICK' is visible on dark bg */
+}
+
+/* Make "Your Build" label blue in dark mode */
+[data-theme="dark"] .build-summary-label,
+[data-theme="dark"] .build-toggle-title {
+  color: var(--accent);
+}
+
+
+/* Navigation links */
+[data-theme="dark"] .nav a {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .nav a:hover {
+  color: var(--accent);
+}
+
+/* Cards / Featured Products */
+[data-theme="dark"] .card,
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .featured-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  color: var(--text-primary);
+}
+
+/* Featured section background fix */
+[data-theme="dark"] .featured-products-section,
+[data-theme="dark"] #featured,
+[data-theme="dark"] .featured {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* Buttons */
+[data-theme="dark"] .btn.prebuilt,
+[data-theme="dark"] .btn.view {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+[data-theme="dark"] .btn.prebuilt:hover,
+[data-theme="dark"] .btn.view:hover {
+  background: var(--highlight-accent);
+}
+
+/* CTA Section ("Ready to Get Started?") */
+[data-theme="dark"] .cta-box {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: #f1f5f9;
+}
+[data-theme="dark"] .cta-box h2,
+[data-theme="dark"] .cta-box p {
+  color: #f8fafc; /* brighter for visibility */
+}
+[data-theme="dark"] .cta-box .btn {
+  background: #3b82f6;
+  color: white;
+}
+[data-theme="dark"] .cta-box .btn:hover {
+  background: var(--highlight-accent);
+  color: white;
+}
+/* Footer */
+[data-theme="dark"] footer,
+[data-theme="dark"] .site-footer {
+  background: #1b1d22;
+  color: var(--text-secondary);
+}
+
+/* 🌙 Fix: Product text visibility in dark mode */
+body.dark-mode .product-card h3,
+body.dark-mode .product-card .product-name,
+body.dark-mode .product-card .product-title,
+body.dark-mode .product-card p,
+body.dark-mode .product-card span,
+body.dark-mode .product-card .rating {
+  color: #eaeaea; /* bright, readable white */
+}
+
+body.dark-mode .product-card .price{
+  color: var(--accent); /* keep accent color for price */
+}
+
+body.dark-mode .product-card small {
+  color: #a0a0a0; /* secondary muted text */
+}
+
+/* Ensure only product titles are forced white in dark mode */
+body.dark-mode .product-card h3,
+[data-theme="dark"] .product-card h3,
+body.dark-mode .product-info h3,
+[data-theme="dark"] .product-info h3 {
+  color: #ffffff !important;
+}
+
+/* Ensure featured product titles are white in dark mode (only titles) */
+body.dark-mode .featured-info h3,
+[data-theme="dark"] .featured-info h3,
+body.dark-mode .featured-card h3,
+[data-theme="dark"] .featured-card h3 {
+  color: #ffffff !important;
+}
+/* keep featured price color unchanged */
+body.dark-mode .featured-info .price,
+[data-theme="dark"] .featured-info .price {
+  color: var(--accent) !important;
+}
+
+/* 🌙 Dark mode — make "View All Products" button blue with white text */
+[data-theme="dark"] .btn.view-all {
+  background-color: #3b82f6; /* bright blue */
+  color: #ffffff; /* white text */
+  border: none;
+}
+
+[data-theme="dark"] .btn.view-all:hover {
+  background-color: #60a5fa; /* lighter blue on hover */
+  color: #ffffff; /* keep text white */
+}
+
+
+/* 🌙 Dark Mode for Login/Signup Page */
+[data-theme="dark"] .auth-left {
+  background: linear-gradient(135deg, #0f172a, #1e293b); /* keep the nice blue gradient */
+  color: #f1f5f9;
+}
+
+/* ✅ Only change the main heading to white */
+[data-theme="dark"] .auth-left h1 {
+  color: #ffffff;
+}
+
+/* ✅ Make paragraph gray instead of white */
+[data-theme="dark"] .auth-left p {
+  color: #94a3b8;
+}
+
+
+
+/* ✅ Right side dark theme — keep nice contrast */
+[data-theme="dark"] .auth-right {
+  background: linear-gradient(135deg, #0b1120, #1e293b); /* smooth deep blue gradient */
+  color: #f1f5f9;
+}
+
+/* Form + text elements inside */
+[data-theme="dark"] .auth-right input,
+[data-theme="dark"] .auth-right label,
+[data-theme="dark"] .auth-right p,
+[data-theme="dark"] .auth-right h2,
+[data-theme="dark"] .auth-right a {
+  color: #e2e8f0;
+}
+
+/* Inputs */
+[data-theme="dark"] .auth-right input {
+  --auth-input-text: #f1f5f9;
+  --auth-input-bg: #0f172a;
+  --auth-input-border: #334155;
+  background-color: var(--auth-input-bg, #0f172a);
+  border: 1px solid var(--auth-input-border, #334155);
+  color: var(--auth-input-text, #f1f5f9);
+}
+
+[data-theme="dark"] .auth-right input::placeholder {
+  color: #94a3b8;
+}
+
+/* Autofill fixes — dark mode */
+[data-theme="dark"] .auth-right input:-webkit-autofill,
+[data-theme="dark"] .auth-right input:-webkit-autofill:hover {
+  -webkit-text-fill-color: var(--auth-input-text, #f1f5f9);
+  caret-color: var(--auth-input-text, #f1f5f9);
+  -webkit-box-shadow: 0 0 0px 1000px var(--auth-input-bg, #0f172a) inset;
+  box-shadow: 0 0 0px 1000px var(--auth-input-bg, #0f172a) inset;
+  border: 1px solid var(--auth-input-border, #334155);
+}
+[data-theme="dark"] .auth-right input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--auth-input-bg, #0f172a) inset, 0 0 0 3px var(--focus-ring);
+  box-shadow: 0 0 0px 1000px var(--auth-input-bg, #0f172a) inset, 0 0 0 3px var(--focus-ring);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Buttons */
+[data-theme="dark"] .auth-btn {
+  background-color: #0b63ff;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .auth-btn:hover {
+  background-color: #0c3375;
+}
+
+/* Social buttons */
+[data-theme="dark"] .social-login button {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+}
+
+[data-theme="dark"] .social-login button:hover {
+  background-color: #1e293b;
+}
+
+/* 🌙 Dark Mode - Hamburger Menu */
+[data-theme="dark"] #menu-toggle {
+  background-color: #111827; /* match dark container */
+  color: #f1f5f9; /* icon color */
+  border: 1px solid #1e293b; /* subtle border to match theme */
+}
+
+/* Optional: hover state for nice effect */
+[data-theme="dark"] #menu-toggle:hover {
+  background-color: #1e293b;
+}
+
+/* 🌙 Dark Mode — Mobile Drawer */
+[data-theme="dark"] #mobile-drawer {
+  background-color: #111827; /* Matches dark background */
+  color: #f1f5f9;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Drawer links (Home, Products, PC Builder, etc.) */
+[data-theme="dark"] #mobile-drawer a {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] #mobile-drawer a:hover {
+  color: #60a5fa; /* Soft blue hover */
+}
+
+/* Drawer actions (Log In / Sign Up section) */
+[data-theme="dark"] .drawer-actions {
+  background-color: #1e293b;
+  border-top: 1px solid #334155;
+  padding: 1rem;
+}
+
+/* Log In link */
+[data-theme="dark"] .drawer-actions .login {
+  color: #e2e8f0;
+}
+
+/* Sign Up button */
+[data-theme="dark"] .drawer-actions .signup {
+  background-color: #2563eb;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+}
+
+[data-theme="dark"] .drawer-actions .signup:hover {
+  background-color: #1d4ed8;
+}
+
+/* Default light theme */
+.search-bar input {
+  background-color: #fff;
+  color: #000;
+}
+
+/* 🌙 Dark Mode — Search Bar (Match Tabs Color) */
+[data-theme="dark"] .product-search input {
+  background-color: #1e1e1e; /* same gray as tabs */
+  color: #f1f5f9; /* white text */
+  border: 1px solid #333333; /* subtle dark border */
+}
+
+[data-theme="dark"] .product-search input::placeholder {
+  color: #9ca3af; /* soft gray placeholder */
+}
+
+[data-theme="dark"] .product-search input:focus {
+  border-color: #3b82f6; /* slight blue highlight on focus only */
+  outline: none;
+  box-shadow: none; /* no glow, clean look */
+  /* keep the icon visible in dark focus state too */
+  background: #1e1e1e url("assets/search.png") no-repeat left 14px center;
+  background-size: 18px;
+}
+
+/* 🌙 Dark Mode — Tabs */
+[data-theme="dark"] .product-tabs .tab {
+  background-color: #1e1e1e; /* same gray as other sections */
+  color: #e5e7eb; /* light gray text */
+  border: none;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .product-tabs .tab:hover {
+  /* Increase contrast so hover is visible on dark surfaces */
+  background: rgba(11,99,255,0.22);
+  color: #ffffff;
+}
+
+/* Keep selected state on hover (dark mode) */
+[data-theme="dark"] .product-tabs .tab.active:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+/* ✅ Active tab in dark mode */
+[data-theme="dark"] .product-tabs .tab.active {
+  background-color: #2563eb; /* bright blue like Add to Cart */
+  color: #ffffff;
+}
+
+/* Optional: smooth hover effect in light mode too */
+.product-tabs .tab {
+  transition: all 0.2s ease;
+}
+
+/* Light theme */
+.build-summary {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Dark mode */
+body.dark .build-summary {
+  background-color: #1c1c1c; /* Same tone as product cards */
+  color: #fff;
+  border: 1px solid #2e2e2e;
+}
+
+/* "Your Build" title and section headers */
+body.dark .build-summary h3,
+body.dark .build-summary p {
+  color: #fff;
+}
+
+/* Keep "Your Build" toggle text white in dark mode */
+[data-theme="dark"] .build-toggle,
+[data-theme="dark"] .build-toggle .build-toggle-text,
+[data-theme="dark"] .build-toggle .build-toggle-title,
+[data-theme="dark"] .build-toggle .build-toggle-count {
+  color: #ffffff !important;
+}
+
+/* Ensure the cart icon contrast stays readable (remove color inversion if applied) */
+[data-theme="dark"] .build-toggle-cart img {
+  filter: none !important;
+}
+
+/* ===== Checkout headings dark-mode fixes (append only) ===== */
+/* Make the main Checkout title visible (white) in dark mode */
+[data-theme="dark"] .checkout-title,
+body.dark-mode .checkout-title,
+[data-theme="dark"] .checkout-container h1,
+body.dark-mode .checkout-container h1 {
+  color: #ffffff !important;
+}
+
+/* Make Order Summary heading match the billing/section accent in dark mode */
+[data-theme="dark"] .checkout-summary h2,
+body.dark-mode .checkout-summary h2 {
+  color: var(--accent) !important;
+  font-weight: 700;
+}
+
+/* Ensure left-side section headings (Billing / Shipping) remain accent colored in dark mode */
+[data-theme="dark"] .checkout-section h2,
+body.dark-mode .checkout-section h2 {
+  color: var(--accent) !important;
+  font-weight: 700;
+}
+
+/* ---------- CHECKOUT LAYOUT ---------- */
+
+.checkout-container {
+  max-width: 1200px;
+  margin: 6rem auto 2rem;
+  padding: 0 20px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.checkout-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 1.25rem;
+}
+
+/* === TWO-COLUMN CHECKOUT LAYOUT === */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+  .checkout-summary {
+    margin-top: 2rem;
+  }
+}
+
+/* left column */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* === SECTION BOXES === */
+.checkout-section {
+  background: var(--card);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+}
+
+.checkout-section:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-section h2 {
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ===== FORM FIELDS ===== */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.75rem;
+}
+
+.form-grid label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.form-grid.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+/* ===== INPUT BOXES ===== */
+.checkout-section input[type="text"],
+.checkout-section input[type="email"],
+.checkout-section input[type="number"],
+.checkout-section select,
+.checkout-section textarea {
+  width: 100%;
+  background: #f9fafb; /* light background */
+  border: 1.5px solid #d1d5db; /* subtle outline */
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  line-height: 1.4;
+}
+
+input::placeholder {
+  color: #9ca3af; /* grayish placeholder */
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  background: #ffffff;
+}
+
+/* === RIGHT COLUMN: SUMMARY === */
+.checkout-summary {
+  background: var(--card);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  height: fit-content;
+}
+
+.checkout-summary h2 {
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.checkout-summary p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* === SUMMARY ITEMS === */
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.summary-item.total {
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+/* === BUTTON === */
+.place-order,
+.btn-place {
+  display: block;
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.08s ease;
+}
+
+.place-order:hover,
+.btn-place:hover { background: var(--highlight-accent); transform: translateY(-2px); }
+
+/* small helper list under summary */
+.checkout-benefits { margin-top: 14px; color: var(--muted); font-size: 0.95rem; list-style:none; padding-left:0; }
+.checkout-benefits li { margin-bottom:8px; }
+
+input::placeholder {
+  color: #9ca3af;
+  transition: none !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  background: #ffffff;
+  transition: none !important;
+}
+
+/* ===== SECTION BOXES ===== */
+.checkout-section {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: none !important; /* no fade when switching themes */
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+:root.dark .checkout-section,
+[data-theme="dark"] .checkout-section {
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: none !important;
+}
+
+:root.dark input::placeholder,
+[data-theme="dark"] input::placeholder {
+  color: #9ca3af;
+  transition: none !important;
+}
+
+:root.dark input:focus,
+:root.dark select:focus,
+:root.dark textarea:focus,
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  background: var(--text);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+  transition: none !important;
+}
