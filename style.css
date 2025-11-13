@@ -89,7 +89,14 @@ body.auth-page{
 .user-badge__menu-list{display:flex;flex-direction:column;gap:8px}
 .user-badge__menu-item{width:100%;text-align:left;border:0;border-radius:10px;padding:10px 12px;background:rgba(15,23,36,0.03);font-size:15px;font-weight:500;color:var(--text);cursor:pointer;transition:background .2s ease,color .2s ease}
 .user-badge__menu-item:hover{background:rgba(0,102,255,0.08);color:var(--accent)}
-.dark-mode .user-badge__toggle{background:var(--card-dark, #181818);border-color:1px solid #2e2e2e}
+.dark-mode .user-badge__toggle{background:var(--card-dark, #181818);border:1px solid #2e2e2e;box-shadow:0 0 0 1px rgba(255,255,255,0.06)}
+/* Support attribute-based dark theme too */
+[data-theme="dark"] .user-badge__toggle{background:var(--card, #1e1e1e);border:1px solid #2e2e2e;box-shadow:0 0 0 1px rgba(255,255,255,0.06)}
+/* Improve focus/hover visibility in dark mode */
+.dark-mode .user-badge__toggle:hover,
+[data-theme="dark"] .user-badge__toggle:hover{border-color:rgba(255,255,255,0.22)}
+.dark-mode .user-badge__toggle:focus-visible,
+[data-theme="dark"] .user-badge__toggle:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus-ring);border-color:rgba(255,255,255,0.22)}
 .dark-mode .user-badge__menu{
   background: var(--card-dark, #181818);
   border: 1px solid #2e2e2e;

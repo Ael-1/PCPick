@@ -229,6 +229,9 @@ window.addEventListener('load', () => {
   });
 })();
 
+// Note: Supabase cart writes are handled in supabase-data.js (pcpickPersistCart).
+// We removed a duplicate mirroring block here that could erase server rows on refresh.
+
 (function () {
   // Find buttons/links whose visible text includes "checkout" (case-insensitive)
   const candidates = Array.from(document.querySelectorAll('a,button'))
@@ -236,12 +239,29 @@ window.addEventListener('load', () => {
 
   if (candidates.length === 0) return;
 
+  const REF = 'wuxcglaecmmpdtoxgchu';
+  const STORAGE_KEY = `sb-${REF}-auth-token`;
+  const isLoggedIn = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      const candidates = [parsed?.currentSession, parsed?.session, parsed?.data?.session, parsed];
+      const session = candidates.find((s) => s && s.access_token && s.user);
+      return Boolean(session && session.user && session.access_token);
+    } catch { return false; }
+  };
+
   candidates.forEach(btn => {
     btn.addEventListener('click', (e) => {
       // prevent default form submission or link navigation so we can route to checkout page
       e.preventDefault();
-      // navigate to checkout page
-      window.location.href = 'checkout.html';
+      // navigate: if not logged in, go to login first
+      if (!isLoggedIn()) {
+        window.location.href = 'login.html';
+      } else {
+        window.location.href = 'checkout.html';
+      }
     });
   });
 })();
@@ -494,7 +514,7 @@ window.addEventListener('load', () => {
     btn?.setAttribute('aria-busy', 'true');
     localStorage.removeItem(STORAGE_KEY);
     await performSupabaseLogout(session);
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
   };
 
   const wireTemporaryLogout = () => {

@@ -73,6 +73,7 @@
       <p class="section-description">Browse brand new and expertly configured systems. No hassle!</p>
 
       <!-- CPU PRODUCTS -->
+       <div id="prebuilt-section" class="product-grid"></div>
       <div id="cpu-section" class="product-grid">
         <div class="product-card">
           <img src="assets/Ryzen9_7950X.jpg" alt="Ryzen 9 7950X">
@@ -161,7 +162,6 @@
           </div>
         </div>
       </div>
-
     </section>
   </main>
 
@@ -224,6 +224,9 @@
   <div class="build-toast" id="product-toast" role="status" aria-live="polite" aria-hidden="true"></div>
 
   <script src="script.js"></script>
+  <!-- Supabase client (UMD) and data loader -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-data.js"></script>
   <script>
     (function(){
       const cartToggle = document.getElementById('cart-toggle');
@@ -269,12 +272,13 @@
         if (input) input.value = String(Math.max(1, q));
       };
 
-      const ensureCartRow = (key, name, unit) => {
+      const ensureCartRow = (key, name, unit, uid) => {
         let row = cartList?.querySelector(`li[data-key="${key}"]`);
         if (row) return row;
         row = document.createElement('li');
         row.classList.add('has-selection');
         row.dataset.key = key;
+        if (uid) row.dataset.uid = uid;
         row.innerHTML = `
           <span>Item</span>
           <div class="summary-selection">
@@ -318,18 +322,21 @@
         return row;
       };
 
-      const adjustCartQuantity = (name, unit, delta) => {
+      const adjustCartQuantity = (name, unit, delta, uid) => {
         if (!delta) return;
         const key = productKey(name, unit);
-        const current = cartItems.get(key) || { name, unit, qty: 0 };
+        const current = cartItems.get(key) || { name, unit, qty: 0, uid };
+        if (uid && !current.uid) current.uid = uid;
         current.qty = Math.max(0, current.qty + delta);
         if (current.qty === 0) {
           cartItems.delete(key);
           cartList?.querySelector(`li[data-key="${key}"]`)?.remove();
+          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: 0 }); } catch {}
         } else {
           cartItems.set(key, current);
-          ensureCartRow(key, name, unit);
+          ensureCartRow(key, name, unit, current.uid);
           updateCartRowQty(key);
+          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: current.qty }); } catch {}
         }
         renderTotals();
       };
@@ -370,10 +377,13 @@
         }
       });
 
-      // Inject quantity controls and wire events
-      document.querySelectorAll('.add-cart-btn').forEach(btn=>{
-        const card = btn.closest('.product-card');
-        if (!card) return;
+      // Inject quantity controls and wire events for any new buttons
+      const wireNewAddToCartButtons = () => {
+        document.querySelectorAll('.add-cart-btn').forEach(btn=>{
+          if (btn.dataset.pcpickWired === '1') return;
+          btn.dataset.pcpickWired = '1';
+          const card = btn.closest('.product-card');
+          if (!card) return;
         const row = document.createElement('div');
         row.className = 'add-cart-row';
         const qc = document.createElement('div');
@@ -395,7 +405,8 @@
         const getData = () => {
           const name = card.querySelector('.product-info h3')?.textContent?.trim() || 'Item';
           const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || '$0');
-          return { name, unit };
+          const uid = card?.dataset?.uid || null;
+          return { name, unit, uid };
         };
 
         const amountInput = qc.querySelector('.qty-amount');
@@ -407,14 +418,15 @@
         };
 
         btn.addEventListener('click', ()=>{
-          const {name, unit} = getData();
+          const {name, unit, uid} = getData();
           const key = productKey(name, unit);
           const qty = selectedQuantities.get(key) ?? 0;
           if (qty <= 0) {
             showToast('Set a quantity first.');
             return;
           }
-          adjustCartQuantity(name, unit, qty);
+          adjustCartQuantity(name, unit, qty, uid);
+          try { if (uid) window.pcpickCartAdd?.({ product_uid: uid, price: unit, quantity: qty }); } catch {}
           showToast(`${qty} × ${name} added to cart!`);
           updateSelection(key, 0);
         });
@@ -439,7 +451,47 @@
           amountInput.value = String(parsed);
           updateSelection(key, parsed);
         });
+        });
+      };
+
+      // Initial wiring for static buttons
+      wireNewAddToCartButtons();
+      // Re-run after Supabase populates dynamic cards
+      document.addEventListener('pcpick:prebuilt-populated', wireNewAddToCartButtons);
+
+      // Apply server cart snapshot (if any)
+      let snapshotApplied = false;
+      const applyCartSnapshot = (rows=[]) => {
+        if (snapshotApplied) return;
+        try {
+          let applied = 0;
+          rows.forEach((r) => {
+            const uid = r.uid;
+            let name = r.name;
+            let unit = Number(r.price || 0);
+            if (!name || !unit) {
+              const card = document.querySelector(`.product-card[data-uid="${uid}"]`);
+              const domName = card?.querySelector('.product-info h3')?.textContent?.trim();
+              const domUnit = parsePrice(card?.querySelector('.price')?.textContent?.trim() || '$0');
+              name = name || domName || 'Item';
+              if (!Number.isFinite(unit) || unit <= 0) unit = domUnit;
+            }
+            const qty = Math.max(0, Number(r.quantity || 0));
+            if (qty > 0) { adjustCartQuantity(name, unit, qty, uid); applied++; }
+          });
+          if (applied > 0) snapshotApplied = true;
+        } catch {}
+      };
+      document.addEventListener('pcpick:cart-snapshot', (e) => applyCartSnapshot(e.detail?.rows || []));
+      // Listen for cross-tab/cart updates via localStorage
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'pcpick:cart' && typeof e.newValue === 'string') {
+          try { const parsed = JSON.parse(e.newValue || '{}'); applyCartSnapshot(parsed.rows || []); } catch {}
+        }
       });
+      // Seed from localStorage (fast) then Supabase (authoritative)
+      try { const cached = JSON.parse(localStorage.getItem('pcpick:cart') || 'null'); if (cached?.rows) applyCartSnapshot(cached.rows); } catch {}
+      window.pcpickGetCartSnapshot?.().then(applyCartSnapshot);
     })();
   </script>
 </body>
