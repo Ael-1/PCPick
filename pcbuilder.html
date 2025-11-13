@@ -67,7 +67,8 @@
       <!-- Category buttons -->
       <div class="products-controls">
         <div class="product-tabs" role="tablist" aria-label="product categories">
-          <button class="tab active" data-cat="cpu-section">CPUs</button>
+          <button class="tab active" data-cat="all-section">All</button>
+          <button class="tab" data-cat="cpu-section">CPUs</button>
           <button class="tab" data-cat="gpu-section">Graphics Cards</button>
           <button class="tab" data-cat="memory-section">Memory (RAM)</button>
           <button class="tab" data-cat="motherboard-section">Motherboards</button>
@@ -81,36 +82,9 @@
         </div>
       </div>
 
-
+      <div id="all-section" class="product-grid"></div>
       <!-- CPU PRODUCTS -->
       <div id="cpu-section" class="product-grid">
-        <div class="product-card">
-          <img src="assets/Ryzen9_7950X.jpg" alt="Ryzen 9 7950X">
-          <div class="product-info">
-            <h3>AMD Ryzen 9 7950X</h3>
-            <ul>
-              <li>16 Cores / 32 Threads</li>
-              <li>5.7 GHz Boost</li>
-              <li>AM5 Socket</li>
-            </ul>
-            <p class="price">$549</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="assets/Core i9-14900K.png" alt="Intel Core i9-14900K">
-          <div class="product-info">
-            <h3>Intel Core i9-14900K</h3>
-            <ul>
-              <li>24 Cores / 32 Threads</li>
-              <li>6.0 GHz Boost</li>
-              <li>LGA1700 Socket</li>
-            </ul>
-            <p class="price">$589</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
 
         <div class="product-card">
           <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
@@ -121,8 +95,8 @@
               <li>5.0 GHz Boost</li>
               <li>3D V-Cache</li>
             </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
+            <p class="price">PHP 449</p>
+            <button class="add-cart-btn">Select</button>
           </div>
         </div>
       </div>
@@ -138,8 +112,8 @@
               <li>16384 CUDA Cores</li>
               <li>450W TDP</li>
             </ul>
-            <p class="price">$1599</p>
-            <button class="add-cart-btn">Add to Cart</button>
+            <p class="price">PHP 1599</p>
+            <button class="add-cart-btn">Select</button>
           </div>
         </div>
 
@@ -152,8 +126,8 @@
               <li>RDNA 3 Architecture</li>
               <li>355W TDP</li>
             </ul>
-            <p class="price">$999</p>
-            <button class="add-cart-btn">Add to Cart</button>
+            <p class="price">PHP 999</p>
+            <button class="add-cart-btn">Select</button>
           </div>
         </div>
 
@@ -166,8 +140,8 @@
               <li>DLSS 3.0</li>
               <li>285W TDP</li>
             </ul>
-            <p class="price">$799</p>
-            <button class="add-cart-btn">Add to Cart</button>
+            <p class="price">PHP 799</p>
+            <button class="add-cart-btn">Select</button>
           </div>
         </div>
       </div>
@@ -184,7 +158,7 @@
               <li>32GB (2x16GB)</li>
               <li>RGB Lighting</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -199,7 +173,7 @@
               <li>64GB (2x32GB)</li>
               <li>Low Latency</li>
             </ul>
-            <p class="price">$249</p>
+            <p class="price">PHP 249</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -214,7 +188,7 @@
               <li>32GB (2x16GB)</li>
               <li>Budget Friendly</li>
             </ul>
-            <p class="price">$99</p>
+            <p class="price">PHP 99</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -232,7 +206,7 @@
               <li>PCIe 5.0</li>
               <li>WiFi 6E</li>
             </ul>
-            <p class="price">$499</p>
+            <p class="price">PHP 499</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -247,7 +221,7 @@
               <li>DDR5</li>
               <li>Thunderbolt 4</li>
             </ul>
-            <p class="price">$449</p>
+            <p class="price">PHP 449</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -262,7 +236,7 @@
               <li>PCIe 4.0</li>
               <li>M.2 Heatsink</li>
             </ul>
-            <p class="price">$199</p>
+            <p class="price">PHP 199</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -280,7 +254,7 @@
               <li>7450 MB/s Read</li>
               <li>2TB Capacity</li>
             </ul>
-            <p class="price">$199</p>
+            <p class="price">PHP 199</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -295,7 +269,7 @@
               <li>7300 MB/s Read</li>
               <li>1TB Capacity</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -310,7 +284,7 @@
               <li>5000 MB/s Read</li>
               <li>4TB Capacity</li>
             </ul>
-            <p class="price">$299</p>
+            <p class="price">PHP 299</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -328,7 +302,7 @@
               <li>80+ Gold</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$179</p>
+            <p class="price">PHP 179</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -343,7 +317,7 @@
               <li>80+ Gold</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$139</p>
+            <p class="price">PHP 139</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -358,7 +332,7 @@
               <li>80+ Titanium</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$399</p>
+            <p class="price">PHP 399</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -376,7 +350,7 @@
               <li>Tempered Glass</li>
               <li>USB-C Front Panel</li>
             </ul>
-            <p class="price">$164</p>
+            <p class="price">PHP 164</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -391,7 +365,7 @@
               <li>Mesh Front</li>
               <li>Cable Management</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -406,7 +380,7 @@
               <li>Dual Chamber</li>
               <li>Showcase Design</li>
             </ul>
-            <p class="price">$159</p>
+            <p class="price">PHP 159</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -424,7 +398,7 @@
               <li>RGB Pump</li>
               <li>Quiet Operation</li>
             </ul>
-            <p class="price">$179</p>
+            <p class="price">PHP 179</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -439,7 +413,7 @@
               <li>Premium Fans</li>
               <li>Silent</li>
             </ul>
-            <p class="price">$109</p>
+            <p class="price">PHP 109</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -454,14 +428,109 @@
               <li>LCD Display</li>
               <li>RGB Fans</li>
             </ul>
-            <p class="price">$189</p>
+            <p class="price">PHP 189</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
       </div>
-
+    </div>
     </section>
   </main>
+
+  <aside class="build-summary-panel" id="build-summary" aria-hidden="true">
+    <div class="build-summary-inner">
+      <header class="build-summary-header">
+        <span class="build-summary-icon" aria-hidden="true">
+          <img src="assets/cart.png" alt="">
+        </span>
+        <div>
+          <p class="build-summary-label">Your Build</p>
+          <p class="build-summary-note">Review selected components</p>
+        </div>
+      </header>
+      <ul class="build-summary-list">
+        <li data-summary-item="cpu">
+          <span>CPU</span>
+          <div class="summary-selection">
+            <strong data-category="cpu">Not selected</strong>
+            <span class="summary-price" data-price-category="cpu">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="cpu" aria-label="Clear CPU selection">×</button>
+        </li>
+        <li data-summary-item="gpu">
+          <span>GPU</span>
+          <div class="summary-selection">
+            <strong data-category="gpu">Not selected</strong>
+            <span class="summary-price" data-price-category="gpu">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="gpu" aria-label="Clear GPU selection">×</button>
+        </li>
+        <li data-summary-item="ram">
+          <span>RAM</span>
+          <div class="summary-selection">
+            <strong data-category="ram">Not selected</strong>
+            <span class="summary-price" data-price-category="ram">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="ram" aria-label="Clear RAM selection">×</button>
+        </li>
+        <li data-summary-item="motherboard">
+          <span>Motherboard</span>
+          <div class="summary-selection">
+            <strong data-category="motherboard">Not selected</strong>
+            <span class="summary-price" data-price-category="motherboard">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="motherboard" aria-label="Clear Motherboard selection">×</button>
+        </li>
+        <li data-summary-item="storage">
+          <span>Storage</span>
+          <div class="summary-selection">
+            <strong data-category="storage">Not selected</strong>
+            <span class="summary-price" data-price-category="storage">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="storage" aria-label="Clear Storage selection">×</button>
+        </li>
+        <li data-summary-item="psu">
+          <span>PSU</span>
+          <div class="summary-selection">
+            <strong data-category="psu">Not selected</strong>
+            <span class="summary-price" data-price-category="psu">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="psu" aria-label="Clear PSU selection">×</button>
+        </li>
+        <li data-summary-item="case">
+          <span>Case</span>
+          <div class="summary-selection">
+            <strong data-category="case">Not selected</strong>
+            <span class="summary-price" data-price-category="case">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="case" aria-label="Clear Case selection">×</button>
+        </li>
+        <li data-summary-item="cooler">
+          <span>Cooler</span>
+          <div class="summary-selection">
+            <strong data-category="cooler">Not selected</strong>
+            <span class="summary-price" data-price-category="cooler">—</span>
+          </div>
+          <button class="summary-clear" type="button" data-category="cooler" aria-label="Clear Cooler selection">×</button>
+        </li>
+      </ul>
+      <div class="build-summary-totals">
+        <div class="summary-total-row">
+          <span>Subtotal</span>
+          <strong id="build-subtotal">PHP 0.00</strong>
+        </div>
+        <div class="summary-total-row">
+          <span>VAT (12%)</span>
+          <strong id="build-vat">PHP 0.00</strong>
+        </div>
+        <div class="summary-total-row summary-grand-total">
+          <span>Total</span>
+          <strong id="build-total">PHP 0.00</strong>
+        </div>
+        <button class="btn checkout-btn" type="button">Checkout</button>
+      </div>
+    </div>
+  </aside>
 
   <footer class="site-footer">
     <div class="container">
@@ -485,19 +554,22 @@
     const cpuSection = document.getElementById("cpu-section");
     const gpuSection = document.getElementById("gpu-section");
 
-    cpuBtn.addEventListener("click", () => {
-      cpuSection.style.display = "grid";
-      gpuSection.style.display = "none";
-      cpuBtn.classList.add("active");
-      gpuBtn.classList.remove("active");
-    });
+    const builderTabs = document.querySelectorAll(".pcbuilder .product-tabs .tab");
+    const builderSections = document.querySelectorAll(".pcbuilder .product-grid");
+    const builderStack = document.querySelector(".pcbuilder .product-grid-stack");
 
-    gpuBtn.addEventListener("click", () => {
-      gpuSection.style.display = "grid";
-      cpuSection.style.display = "none";
-      gpuBtn.classList.add("active");
-      cpuBtn.classList.remove("active");
-    });
+    if (builderTabs.length && builderSections.length) {
+      const showSection = (targetId) => {
+        const showAll = targetId === "all";
+        if (builderStack) builderStack.classList.toggle("show-all", showAll);
+        builderSections.forEach((section) => {
+          if (showAll) {
+            section.style.display = "contents";
+          } else {
+            section.style.display = section.id === targetId ? "grid" : "none";
+          }
+        });
+      };
 
     const builderChevron = document.getElementById("pcbuilder-chevron");
     if (builderChevron) {
@@ -505,6 +577,210 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     }
+
+    const summaryMap = {};
+    document.querySelectorAll(".build-summary-list strong[data-category]").forEach((entry) => {
+      summaryMap[entry.dataset.category] = entry;
+    });
+    const summaryPriceMap = {};
+    document.querySelectorAll(".summary-price[data-price-category]").forEach((entry) => {
+      summaryPriceMap[entry.dataset.priceCategory] = entry;
+    });
+    const summaryItems = {};
+    document.querySelectorAll(".build-summary-list li[data-summary-item]").forEach((item) => {
+      summaryItems[item.dataset.summaryItem] = item;
+    });
+    const clearButtons = {};
+    document.querySelectorAll(".summary-clear[data-category]").forEach((btn) => {
+      clearButtons[btn.dataset.category] = btn;
+    });
+    const selectedCards = {};
+    const selectedPrices = {};
+    const buildCountEl = document.querySelector(".build-toggle-count");
+    const subtotalEl = document.getElementById("build-subtotal");
+    const vatEl = document.getElementById("build-vat");
+    const totalEl = document.getElementById("build-total");
+    const toast = document.getElementById("build-toast");
+    let toastTimeout;
+    const VAT_RATE = 0.12;
+    const currencyFormatter = new Intl.NumberFormat("en-PH", {
+      style: "currency",
+      currency: "PHP",
+      minimumFractionDigits: 2,
+    });
+
+    const sectionCategoryMap = {
+      "cpu-section": "cpu",
+      "gpu-section": "gpu",
+      "memory-section": "ram",
+      "motherboard-section": "motherboard",
+      "storage-section": "storage",
+      "psu-section": "psu",
+      "case-section": "case",
+      "cooler-section": "cooler",
+    };
+
+    function updateBuildCount() {
+      const total = Object.keys(summaryMap).length;
+      const filled = Object.values(summaryMap).filter(
+        (entry) => entry.textContent.trim().toLowerCase() !== "not selected"
+      ).length;
+      if (buildCountEl) {
+        buildCountEl.textContent = `(${filled}/${total})`;
+      }
+    }
+
+    function parsePrice(value) {
+      if (!value) return 0;
+      const numeric = Number(value.replace(/[^0-9.]/g, ""));
+      return Number.isFinite(numeric) ? numeric : 0;
+    }
+
+    function formatCurrency(value) {
+      return currencyFormatter.format(value);
+    }
+
+    function updateTotals() {
+      const subtotal = Object.values(selectedPrices).reduce((sum, price) => sum + price, 0);
+      const vat = subtotal * VAT_RATE;
+      const total = subtotal + vat;
+
+      if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
+      if (vatEl) vatEl.textContent = formatCurrency(vat);
+      if (totalEl) totalEl.textContent = formatCurrency(total);
+    }
+
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.setAttribute("aria-hidden", "false");
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast?.classList.remove("is-visible");
+        toast?.setAttribute("aria-hidden", "true");
+      }, 2200);
+    }
+
+    function setSelectedCard(categoryKey, card, productName, priceValue) {
+      if (!categoryKey || !card) return;
+
+      const previous = selectedCards[categoryKey];
+      const prevUid = previous?.dataset?.uid || null;
+      if (previous && previous !== card) {
+        previous.classList.remove("is-selected");
+        const prevButton = previous.querySelector(".add-cart-btn");
+        if (prevButton) {
+          prevButton.classList.remove("is-selected");
+          prevButton.textContent = "Select";
+        }
+      }
+
+      const button = card.querySelector(".add-cart-btn");
+      card.classList.add("is-selected");
+      if (button) {
+        button.classList.add("is-selected");
+        button.textContent = "Selected";
+      }
+      summaryMap[categoryKey].textContent = productName;
+      summaryMap[categoryKey].classList.add("has-selection");
+      if (summaryPriceMap[categoryKey]) {
+        summaryPriceMap[categoryKey].textContent = formatCurrency(priceValue);
+      }
+      if (summaryItems[categoryKey]) {
+        summaryItems[categoryKey].classList.add("has-selection");
+      }
+      selectedCards[categoryKey] = card;
+      selectedPrices[categoryKey] = priceValue;
+      // Persist to user_build: replace previous selection with new
+      try {
+        const uid = card?.dataset?.uid || null;
+        if (uid) window.pcpickBuildReplace?.({ prev_uid: prevUid, new_uid: uid, price: priceValue });
+      } catch {}
+    }
+
+    const wireNewBuilderButtons = () => {
+      document.querySelectorAll(".pcbuilder .add-cart-btn").forEach((button) => {
+        if (button.dataset.pcpickWired === '1') return;
+        button.dataset.pcpickWired = '1';
+        button.addEventListener("click", () => {
+          const card = button.closest(".product-card");
+          const section = button.closest(".product-grid");
+          const productName =
+            card?.querySelector(".product-info h3")?.textContent?.trim() || "Item";
+          const priceText = card?.querySelector(".price")?.textContent?.trim() || "PHP 0";
+          const priceValue = parsePrice(priceText);
+          const categoryKey = sectionCategoryMap[section?.id ?? ""];
+
+          if (!categoryKey || !summaryMap[categoryKey]) {
+            showToast(`${productName} added to your cart.`);
+            return;
+          }
+
+          setSelectedCard(categoryKey, card, productName, priceValue);
+          showToast(`${productName} added to Your Build!`);
+          updateBuildCount();
+          updateTotals();
+        });
+      });
+    };
+    wireNewBuilderButtons();
+    document.addEventListener('pcpick:builder-populated', () => {
+      ensurePurchaseRow();
+      wireNewBuilderButtons();
+    });
+
+    // Restore build selections from server snapshot
+    const applyBuildSnapshot = (rows=[]) => {
+      try {
+        rows.forEach((r) => {
+          if (!r || !r.uid) return;
+          const card = document.querySelector(`.pcbuilder .product-card[data-uid="${r.uid}"]`);
+          if (!card) return;
+          const section = card.closest('.product-grid');
+          const categoryKey = sectionCategoryMap[section?.id ?? ""];
+          const productName = card.querySelector('.product-info h3')?.textContent?.trim() || r.name || 'Item';
+          const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || '') || r.price || 0;
+          if (categoryKey) setSelectedCard(categoryKey, card, productName, unit);
+        });
+        updateBuildCount();
+        updateTotals();
+      } catch {}
+    };
+    document.addEventListener('pcpick:build-snapshot', (e) => applyBuildSnapshot(e.detail?.rows || []));
+    window.pcpickGetBuildSnapshot?.().then(applyBuildSnapshot);
+
+    Object.values(clearButtons).forEach((button) => {
+      button.addEventListener("click", () => {
+        const categoryKey = button.dataset.category;
+        if (!categoryKey || !summaryMap[categoryKey]) return;
+
+        const card = selectedCards[categoryKey];
+        if (card) {
+          card.classList.remove("is-selected");
+          const btn = card.querySelector(".add-cart-btn");
+          if (btn) {
+            btn.classList.remove("is-selected");
+            btn.textContent = "Select";
+          }
+          delete selectedCards[categoryKey];
+        }
+
+        summaryMap[categoryKey].textContent = "Not selected";
+        summaryMap[categoryKey].classList.remove("has-selection");
+        if (summaryPriceMap[categoryKey]) {
+          summaryPriceMap[categoryKey].textContent = "—";
+        }
+        if (summaryItems[categoryKey]) {
+          summaryItems[categoryKey].classList.remove("has-selection");
+        }
+        const uid = card?.dataset?.uid || null;
+        delete selectedPrices[categoryKey];
+        updateBuildCount();
+        updateTotals();
+        try { if (uid) window.pcpickBuildDelete?.({ product_uid: uid }); } catch {}
+      });
+    });}
   </script>
 </body>
 </html>

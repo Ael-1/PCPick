@@ -6,6 +6,7 @@
   <title>PCPick — Products</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="icon" type="image/x-icon" href="assets/icon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -66,7 +67,8 @@
       <!-- Tabs + search (use the products-controls/product-tabs wrapper so search sits to the right) -->
       <div class="products-controls">
         <div class="product-tabs" role="tablist" aria-label="product categories">
-          <button class="tab active" data-cat="cpu-section">CPUs</button>
+          <button class="tab active" data-cat="all-section">All</button>
+          <button class="tab" data-cat="cpu-section">CPUs</button>
           <button class="tab" data-cat="gpu-section">Graphics Cards</button>
           <button class="tab" data-cat="memory-section">Memory (RAM)</button>
           <button class="tab" data-cat="motherboard-section">Motherboards</button>
@@ -81,50 +83,9 @@
         </div>
       </div>
 
+      <div id="all-section" class="product-grid"></div>
       <!-- CPU PRODUCTS -->
-      <div id="cpu-section" class="product-grid">
-        <div class="product-card">
-          <img src="assets/Ryzen9_7950X.jpg" alt="Ryzen 9 7950X">
-          <div class="product-info">
-            <h3>AMD Ryzen 9 7950X</h3>
-            <ul>
-              <li>16 Cores / 32 Threads</li>
-              <li>5.7 GHz Boost</li>
-              <li>AM5 Socket</li>
-            </ul>
-            <p class="price">$549</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="assets/Core i9-14900K.png" alt="Intel Core i9-14900K">
-          <div class="product-info">
-            <h3>Intel Core i9-14900K</h3>
-            <ul>
-              <li>24 Cores / 32 Threads</li>
-              <li>6.0 GHz Boost</li>
-              <li>LGA1700 Socket</li>
-            </ul>
-            <p class="price">$589</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
-          <div class="product-info">
-            <h3>AMD Ryzen 7 7800X3D</h3>
-            <ul>
-              <li>8 Cores / 16 Threads</li>
-              <li>5.0 GHz Boost</li>
-              <li>3D V-Cache</li>
-            </ul>
-            <p class="price">$449</p>
-            <button class="add-cart-btn">Add to Cart</button>
-          </div>
-        </div>
-      </div>
+      <div id="cpu-section" class="product-grid"></div>
 
       <!-- GPU PRODUCTS -->
       <div id="gpu-section" class="product-grid">
@@ -137,7 +98,7 @@
               <li>16384 CUDA Cores</li>
               <li>450W TDP</li>
             </ul>
-            <p class="price">$1599</p>
+            <p class="price">PHP 1599</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -151,7 +112,7 @@
               <li>RDNA 3 Architecture</li>
               <li>355W TDP</li>
             </ul>
-            <p class="price">$999</p>
+            <p class="price">PHP 999</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -165,7 +126,7 @@
               <li>DLSS 3.0</li>
               <li>285W TDP</li>
             </ul>
-            <p class="price">$799</p>
+            <p class="price">PHP 799</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -183,7 +144,7 @@
               <li>32GB (2x16GB)</li>
               <li>RGB Lighting</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -198,7 +159,7 @@
               <li>64GB (2x32GB)</li>
               <li>Low Latency</li>
             </ul>
-            <p class="price">$249</p>
+            <p class="price">PHP 249</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -213,7 +174,7 @@
               <li>32GB (2x16GB)</li>
               <li>Budget Friendly</li>
             </ul>
-            <p class="price">$99</p>
+            <p class="price">PHP 99</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -231,7 +192,7 @@
               <li>PCIe 5.0</li>
               <li>WiFi 6E</li>
             </ul>
-            <p class="price">$499</p>
+            <p class="price">PHP 499</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -246,7 +207,7 @@
               <li>DDR5</li>
               <li>Thunderbolt 4</li>
             </ul>
-            <p class="price">$449</p>
+            <p class="price">PHP 449</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -261,7 +222,7 @@
               <li>PCIe 4.0</li>
               <li>M.2 Heatsink</li>
             </ul>
-            <p class="price">$199</p>
+            <p class="price">PHP 199</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -279,7 +240,7 @@
               <li>7450 MB/s Read</li>
               <li>2TB Capacity</li>
             </ul>
-            <p class="price">$199</p>
+            <p class="price">PHP 199</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -294,7 +255,7 @@
               <li>7300 MB/s Read</li>
               <li>1TB Capacity</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -309,7 +270,7 @@
               <li>5000 MB/s Read</li>
               <li>4TB Capacity</li>
             </ul>
-            <p class="price">$299</p>
+            <p class="price">PHP 299</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -327,7 +288,7 @@
               <li>80+ Gold</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$179</p>
+            <p class="price">PHP 179</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -342,7 +303,7 @@
               <li>80+ Gold</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$139</p>
+            <p class="price">PHP 139</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -357,7 +318,7 @@
               <li>80+ Titanium</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$399</p>
+            <p class="price">PHP 399</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -375,7 +336,7 @@
               <li>Tempered Glass</li>
               <li>USB-C Front Panel</li>
             </ul>
-            <p class="price">$164</p>
+            <p class="price">PHP 164</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -390,7 +351,7 @@
               <li>Mesh Front</li>
               <li>Cable Management</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -405,7 +366,7 @@
               <li>Dual Chamber</li>
               <li>Showcase Design</li>
             </ul>
-            <p class="price">$159</p>
+            <p class="price">PHP 159</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -423,7 +384,7 @@
               <li>RGB Pump</li>
               <li>Quiet Operation</li>
             </ul>
-            <p class="price">$179</p>
+            <p class="price">PHP 179</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -438,7 +399,7 @@
               <li>Premium Fans</li>
               <li>Silent</li>
             </ul>
-            <p class="price">$109</p>
+            <p class="price">PHP 109</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -453,7 +414,7 @@
               <li>LCD Display</li>
               <li>RGB Fans</li>
             </ul>
-            <p class="price">$189</p>
+            <p class="price">PHP 189</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -468,26 +429,352 @@
     </div>
   </footer>
 
+  <!-- Cart summary (floating panel, reuses build summary styles) -->
+  <aside class="build-summary-panel" id="cart-summary" aria-hidden="true">
+    <div class="build-summary-inner">
+      <header class="build-summary-header">
+        <span class="build-summary-icon" aria-hidden="true">
+          <img src="assets/cart.png" alt="">
+        </span>
+        <div>
+          <p class="build-summary-label">Your Cart</p>
+          <p class="build-summary-note">Items added to your cart</p>
+        </div>
+      </header>
+      <ul class="build-summary-list" id="cart-list"></ul>
+      <p class="build-summary-note" id="cart-empty">Your cart is empty. Add an item to see it here.</p>
+      <div class="build-summary-totals" id="cart-totals" hidden>
+        <div class="summary-total-row">
+          <span>Subtotal</span>
+          <strong id="cart-subtotal">PHP 0.00</strong>
+        </div>
+        <div class="summary-total-row">
+          <span>VAT (12%)</span>
+          <strong id="cart-vat">PHP 0.00</strong>
+        </div>
+        <div class="summary-total-row summary-grand-total">
+          <span>Total</span>
+          <strong id="cart-total">PHP 0.00</strong>
+        </div>
+        <button class="btn checkout-btn" type="button">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <button
+    type="button"
+    class="build-toggle"
+    id="cart-toggle"
+    aria-label="Toggle cart summary"
+    aria-controls="cart-summary"
+    aria-expanded="false"
+  >
+    <span class="build-toggle-left">
+      <span class="build-toggle-cart" aria-hidden="true"><img src="assets/cart.png" alt="" loading="lazy"></span>
+      <span class="build-toggle-text">
+        <span class="build-toggle-title">Cart</span>
+        <span class="build-toggle-count" id="cart-count">(0)</span>
+      </span>
+    </span>
+    <span class="build-toggle-chevron" aria-hidden="true"></span>
+  </button>
+
+  <div class="build-toast" id="product-toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
   <script src="script.js"></script>
   <script>
-    const cpuBtn = document.getElementById("cpu-btn");
-    const gpuBtn = document.getElementById("gpu-btn");
-    const cpuSection = document.getElementById("cpu-section");
-    const gpuSection = document.getElementById("gpu-section");
+    const productTabs = document.querySelectorAll(".products .product-tabs .tab");
+    const productSections = document.querySelectorAll(".products .product-grid");
 
-    cpuBtn.addEventListener("click", () => {
-      cpuSection.style.display = "grid";
-      gpuSection.style.display = "none";
-      cpuBtn.classList.add("active");
-      gpuBtn.classList.remove("active");
-    });
+    if (productTabs.length && productSections.length) {
+      const showProductSection = (targetId) => {
+        productSections.forEach((section) => {
+            section.style.display = section.id === targetId ? "grid" : "none";
+        });
+      };
 
-    gpuBtn.addEventListener("click", () => {
-      gpuSection.style.display = "grid";
-      cpuSection.style.display = "none";
-      gpuBtn.classList.add("active");
-      cpuBtn.classList.remove("active");
-    });
+      productTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          productTabs.forEach((btn) => btn.classList.remove("active"));
+          tab.classList.add("active");
+          showProductSection(tab.dataset.cat);
+        });
+      });
+
+      showProductSection(productTabs[0]?.dataset.cat ?? productSections[0]?.id);
+    }
+  </script>
+  <script>
+    (function(){
+      const cartToggle = document.getElementById('cart-toggle');
+      const cartSummary = document.getElementById('cart-summary');
+      const cartList = document.getElementById('cart-list');
+      const cartCount = document.getElementById('cart-count');
+      const cartTotals = document.getElementById('cart-totals');
+      const cartSubtotalEl = document.getElementById('cart-subtotal');
+      const cartVatEl = document.getElementById('cart-vat');
+      const cartTotalEl = document.getElementById('cart-total');
+      const cartEmpty = document.getElementById('cart-empty');
+      const toast = document.getElementById('product-toast');
+
+      const fmt = new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2});
+      const parsePrice = (t)=>{const n=Number((t||'').replace(/[^0-9.]/g,''));return Number.isFinite(n)?n:0};
+
+      // key -> { name, unit, qty } for items already in the cart
+      const cartItems = new Map();
+      // key -> qty selected via quantity controls (not yet added)
+      const selectedQuantities = new Map();
+
+      const VAT_RATE = 0.12;
+      const renderTotals = () => {
+        const qtyTotal = Array.from(cartItems.values()).reduce((s,i)=>s+i.qty,0);
+        const subtotal = Array.from(cartItems.values()).reduce((s,i)=>s + (i.unit*i.qty),0);
+        const vat = subtotal * VAT_RATE;
+        const total = subtotal + vat;
+        cartCount.textContent = `(${qtyTotal})`;
+        if (cartEmpty) cartEmpty.hidden = qtyTotal > 0 ? true : false;
+        if (cartTotals) {
+          cartTotals.hidden = qtyTotal === 0;
+          if (cartSubtotalEl) cartSubtotalEl.textContent = fmt.format(subtotal);
+          if (cartVatEl) cartVatEl.textContent = fmt.format(vat);
+          if (cartTotalEl) cartTotalEl.textContent = fmt.format(total);
+        }
+      };
+
+      const productKey = (name, unit)=>`${name}|${unit}`;
+
+      const updateCartRowQty = (key) => {
+        const row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (!row) return;
+        const q = cartItems.get(key)?.qty ?? 0;
+        const input = row.querySelector('.cart-qty-input');
+        if (input) input.value = String(Math.max(1, q));
+      };
+
+      const ensureCartRow = (key, name, unit, uid) => {
+        let row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (row) return row;
+        row = document.createElement('li');
+        row.classList.add('has-selection');
+        row.dataset.key = key;
+        if (uid) row.dataset.uid = uid;
+        row.innerHTML = `
+          <span>Item</span>
+          <div class="summary-selection">
+            <strong class="has-selection">${name}</strong>
+            <span class="summary-price">${fmt.format(unit)}</span>
+          </div>
+          <div class="cart-qty-controls">
+            <button type="button" class="cart-qty-minus" aria-label="Decrease quantity">-</button>
+            <input type="number" class="cart-qty-input" aria-label="Quantity" value="1" min="1" inputmode="numeric">
+            <button type="button" class="cart-qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="summary-clear" type="button" aria-label="Remove from cart">x</button>`;
+        cartList?.appendChild(row);
+        row.querySelector('.summary-clear')?.addEventListener('click', ()=>{
+          cartItems.delete(key);
+          row.remove();
+          renderTotals();
+        });
+
+        const qtyInput = row.querySelector('.cart-qty-input');
+
+        row.querySelector('.cart-qty-plus')?.addEventListener('click', ()=>{
+          adjustCartQuantity(name, unit, 1);
+        });
+
+        row.querySelector('.cart-qty-minus')?.addEventListener('click', ()=>{
+          adjustCartQuantity(name, unit, -1);
+        });
+
+        qtyInput?.addEventListener('input', () => {
+          const value = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+          qtyInput.value = String(value);
+          const key = productKey(name, unit);
+          const current = cartItems.get(key);
+          if (!current) return;
+          const delta = value - current.qty;
+          if (delta !== 0) {
+            adjustCartQuantity(name, unit, delta);
+          }
+        });
+        return row;
+      };
+
+      const adjustCartQuantity = (name, unit, delta, uid) => {
+        if (!delta) return;
+        const key = productKey(name, unit);
+        const current = cartItems.get(key) || { name, unit, qty: 0, uid };
+        if (uid && !current.uid) current.uid = uid;
+        current.qty = Math.max(0, current.qty + delta);
+        if (current.qty === 0) {
+          cartItems.delete(key);
+          cartList?.querySelector(`li[data-key="${key}"]`)?.remove();
+          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: 0 }); } catch {}
+        } else {
+          cartItems.set(key, current);
+          ensureCartRow(key, name, unit, current.uid);
+          updateCartRowQty(key);
+          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: current.qty }); } catch {}
+        }
+        renderTotals();
+      };
+
+      const showToast = (msg) => {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.setAttribute('aria-hidden','false');
+        toast.classList.add('is-visible');
+        clearTimeout(showToast.tid);
+        showToast.tid = setTimeout(()=>{
+          toast.classList.remove('is-visible');
+          toast.setAttribute('aria-hidden','true');
+        }, 2000);
+      };
+
+      const collapseCart = () => {
+        cartToggle?.setAttribute('aria-expanded','false');
+        cartSummary?.classList.remove('is-visible');
+        cartSummary?.setAttribute('aria-hidden','true');
+      };
+
+      cartToggle?.addEventListener('click', ()=>{
+        const expanded = cartToggle.getAttribute('aria-expanded') === 'true';
+        const next = !expanded;
+        cartToggle.setAttribute('aria-expanded', String(next));
+        cartSummary.classList.toggle('is-visible', next);
+        cartSummary.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!cartSummary || !cartToggle) return;
+        if (event.target.closest('#cart-summary') || event.target.closest('#cart-toggle')) return;
+        if (event.target.closest('.site-header')) return;
+        if (event.target.closest('button, a, input, textarea, select, [role="button"], [contenteditable=""], [contenteditable="true"]')) return;
+        if (cartToggle.getAttribute('aria-expanded') === 'true') {
+          collapseCart();
+        }
+      });
+
+      // Inject quantity controls and wire events for any new buttons
+      const wireNewAddToCartButtons = () => {
+        document.querySelectorAll('.add-cart-btn').forEach(btn=>{
+          if (btn.dataset.pcpickWired === '1') return;
+          btn.dataset.pcpickWired = '1';
+          const card = btn.closest('.product-card');
+          if (!card) return;
+        // create quantity controls next to the button
+        const row = document.createElement('div');
+        row.className = 'add-cart-row';
+        const qc = document.createElement('div');
+        qc.className = 'qty-controls';
+        qc.innerHTML = `<button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>
+                        <input type="number" class="qty-amount" value="0" min="0" inputmode="numeric" aria-label="Quantity">
+                        <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>`;
+        // Place quantity controls first, then the button
+        row.appendChild(qc);
+        row.appendChild(btn);
+
+        const info = card.querySelector('.product-info');
+        const price = card.querySelector('.price');
+        const purchaseRow = document.createElement('div');
+        purchaseRow.className = 'purchase-row';
+        if (price) purchaseRow.appendChild(price);
+        purchaseRow.appendChild(row);
+        info?.appendChild(purchaseRow);
+
+        const getData = () => {
+          const name = card.querySelector('.product-info h3')?.textContent?.trim() || 'Item';
+          const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || 'PHP 0');
+          const uid = card?.dataset?.uid || null;
+          return { name, unit, uid };
+        };
+
+        const amountInput = qc.querySelector('.qty-amount');
+
+        const updateSelection = (key, next) => {
+          const value = Math.max(0, next);
+          selectedQuantities.set(key, value);
+          if (amountInput) amountInput.value = String(value);
+        };
+
+        btn.addEventListener('click', ()=>{
+          const {name, unit, uid} = getData();
+          const key = productKey(name, unit);
+          const qty = selectedQuantities.get(key) ?? 0;
+          if (qty <= 0) {
+            showToast('Set a quantity first.');
+            return;
+          }
+          adjustCartQuantity(name, unit, qty, uid);
+          try { if (uid) window.pcpickCartAdd?.({ product_uid: uid, price: unit, quantity: qty }); } catch {}
+          showToast(`${qty} × ${name} added to cart!`);
+          updateSelection(key, 0);
+        });
+
+        qc.querySelector('.qty-plus')?.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const current = selectedQuantities.get(key) ?? 0;
+          updateSelection(key, current + 1);
+        });
+        qc.querySelector('.qty-minus')?.addEventListener('click', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const current = selectedQuantities.get(key) ?? 0;
+          updateSelection(key, current - 1);
+        });
+
+        amountInput?.addEventListener('input', ()=>{
+          const {name, unit} = getData();
+          const key = productKey(name, unit);
+          const parsed = Math.max(0, Math.floor(Number(amountInput.value) || 0));
+          amountInput.value = String(parsed);
+          updateSelection(key, parsed);
+        });
+        });
+      };
+
+      // Initial wiring for static buttons
+      wireNewAddToCartButtons();
+      // Re-run after Supabase populates dynamic cards
+      document.addEventListener('pcpick:products-populated', wireNewAddToCartButtons);
+
+      // Apply server cart snapshot (if any)
+      let snapshotApplied = false;
+      const applyCartSnapshot = (rows=[]) => {
+        if (snapshotApplied) return;
+        try {
+          let applied = 0;
+          rows.forEach((r) => {
+            const uid = r.uid;
+            let name = r.name;
+            let unit = Number(r.price || 0);
+            // if name/price missing, try DOM lookup by uid
+            if (!name || !unit) {
+              const card = document.querySelector(`.product-card[data-uid="${uid}"]`);
+              const domName = card?.querySelector('.product-info h3')?.textContent?.trim();
+              const domUnit = parsePrice(card?.querySelector('.price')?.textContent?.trim() || 'PHP 0');
+              name = name || domName || 'Item';
+              if (!Number.isFinite(unit) || unit <= 0) unit = domUnit;
+            }
+            const qty = Math.max(0, Number(r.quantity || 0));
+            if (qty > 0) { adjustCartQuantity(name, unit, qty, uid); applied++; }
+          });
+          if (applied > 0) snapshotApplied = true;
+        } catch {}
+      };
+      document.addEventListener('pcpick:cart-snapshot', (e) => applyCartSnapshot(e.detail?.rows || []));
+      // Listen for cross-tab/cart updates via localStorage
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'pcpick:cart' && typeof e.newValue === 'string') {
+          try { const parsed = JSON.parse(e.newValue || '{}'); applyCartSnapshot(parsed.rows || []); } catch {}
+        }
+      });
+      // Seed from localStorage (fast) then Supabase (authoritative)
+      try { const cached = JSON.parse(localStorage.getItem('pcpick:cart') || 'null'); if (cached?.rows) applyCartSnapshot(cached.rows); } catch {}
+      window.pcpickGetCartSnapshot?.().then(applyCartSnapshot);
+    })();
   </script>
 </body>
 </html>
