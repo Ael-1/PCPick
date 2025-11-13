@@ -628,6 +628,7 @@
           try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: current.qty }); } catch {}
         }
         renderTotals();
+
       };
 
       const showToast = (msg) => {
@@ -785,6 +786,24 @@
       try { const cached = JSON.parse(localStorage.getItem('pcpick:cart') || 'null'); if (cached?.rows) applyCartSnapshot(cached.rows); } catch {}
       window.pcpickGetCartSnapshot?.().then(applyCartSnapshot);
     })();
+  </script>
+  <script>
+    // Example: attach to each add button (place in products page script)
+    document.querySelectorAll('.add-to-cart[data-product-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.productId;
+        const name = btn.dataset.productName || btn.closest('.product')?.querySelector('.product-title')?.textContent || 'Product';
+        const price = Number((btn.dataset.productPrice || '0').replace(/[^0-9.]/g,'')) || 0;
+        const qty = Number(btn.dataset.productQty || 1);
+        const category = btn.dataset.productCategory || 'Item';
+
+        const existing = JSON.parse(localStorage.getItem('pcpick_cart') || '[]');
+        existing.push({ uid: id || Date.now().toString(), name, price, qty, category });
+        localStorage.setItem('pcpick_cart', JSON.stringify(existing));
+        if (typeof window.pcpickSetCart === 'function') window.pcpickSetCart(existing);
+        else document.dispatchEvent(new CustomEvent('pcpick:cart-updated', { detail: { cart: existing } }));
+      });
+    });
   </script>
 </body>
 </html>
