@@ -393,8 +393,6 @@ body.auth-page{
   display: flex;
   align-items: center;
   position: relative;
-  max-width: 320px;
-  min-width: 200px;
 }
 
 .product-search input {
@@ -421,13 +419,6 @@ body.auth-page{
   /* keep the search icon visible on focus */
   background: #fff url("assets/search.png") no-repeat left 14px center;
   background-size: 18px;
-}
-
-/* keep search compact on wide screens, full width on small screens */
-.product-search {
-  min-width: 260px;
-  max-width: 420px;
-  width: 32%;
 }
 
 .tab {
@@ -485,6 +476,25 @@ body.auth-page{
   justify-items: stretch;   /* stretch cards to column width */
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 0 8px;
+}
+.product-grid-stack {
+  width: 100%;
+}
+.product-grid-stack.show-all {
+  display: grid;
+  gap: 28px;
+  margin-top: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0 8px;
+}
+.product-grid-stack.show-all .product-grid {
+  display: contents !important;
+  margin: 0;
+  padding: 0;
+}
+.product-grid-stack.show-all .product-card {
+  width: 100%;
+  height: 100%;
 }
 .pcbuilder .product-grid,
 .products .product-grid{
