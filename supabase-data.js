@@ -12,7 +12,7 @@
 
   const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
+  const fmt = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 });
   const currency = (v) => fmt.format(Number(v || 0));
   const VAT_RATE = 0.12; // 12% VAT used across pages
   const toCents = (n) => Math.round((Number(n) || 0) * 100) / 100;
@@ -30,27 +30,28 @@
     prebuilt: 'prebuilt-section',
   };
 
+  // Define category synonyms and patterns in a structured way for easier maintenance.
+  const CATEGORY_SYNONYMS = {
+    cpu: [/cpu|processor/],
+    gpu: [/gpu|graphic/],
+    memory: [/ram|memory/],
+    motherboard: [/mother ?board/],
+    storage: [/storage|ssd|hdd|nvme/],
+    psu: [/psu|power/],
+    case: [/case|chassis/],
+    cooler: [/cool(ing|er)|aio|fan/],
+    prebuilt: [/pre\s*built/],
+  };
+
   const normalizeCategory = (value) => {
     const s = (value || '').toString().trim().toLowerCase();
-    if (s === 'cpu') return 'cpu';
-    if (s === 'gpu') return 'gpu';
-    if (s === 'ram' || s === 'memory') return 'memory';
-    if (s === 'motherboard') return 'motherboard';
-    if (s === 'storage') return 'storage';
-    if (s === 'psu' || s === 'power supply' || s === 'power-supply') return 'psu';
-    if (s === 'case' || s === 'chassis') return 'case';
-    if (s === 'cooler' || s === 'cooling') return 'cooler';
-    if (s === 'prebuilt') return 'prebuilt';
-    // Heuristics fallback
-    if (/cpu|processor/.test(s)) return 'cpu';
-    if (/gpu|graphics/.test(s)) return 'gpu';
-    if (/ram|memory/.test(s)) return 'memory';
-    if (/mother ?board/.test(s)) return 'motherboard';
-    if (/psu|power/.test(s)) return 'psu';
-    if (/case|chassis/.test(s)) return 'case';
-    if (/cool(ing|er)|aio|fan/.test(s)) return 'cooler';
-    if (/pre\s*built/.test(s)) return 'prebuilt';
-    return s;
+    if (!s) return ''; // Return empty string if input is empty
+
+    // Find the first canonical category name that matches the input string.
+    for (const category in CATEGORY_SYNONYMS) {
+      if (CATEGORY_SYNONYMS[category].some(pattern => pattern.test(s))) return category;
+    }
+    return s; // Fallback to the cleaned string if no match is found
   };
 
   const safeSpecsList = (product) => {
@@ -110,7 +111,8 @@
     } catch { return null; }
   }
 
-  // Add-to-cart: create if new, else add quantity to existing row for this product
+  // Add-to-cart: create if new, else add quantity to existing row.
+  // This now requires a database function to handle the quantity increment atomically.
   async function cartAdd({ product_uid, price, quantity }) {
     const operation = async () => {
       const userId = await authUserId();
@@ -148,8 +150,8 @@
   async function cartSet({ product_uid, price, quantity }) {
     const userId = await authUserId();
     if (!userId || !product_uid) return;
-    const unit = Number(price || 0);
     const qty = Math.max(0, Number(quantity || 0));
+
     if (qty <= 0) {
       await client.from('user_cart')
         .delete()
@@ -350,6 +352,8 @@
   window.pcpickBuildDelete = buildDelete;
   window.pcpickBuildReplace = buildReplace;
 
+  let allProducts = []; // Cache products to avoid re-fetching
+
   async function fetchTable(table) {
     try {
       const { data, error } = await client.from(table).select('*');
@@ -361,6 +365,13 @@
     }
   }
 
+  async function fetchAndCacheProducts() {
+    if (allProducts.length === 0) {
+      allProducts = await fetchTable('products');
+    }
+    return allProducts;
+  }
+
   function clearIfAny(el) {
     if (!el) return;
     while (el.firstChild) el.removeChild(el.firstChild);
@@ -370,7 +381,53 @@
     const scope = document.querySelector(scopeSelector);
     if (!scope) return;
 
-    const items = await fetchTable('products');
+    const items = await fetchAndCacheProducts();
+    if (!items.length) return;
+
+    // This function will be called by the search handler
+    window.pcpickFilterProducts = (searchTerm) => {
+      const lowerTerm = (searchTerm || '').toLowerCase();
+      const filteredItems = lowerTerm
+        ? items.filter(it => (it.product_name || it.name || '').toLowerCase().includes(lowerTerm))
+        : items;
+      renderProducts(filteredItems);
+    };
+
+    // Group by normalized category
+    const byCategory = {};
+    for (const it of items) {
+      const key = normalizeCategory(it.category || it.type);
+      if (key === 'prebuilt') continue; // exclude Prebuilt from generic products/builder pages
+      if (!byCategory[key]) byCategory[key] = [];
+      byCategory[key].push(it);
+    }
+
+    const renderProducts = (productItems) => {
+      // Clear all known sections first
+      Object.values(categoryToSectionId).forEach((sectionId) => {
+        const section = scope.querySelector(`#${sectionId}.product-grid`);
+        if (section) clearIfAny(section);
+      });
+
+      // Append items to their corresponding sections
+      const defaultGrid = scope.querySelector('.product-grid');
+      productItems.forEach((it) => {
+        const key = normalizeCategory(it.category);
+        if (key === 'prebuilt') return; // don't place Prebuilt items in component tabs
+        const sectionId = categoryToSectionId[key];
+        const section = sectionId ? scope.querySelector(`#${sectionId}.product-grid`) : null;
+        (section || defaultGrid)?.appendChild(createCard(it, { buttonLabel }));
+      });
+    };
+
+    renderProducts(items);
+  }
+
+  async function populateAllProducts(scopeSelector, buttonLabel) {
+    const scope = document.querySelector(scopeSelector);
+    if (!scope) return;
+
+    const items = await fetchAndCacheProducts();
     if (!items.length) return;
 
     // Group by normalized category
@@ -382,21 +439,26 @@
       byCategory[key].push(it);
     }
 
-    // Clear all known sections first
-    Object.values(categoryToSectionId).forEach((sectionId) => {
-      const section = scope.querySelector(`#${sectionId}.product-grid`);
-      if (section) clearIfAny(section);
-    });
+    const renderAllProducts = (productItems) => {
+      const allSectionGrid = scope.querySelector('#all-section.product-grid');
+      if (allSectionGrid) clearIfAny(allSectionGrid);
 
-    // Append items to their corresponding sections; if unknown, drop into first grid in scope
-    const defaultGrid = scope.querySelector('.product-grid');
-    items.forEach((it) => {
-      const key = normalizeCategory(it.category);
-      if (key === 'prebuilt') return; // don't place Prebuilt items in component tabs
-      const sectionId = categoryToSectionId[key];
-      const section = sectionId ? scope.querySelector(`#${sectionId}.product-grid`) : null;
-      (section || defaultGrid)?.appendChild(createCard(it, { buttonLabel }));
-    });
+      productItems.forEach((it) => {
+        const key = normalizeCategory(it.category);
+        if (key === 'prebuilt') return; // don't place Prebuilt items in component tabs
+        allSectionGrid?.appendChild(createCard(it, { buttonLabel }));
+      });
+    };
+
+    window.pcpickFilterAllProducts = (searchTerm) => {
+      const lowerTerm = (searchTerm || '').toLowerCase();
+      const filteredItems = lowerTerm
+        ? items.filter(it => (it.product_name || it.name || '').toLowerCase().includes(lowerTerm))
+        : items;
+      renderAllProducts(filteredItems);
+    };
+
+    renderAllProducts(items);
   }
 
   // Note: Prebuilt PCs page also uses the same `products` table so we reuse populateProducts
@@ -404,27 +466,37 @@
     const scope = document.querySelector(scopeSelector);
     if (!scope) return;
 
-    const items = await fetchTable('products');
-    const list = items.filter((it) => normalizeCategory(it.category) === 'prebuilt');
-    // Prefer first grid under scope; hide others to avoid duplicate layouts
-    const grids = scope.querySelectorAll('.product-grid');
-    if (!grids.length) return;
-    const target = grids[0];
-    clearIfAny(target);
-    grids.forEach((g, i) => { if (i > 0) g.style.display = 'none'; });
-    list.forEach((pc) => target.appendChild(createCard(pc, { buttonLabel: 'Add to Cart' })));
+    const items = await fetchAndCacheProducts();
+    const prebuiltItems = items.filter((it) => normalizeCategory(it.category) === 'prebuilt');
+
+    const renderPrebuilt = (list) => {
+      const section = scope.querySelector('#prebuilt-section.product-grid');
+      if (!section) return;
+      clearIfAny(section);
+      list.forEach((pc) => section.appendChild(createCard(pc, { buttonLabel: 'Add to Cart' })));
+    };
+
+    window.pcpickFilterPrebuilt = (searchTerm) => {
+      const lowerTerm = (searchTerm || '').toLowerCase();
+      const filtered = lowerTerm ? prebuiltItems.filter(it => (it.product_name || it.name || '').toLowerCase().includes(lowerTerm)) : prebuiltItems;
+      renderPrebuilt(filtered);
+    };
+
+    renderPrebuilt(prebuiltItems);
   }
 
   // Auto-run on DOM ready
   const run = async () => {
     // Products page
-    if (document.querySelector('.products')) {
+      if (document.querySelector('.products')) {
       await populateProducts('.products', 'Add to Cart');
+      await populateAllProducts('.products', 'Add to Cart');
       document.dispatchEvent(new CustomEvent('pcpick:products-populated'));
     }
     // PC Builder: same products table, different button label
     if (document.querySelector('.pcbuilder')) {
       await populateProducts('.pcbuilder', 'Select');
+      await populateAllProducts('.pcbuilder', 'Add to Cart');
       document.dispatchEvent(new CustomEvent('pcpick:builder-populated'));
     }
     // Prebuilt PCs (only items whose category is Prebuilt)

@@ -72,6 +72,12 @@
       <h2 class="section-title">Pre-built PCs</h2>
       <p class="section-description">Browse brand new and expertly configured systems. No hassle!</p>
 
+      <div class="product-search">
+        <input id="prebuilt-search" type="search" 
+        placeholder="Search products..." 
+        aria-label="Search products">
+      </div>
+
       <!-- CPU PRODUCTS -->
        <div id="prebuilt-section" class="product-grid"></div>
       <div id="cpu-section" class="product-grid">
@@ -84,7 +90,7 @@
               <li>5.7 GHz Boost</li>
               <li>AM5 Socket</li>
             </ul>
-            <p class="price">$549</p>
+            <p class="price">PHP 549</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -98,7 +104,7 @@
               <li>6.0 GHz Boost</li>
               <li>LGA1700 Socket</li>
             </ul>
-            <p class="price">$589</p>
+            <p class="price">PHP 589</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -112,7 +118,7 @@
               <li>5.0 GHz Boost</li>
               <li>3D V-Cache</li>
             </ul>
-            <p class="price">$449</p>
+            <p class="price">PHP 449</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -129,7 +135,7 @@
               <li>16384 CUDA Cores</li>
               <li>450W TDP</li>
             </ul>
-            <p class="price">$1599</p>
+            <p class="price">PHP 1599</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -143,7 +149,7 @@
               <li>RDNA 3 Architecture</li>
               <li>355W TDP</li>
             </ul>
-            <p class="price">$999</p>
+            <p class="price">PHP 999</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
@@ -157,11 +163,12 @@
               <li>DLSS 3.0</li>
               <li>285W TDP</li>
             </ul>
-            <p class="price">$799</p>
+            <p class="price">PHP 799</p>
             <button class="add-cart-btn">Add to Cart</button>
           </div>
         </div>
       </div>
+    </div>
     </section>
   </main>
 
@@ -188,15 +195,15 @@
       <div class="build-summary-totals" id="cart-totals" hidden>
         <div class="summary-total-row">
           <span>Subtotal</span>
-          <strong id="cart-subtotal">$0.00</strong>
+          <strong id="cart-subtotal">PHP 0.00</strong>
         </div>
         <div class="summary-total-row">
           <span>VAT (12%)</span>
-          <strong id="cart-vat">$0.00</strong>
+          <strong id="cart-vat">PHP 0.00</strong>
         </div>
         <div class="summary-total-row summary-grand-total">
           <span>Total</span>
-          <strong id="cart-total">$0.00</strong>
+          <strong id="cart-total">PHP 0.00</strong>
         </div>
         <button class="btn checkout-btn" type="button">Checkout</button>
       </div>
@@ -228,6 +235,18 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="supabase-data.js"></script>
   <script>
+    // Search functionality
+    const searchInput = document.getElementById('prebuilt-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        if (typeof window.pcpickFilterPrebuilt === 'function') {
+          window.pcpickFilterPrebuilt(searchTerm);
+        }
+      });
+    }
+  </script>
+  <script>
     (function(){
       const cartToggle = document.getElementById('cart-toggle');
       const cartSummary = document.getElementById('cart-summary');
@@ -239,6 +258,107 @@
       const cartTotalEl = document.getElementById('cart-total');
       const cartEmpty = document.getElementById('cart-empty');
       const toast = document.getElementById('product-toast');
+
+      const fmt = new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2});
+      const parsePrice = (t)=>{const n=Number((t||'').replace(/[^0-9.]/g,''));return Number.isFinite(n)?n:0};
+
+      const cartItems = new Map();
+      const selectedQuantities = new Map();
+
+      const VAT_RATE = 0.12;
+      const renderTotals = () => {
+        const qtyTotal = Array.from(cartItems.values()).reduce((s,i)=>s+i.qty,0);
+        const subtotal = Array.from(cartItems.values()).reduce((s,i)=>s + (i.unit*i.qty),0);
+        const vat = subtotal * VAT_RATE;
+        const total = subtotal + vat;
+        cartCount.textContent = `(${qtyTotal})`;
+        if (cartEmpty) cartEmpty.hidden = qtyTotal > 0 ? true : false;
+        if (cartTotals) {
+          cartTotals.hidden = qtyTotal === 0;
+          if (cartSubtotalEl) cartSubtotalEl.textContent = fmt.format(subtotal);
+          if (cartVatEl) cartVatEl.textContent = fmt.format(vat);
+          if (cartTotalEl) cartTotalEl.textContent = fmt.format(total);
+        }
+      };
+
+      const productKey = (name, unit)=>`${name}|${unit}`;
+
+      const updateCartRowQty = (key) => {
+        const row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (!row) return;
+        const q = cartItems.get(key)?.qty ?? 0;
+        const input = row.querySelector('.cart-qty-input');
+        if (input) input.value = String(Math.max(1, q));
+      };
+
+      const ensureCartRow = (key, name, unit, uid) => {
+        let row = cartList?.querySelector(`li[data-key="${key}"]`);
+        if (row) return row;
+        row = document.createElement('li');
+        row.classList.add('has-selection');
+        row.dataset.key = key;
+        if (uid) row.dataset.uid = uid;
+        row.innerHTML = `
+          <span>Item</span>
+          <div class="summary-selection">
+            <strong class="has-selection">${name}</strong>
+            <span class="summary-price">${fmt.format(unit)}</span>
+          </div>
+          <div class="cart-qty-controls">
+            <button type="button" class="cart-qty-minus" aria-label="Decrease quantity">-</button>
+            <input type="number" class="cart-qty-input" aria-label="Quantity" value="1" min="1" inputmode="numeric">
+            <button type="button" class="cart-qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="summary-clear" type="button" aria-label="Remove from cart">x</button>`;
+        cartList?.appendChild(row);
+        row.querySelector('.summary-clear')?.addEventListener('click', ()=>{
+          cartItems.delete(key);
+          row.remove();
+          renderTotals();
+        });
+
+        const qtyInput = row.querySelector('.cart-qty-input');
+
+        row.querySelector('.cart-qty-plus')?.addEventListener('click', ()=>{
+          adjustCartQuantity(name, unit, 1);
+        });
+
+        row.querySelector('.cart-qty-minus')?.addEventListener('click', ()=>{
+          adjustCartQuantity(name, unit, -1);
+        });
+
+        qtyInput?.addEventListener('input', () => {
+          const value = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+          qtyInput.value = String(value);
+          const key = productKey(name, unit);
+          const current = cartItems.get(key);
+          if (!current) return;
+          const delta = value - current.qty;
+          if (delta !== 0) {
+            adjustCartQuantity(name, unit, delta);
+          }
+        });
+        return row;
+      };
+
+      const adjustCartQuantity = (name, unit, delta, uid) => {
+        if (!delta) return;
+        const key = productKey(name, unit);
+        const current = cartItems.get(key) || { name, unit, qty: 0, uid };
+        if (uid && !current.uid) current.uid = uid;
+        current.qty = Math.max(0, current.qty + delta);
+        if (current.qty === 0) {
+          cartItems.delete(key);
+          cartList?.querySelector(`li[data-key="${key}"]`)?.remove();
+          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: 0 }); } catch {}
+        } else {
+          cartItems.set(key, current);
+          ensureCartRow(key, name, unit, current.uid);
+          updateCartRowQty(key);
+          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: current.qty }); } catch {}
+        }
+        renderTotals();
+      };
 
       const showToast = (msg) => {
         if (!toast) return;
@@ -303,7 +423,7 @@
 
         const getData = () => {
           const name = card.querySelector('.product-info h3')?.textContent?.trim() || 'Item';
-          const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || '$0');
+          const unit = parsePrice(card.querySelector('.price')?.textContent?.trim() || 'PHP 0');
           const uid = card?.dataset?.uid || null;
           return { name, unit, uid };
         };
@@ -410,7 +530,5 @@
     });
   });
   </script>
-
-
 </body>
 </html>

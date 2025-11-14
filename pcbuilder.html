@@ -75,7 +75,7 @@
       <!-- Category buttons -->
       <div class="products-controls">
         <div class="product-tabs" role="tablist" aria-label="product categories">
-          <button class="tab active" data-cat="cpu-section">CPUs</button>
+          <button class="tab" data-cat="cpu-section">CPUs</button>
           <button class="tab" data-cat="gpu-section">Graphics Cards</button>
           <button class="tab" data-cat="memory-section">Memory (RAM)</button>
           <button class="tab" data-cat="motherboard-section">Motherboards</button>
@@ -85,12 +85,13 @@
           <button class="tab" data-cat="cooler-section">Cooler</button>
         </div>
         <div class="product-search">
-          <input type="search" placeholder="Search products..." aria-label="Search products">
+          <input id="pcbuilder-search" type="search" placeholder="Search products..." aria-label="Search products">
         </div>
       </div>
 
+      <div id="all-section" class="product-grid"></div>
       <!-- CPU PRODUCTS -->
-      <div id="cpu-section" class="product-grid is-active">
+      <div id="cpu-section" class="product-grid">
 
         <div class="product-card">
           <img src="assets/Ryzen 7 7800X3D.jpg" alt="Ryzen 7 7800X3D">
@@ -101,7 +102,7 @@
               <li>5.0 GHz Boost</li>
               <li>3D V-Cache</li>
             </ul>
-            <p class="price">$449</p>
+            <p class="price">PHP 449</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -118,7 +119,7 @@
               <li>16384 CUDA Cores</li>
               <li>450W TDP</li>
             </ul>
-            <p class="price">$1599</p>
+            <p class="price">PHP 1599</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -132,7 +133,7 @@
               <li>RDNA 3 Architecture</li>
               <li>355W TDP</li>
             </ul>
-            <p class="price">$999</p>
+            <p class="price">PHP 999</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -146,7 +147,7 @@
               <li>DLSS 3.0</li>
               <li>285W TDP</li>
             </ul>
-            <p class="price">$799</p>
+            <p class="price">PHP 799</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -163,7 +164,7 @@
               <li>32GB (2x16GB)</li>
               <li>RGB Lighting</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -177,7 +178,7 @@
               <li>64GB (2x32GB)</li>
               <li>Low Latency</li>
             </ul>
-            <p class="price">$249</p>
+            <p class="price">PHP 249</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -191,7 +192,7 @@
               <li>32GB (2x16GB)</li>
               <li>Budget Friendly</li>
             </ul>
-            <p class="price">$99</p>
+            <p class="price">PHP 99</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -208,7 +209,7 @@
               <li>PCIe 5.0</li>
               <li>WiFi 6E</li>
             </ul>
-            <p class="price">$499</p>
+            <p class="price">PHP 499</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -222,7 +223,7 @@
               <li>DDR5</li>
               <li>Thunderbolt 4</li>
             </ul>
-            <p class="price">$449</p>
+            <p class="price">PHP 449</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -236,7 +237,7 @@
               <li>PCIe 4.0</li>
               <li>M.2 Heatsink</li>
             </ul>
-            <p class="price">$199</p>
+            <p class="price">PHP 199</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -253,7 +254,7 @@
               <li>7450 MB/s Read</li>
               <li>2TB Capacity</li>
             </ul>
-            <p class="price">$199</p>
+            <p class="price">PHP 199</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -267,7 +268,7 @@
               <li>7300 MB/s Read</li>
               <li>1TB Capacity</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -281,7 +282,7 @@
               <li>5000 MB/s Read</li>
               <li>4TB Capacity</li>
             </ul>
-            <p class="price">$299</p>
+            <p class="price">PHP 299</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -298,7 +299,7 @@
               <li>80+ Gold</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$179</p>
+            <p class="price">PHP 179</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -312,7 +313,7 @@
               <li>80+ Gold</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$139</p>
+            <p class="price">PHP 139</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -326,7 +327,7 @@
               <li>80+ Titanium</li>
               <li>Fully Modular</li>
             </ul>
-            <p class="price">$399</p>
+            <p class="price">PHP 399</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -343,7 +344,7 @@
               <li>Tempered Glass</li>
               <li>USB-C Front Panel</li>
             </ul>
-            <p class="price">$164</p>
+            <p class="price">PHP 164</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -357,7 +358,7 @@
               <li>Mesh Front</li>
               <li>Cable Management</li>
             </ul>
-            <p class="price">$129</p>
+            <p class="price">PHP 129</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -371,7 +372,7 @@
               <li>Dual Chamber</li>
               <li>Showcase Design</li>
             </ul>
-            <p class="price">$159</p>
+            <p class="price">PHP 159</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -388,7 +389,7 @@
               <li>RGB Pump</li>
               <li>Quiet Operation</li>
             </ul>
-            <p class="price">$179</p>
+            <p class="price">PHP 179</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -402,7 +403,7 @@
               <li>Premium Fans</li>
               <li>Silent</li>
             </ul>
-            <p class="price">$109</p>
+            <p class="price">PHP 109</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
@@ -416,11 +417,12 @@
               <li>LCD Display</li>
               <li>RGB Fans</li>
             </ul>
-            <p class="price">$189</p>
+            <p class="price">PHP 189</p>
             <button class="add-cart-btn">Select</button>
           </div>
         </div>
       </div>
+    </div>
     </section>
   </main>
 
@@ -504,15 +506,15 @@
       <div class="build-summary-totals">
         <div class="summary-total-row">
           <span>Subtotal</span>
-          <strong id="build-subtotal">$0.00</strong>
+          <strong id="build-subtotal">PHP 0.00</strong>
         </div>
         <div class="summary-total-row">
           <span>VAT (12%)</span>
-          <strong id="build-vat">$0.00</strong>
+          <strong id="build-vat">PHP 0.00</strong>
         </div>
         <div class="summary-total-row summary-grand-total">
           <span>Total</span>
-          <strong id="build-total">$0.00</strong>
+          <strong id="build-total">PHP 0.00</strong>
         </div>
         <button class="btn checkout-btn" type="button">Checkout</button>
       </div>
@@ -568,11 +570,18 @@
 
     const builderTabs = document.querySelectorAll(".pcbuilder .product-tabs .tab");
     const builderSections = document.querySelectorAll(".pcbuilder .product-grid");
+    const builderStack = document.querySelector(".pcbuilder .product-grid-stack");
 
     if (builderTabs.length && builderSections.length) {
       const showSection = (targetId) => {
+        const showAll = targetId === "all";
+        if (builderStack) builderStack.classList.toggle("show-all", showAll);
         builderSections.forEach((section) => {
-          section.style.display = section.id === targetId ? "grid" : "none";
+          if (showAll) {
+            section.style.display = "contents";
+          } else {
+            section.style.display = section.id === targetId ? "grid" : "none";
+          }
         });
       };
 
@@ -648,9 +657,9 @@
     const toast = document.getElementById("build-toast");
     let toastTimeout;
     const VAT_RATE = 0.12;
-    const currencyFormatter = new Intl.NumberFormat("en-US", {
+    const currencyFormatter = new Intl.NumberFormat("en-PH", {
       style: "currency",
-      currency: "USD",
+      currency: "PHP",
       minimumFractionDigits: 2,
     });
 
@@ -753,7 +762,7 @@
           const section = button.closest(".product-grid");
           const productName =
             card?.querySelector(".product-info h3")?.textContent?.trim() || "Item";
-          const priceText = card?.querySelector(".price")?.textContent?.trim() || "$0";
+          const priceText = card?.querySelector(".price")?.textContent?.trim() || "PHP 0";
           const priceValue = parsePrice(priceText);
           const categoryKey = sectionCategoryMap[section?.id ?? ""];
 
@@ -828,15 +837,22 @@
         try { if (uid) window.pcpickBuildDelete?.({ product_uid: uid }); } catch {}
       });
     });
+
+    // Search functionality
+    const searchInput = document.getElementById('pcbuilder-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        // The 'All' tab has a separate population function
+        if (typeof window.pcpickFilterAllProducts === 'function') {
+          window.pcpickFilterAllProducts(searchTerm);
+        }
+        // This filters the category-specific tabs
+        if (typeof window.pcpickFilterProducts === 'function') {
+          window.pcpickFilterProducts(searchTerm);
+        }
+      });
+    }
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
