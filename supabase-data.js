@@ -12,10 +12,10 @@
 
   const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
-  const currency = (v) => fmt.format(Number(v || 0));
-  const VAT_RATE = 0.12; // 12% VAT used across pages
-  const toCents = (n) => Math.round((Number(n) || 0) * 100) / 100;
+  const fmt = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 });
+  const currency = (v) => fmt.format(Number(v || 0));
+  const VAT_RATE = 0.12; // 12% VAT used across pages
+  const toCents = (n) => Math.round((Number(n) || 0) * 100) / 100;
 
   const categoryToSectionId = {
     cpu: 'cpu-section',
@@ -414,70 +414,117 @@
       if (section) clearIfAny(section);
     });
 
-    // Append items to their corresponding sections; if unknown, drop into first grid in scope
-    const defaultGrid = scope.querySelector('.product-grid');
-    items.forEach((it) => {
-      const key = normalizeCategory(it.category);
-      if (key === 'prebuilt') return; // don't place Prebuilt items in component tabs
-      const sectionId = categoryToSectionId[key];
-      const section = sectionId ? scope.querySelector(`#${sectionId}.product-grid`) : null;
-      (section || defaultGrid)?.appendChild(createCard(it, { buttonLabel }));
-    });
-  }
+  async function populateAllProducts(scopeSelector, buttonLabel) {
+    const scope = document.querySelector(scopeSelector);
+    if (!scope) return;
+
+    const items = await fetchTable("products");
+    if (!items.length) return;
+
+    // Group by normalized category
+    const byCategory = {};
+    for (const it of items) {
+      const key = normalizeCategory(it.category || it.type);
+      if (key === 'prebuilt') continue; // exclude Prebuilt from generic products/builder pages
+      if (!byCategory[key]) byCategory[key] = [];
+      byCategory[key].push(it);
+    }
+
+    // Clear all known sections first
+    Object.values(categoryToSectionId).forEach((sectionId) => {
+      const allSection = scope.querySelector('#all-section .product-grid');
+      if (allSection) clearIfAny(allSection);
+    });
+
+    // Append items to their corresponding sections; if unknown, drop into first grid in scope
+    const defaultGrid = scope.querySelector('.product-grid');
+    items.forEach((it) => {
+      const key = normalizeCategory(it.category);
+      if (key === 'prebuilt') return; // don't place Prebuilt items in component tabs
+      const sectionId = categoryToSectionId[key];
+      const section = sectionId ? scope.querySelector(`#all-section.product-grid`) : null;
+      (section || defaultGrid)?.appendChild(createCard(it, { buttonLabel }));
+    });
+  }
+
+  // Note: Prebuilt PCs page also uses the same `products` table so we reuse populateProducts
+  async function populatePrebuilt(scopeSelector) {
+    const scope = document.querySelector(scopeSelector);
+    if (!scope) return;
 
   // Note: Prebuilt PCs page also uses the same `products` table so we reuse populateProducts
   async function populatePrebuilt(scopeSelector) {
     const scope = document.querySelector(scopeSelector);
     if (!scope) return;
 
-    const items = await fetchTable('products');
-    const list = items.filter((it) => normalizeCategory(it.category) === 'prebuilt');
-    // Prefer first grid under scope; hide others to avoid duplicate layouts
-    const grids = scope.querySelectorAll('.product-grid');
-    if (!grids.length) return;
-    const target = grids[0];
-    clearIfAny(target);
-    grids.forEach((g, i) => { if (i > 0) g.style.display = 'none'; });
-    list.forEach((pc) => target.appendChild(createCard(pc, { buttonLabel: 'Add to Cart' })));
-  }
+  // Auto-run on DOM ready
+  const run = async () => {
+    // Products page
+      if (document.querySelector('.products')) {
+      await populateProducts('.products', 'Add to Cart');
+      await populateAllProducts('.products', 'Add to Cart');
+      document.dispatchEvent(new CustomEvent('pcpick:products-populated'));
+    }
+    // PC Builder: same products table, different button label
+    if (document.querySelector('.pcbuilder')) {
+      await populateProducts('.pcbuilder', 'Select');
+      await populateAllProducts('.pcbuilder', 'Add to Cart');
+      document.dispatchEvent(new CustomEvent('pcpick:builder-populated'));
+    }
+    // Prebuilt PCs (only items whose category is Prebuilt)
+    if (document.querySelector('.prebuiltpcs')) {
+      await populatePrebuilt('.prebuiltpcs');
+      document.dispatchEvent(new CustomEvent('pcpick:prebuilt-populated'));
+    }
 
   // Auto-run on DOM ready
-  const run = async () => {
-    // Products page
-    if (document.querySelector('.products')) {
-      await populateProducts('.products', 'Add to Cart');
-      document.dispatchEvent(new CustomEvent('pcpick:products-populated'));
-    }
-    // PC Builder: same products table, different button label
-    if (document.querySelector('.pcbuilder')) {
-      await populateProducts('.pcbuilder', 'Select');
-      document.dispatchEvent(new CustomEvent('pcpick:builder-populated'));
-    }
-    // Prebuilt PCs (only items whose category is Prebuilt)
-    if (document.querySelector('.prebuiltpcs')) {
-      await populatePrebuilt('.prebuiltpcs');
-      document.dispatchEvent(new CustomEvent('pcpick:prebuilt-populated'));
-    }
+    const run = async () => {
+      // Products page
+      if (document.querySelector('.products')) {
+        await populateProducts('.products', 'Add to Cart');
+        document.dispatchEvent(new CustomEvent('pcpick:products-populated'));
+      }
+      // PC Builder: same products table, different button label
+      if (document.querySelector('.pcbuilder')) {
+        await populateProducts('.pcbuilder', 'Select');
+        document.dispatchEvent(new CustomEvent('pcpick:builder-populated'));
+      }
+      // Prebuilt PCs (only items whose category is Prebuilt)
+      if (document.querySelector('.prebuiltpcs')) {
+        await populatePrebuilt('.prebuiltpcs');
+        document.dispatchEvent(new CustomEvent('pcpick:prebuilt-populated'));
+      }
 
-    // Emit cart snapshot once on load for any page to consume
-    try {
-      const rows = await getUserCartSnapshot();
-      document.dispatchEvent(new CustomEvent('pcpick:cart-snapshot', { detail: { rows } }));
-    } catch {}
+      // Emit cart snapshot once on load for any page to consume
+      try {
+        const rows = await getUserCartSnapshot();
+        document.dispatchEvent(new CustomEvent('pcpick:cart-snapshot', { detail: { rows } }));
+      } catch {}
 
-    // Emit build snapshot as well
-    try {
-      const buildRows = await getUserBuildSnapshot();
-      document.dispatchEvent(new CustomEvent('pcpick:build-snapshot', { detail: { rows: buildRows } }));
-    } catch {}
-  };
+      // Emit build snapshot as well
+      try {
+        const buildRows = await getUserBuildSnapshot();
+        document.dispatchEvent(new CustomEvent('pcpick:build-snapshot', { detail: { rows: buildRows } }));
+      } catch {}
+    };
 
-  let invoked = false;
-  const runOnce = () => { if (!invoked) { invoked = true; try { run(); } catch (e) { console.warn('[PCPick] loader error:', e); } } };
-  // Try immediately (since this script is placed before inline initializers)
-  runOnce();
-  // And also ensure after DOMContentLoaded just in case
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runOnce);
-  }
-})();
+    let invoked = false;
+    const runOnce = () => { if (!invoked) { invoked = true; try { run(); } catch (e) { console.warn('[PCPick] loader error:', e); } } };
+    // Try immediately (since this script is placed before inline initializers)
+    runOnce();
+    // And also ensure after DOMContentLoaded just in case
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runOnce);
+    }
+  })();
+
+// Publishes cart rows to checkout.html
+async function loadUserCartForCheckout() {
+  const rows = await getUserCartSnapshot();
+
+  document.dispatchEvent(new CustomEvent("pcpick:checkout-cart", {
+    detail: { rows }
+  }));
+}
+
+
