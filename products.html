@@ -544,12 +544,6 @@
 
       const fmt = new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2});
       const parsePrice = (t)=>{const n=Number((t||'').replace(/[^0-9.]/g,''));return Number.isFinite(n)?n:0};
-
-      // key -> { name, unit, qty } for items already in the cart
-      const cartItems = new Map();
-      // key -> qty selected via quantity controls (not yet added)
-      const selectedQuantities = new Map();
-
       const VAT_RATE = 0.12;
       const renderTotals = () => {
         const qtyTotal = Array.from(cartItems.values()).reduce((s,i)=>s+i.qty,0);
@@ -653,63 +647,63 @@
         toast.textContent = msg;
         toast.setAttribute('aria-hidden','false');
         toast.classList.add('is-visible');
-        clearTimeout(showToast.tid);
-        showToast.tid = setTimeout(()=>{
+        setTimeout(()=>{
           toast.classList.remove('is-visible');
           toast.setAttribute('aria-hidden','true');
         }, 2000);
       };
 
       const collapseCart = () => {
-        cartToggle?.setAttribute('aria-expanded','false');
-        cartSummary?.classList.remove('is-visible');
-        cartSummary?.setAttribute('aria-hidden','true');
+        if (cartToggle) cartToggle.setAttribute('aria-expanded','false');
+        if (cartSummary) {
+          cartSummary.classList.remove('is-visible');
+          cartSummary.setAttribute('aria-hidden','true');
+        }
       };
 
       cartToggle?.addEventListener('click', ()=>{
         const expanded = cartToggle.getAttribute('aria-expanded') === 'true';
         const next = !expanded;
         cartToggle.setAttribute('aria-expanded', String(next));
-        cartSummary.classList.toggle('is-visible', next);
-        cartSummary.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+        if (cartSummary) {
+          cartSummary.classList.toggle('is-visible', next);
+          cartSummary.setAttribute('aria-hidden', String(expanded));
+        }
       });
 
       document.addEventListener('click', (event) => {
         if (!cartSummary || !cartToggle) return;
         if (event.target.closest('#cart-summary') || event.target.closest('#cart-toggle')) return;
         if (event.target.closest('.site-header')) return;
-        if (event.target.closest('button, a, input, textarea, select, [role="button"], [contenteditable=""], [contenteditable="true"]')) return;
         if (cartToggle.getAttribute('aria-expanded') === 'true') {
           collapseCart();
         }
       });
 
-      // Inject quantity controls and wire events for any new buttons
       const wireNewAddToCartButtons = () => {
         document.querySelectorAll('.add-cart-btn').forEach(btn=>{
           if (btn.dataset.pcpickWired === '1') return;
           btn.dataset.pcpickWired = '1';
           const card = btn.closest('.product-card');
           if (!card) return;
-        // create quantity controls next to the button
-        const row = document.createElement('div');
-        row.className = 'add-cart-row';
-        const qc = document.createElement('div');
-        qc.className = 'qty-controls';
-        qc.innerHTML = `<button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>
-                        <input type="number" class="qty-amount" value="0" min="0" inputmode="numeric" aria-label="Quantity">
-                        <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>`;
-        // Place quantity controls first, then the button
-        row.appendChild(qc);
-        row.appendChild(btn);
 
-        const info = card.querySelector('.product-info');
-        const price = card.querySelector('.price');
-        const purchaseRow = document.createElement('div');
-        purchaseRow.className = 'purchase-row';
-        if (price) purchaseRow.appendChild(price);
-        purchaseRow.appendChild(row);
-        info?.appendChild(purchaseRow);
+          const row = document.createElement('div');
+          row.className = 'add-cart-row';
+          const qc = document.createElement('div');
+          qc.className = 'qty-controls';
+          qc.innerHTML = `<button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>
+                          <input type="number" class="qty-amount" value="0" min="0" inputmode="numeric" aria-label="Quantity">
+                          <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>`;
+          row.appendChild(qc);
+          row.appendChild(btn);
+
+          const info = card.querySelector('.product-info');
+          const price = card.querySelector('.price');
+          const purchaseRow = document.createElement('div');
+          purchaseRow.className = 'purchase-row';
+          if (price) purchaseRow.appendChild(price);
+          purchaseRow.appendChild(row);
+          info?.appendChild(purchaseRow);
 
         const getData = () => {
           const name = card.querySelector('.product-info h3')?.textContent?.trim() || 'Item';
@@ -740,36 +734,21 @@
           updateSelection(key, 0);
         });
 
-        qc.querySelector('.qty-plus')?.addEventListener('click', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const current = selectedQuantities.get(key) ?? 0;
-          updateSelection(key, current + 1);
-        });
-        qc.querySelector('.qty-minus')?.addEventListener('click', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const current = selectedQuantities.get(key) ?? 0;
-          updateSelection(key, current - 1);
-        });
-
-        amountInput?.addEventListener('input', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const parsed = Math.max(0, Math.floor(Number(amountInput.value) || 0));
-          amountInput.value = String(parsed);
-          updateSelection(key, parsed);
-        });
+          qc.querySelector('.qty-plus')?.addEventListener('click', () => {
+            amountInput.value = String(Number(amountInput.value) + 1);
+          });
+          qc.querySelector('.qty-minus')?.addEventListener('click', () => {
+            amountInput.value = String(Math.max(0, Number(amountInput.value) - 1));
+          });
+          amountInput?.addEventListener('input', () => {
+            amountInput.value = String(Math.max(0, Math.floor(Number(amountInput.value) || 0)));
+          });
         });
       };
 
-      // Initial wiring for static buttons
       wireNewAddToCartButtons();
-      // Re-run after Supabase populates dynamic cards
       document.addEventListener('pcpick:products-populated', wireNewAddToCartButtons);
 
-      // Apply server cart snapshot (if any)
-      let snapshotApplied = false;
       const applyCartSnapshot = (rows=[]) => {
         if (snapshotApplied) return;
         try {
@@ -793,14 +772,6 @@
         } catch {}
       };
       document.addEventListener('pcpick:cart-snapshot', (e) => applyCartSnapshot(e.detail?.rows || []));
-      // Listen for cross-tab/cart updates via localStorage
-      window.addEventListener('storage', (e) => {
-        if (e.key === 'pcpick:cart' && typeof e.newValue === 'string') {
-          try { const parsed = JSON.parse(e.newValue || '{}'); applyCartSnapshot(parsed.rows || []); } catch {}
-        }
-      });
-      // Seed from localStorage (fast) then Supabase (authoritative)
-      try { const cached = JSON.parse(localStorage.getItem('pcpick:cart') || 'null'); if (cached?.rows) applyCartSnapshot(cached.rows); } catch {}
       window.pcpickGetCartSnapshot?.().then(applyCartSnapshot);
     })();
   </script>

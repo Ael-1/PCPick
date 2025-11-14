@@ -86,46 +86,8 @@
     return card;
   };
 
-  // Debounced writer to user_cart
-  let persistTimer;
-  async function writeUserCart(rows) {
-    try {
-      const { data: userData, error: userErr } = await client.auth.getUser();
-      // broadcast to other tabs immediately via localStorage, regardless of auth
-      try {
-        localStorage.setItem('pcpick:cart', JSON.stringify({ v: 1, ts: Date.now(), rows: rows || [] }));
-      } catch {}
-
-      if (userErr || !userData?.user) return; // not logged in, only local snapshot
-      const userId = userData.user.id;
-      // Replace current snapshot for this user
-      await client.from('user_cart').delete().eq('user_uid', userId);
-      if (Array.isArray(rows) && rows.length) {
-        const payload = rows.map((r) => {
-          const unit = Number(r.price || 0);
-          const qty = Math.max(1, Number(r.quantity || 1));
-          const gross = toCents(unit * qty * (1 + VAT_RATE)); // unit × qty × (1 + VAT)
-          return {
-            user_uid: userId,
-            product_uid: r.product_uid,
-            date_added_to_cart: new Date().toISOString(),
-            price: gross,
-            quantity: qty,
-          };
-        });
-        const { error } = await client.from('user_cart').insert(payload);
-        if (error) console.warn('[PCPick] Failed to insert user_cart:', error.message || error);
-      }
-    } catch (e) {
-      console.warn('[PCPick] Cart persist error:', e?.message || e);
-    }
-  }
-
-  // Global hook: pages can call this with [{product_uid, price, quantity}]
-  window.pcpickPersistCart = function(rows){
-    clearTimeout(persistTimer);
-    persistTimer = setTimeout(() => { writeUserCart(rows); }, 700);
-  }
+  // Global promise to track the last cart operation, preventing race conditions on checkout.
+  window.pcpickLastCartPromise = null;
 
   // Incremental cart operations (no destructive snapshot deletes)
   async function authUserId() {
@@ -152,20 +114,36 @@
   // Add-to-cart: create if new, else add quantity to existing row.
   // This now requires a database function to handle the quantity increment atomically.
   async function cartAdd({ product_uid, price, quantity }) {
-    const userId = await authUserId();
-    if (!userId || !product_uid) return;
-    const unit = Number(price || 0);
-    const qty = Math.max(1, Number(quantity || 1));
-    const gross = toCents(unit * qty * (1 + VAT_RATE));
-
-    // Upsert can't atomically increment, so we call a remote procedure
-    // that can perform this logic safely on the database side.
-    await client.rpc('upsert_cart_item', {
-      p_user_uid: userId,
-      p_product_uid: product_uid,
-      p_quantity_delta: qty,
-      p_price_per_unit: unit,
+    const operation = async () => {
+      const userId = await authUserId();
+      if (!userId || !product_uid || !quantity || quantity <= 0) return;
+      if (!userId || !product_uid) return;
+      const unitNetPrice = Number(price || 0); // This is the base price from the 'products' table
+      const qtyToAdd = Math.max(1, Number(quantity || 1));
+      const existing = await cartSelect(userId, product_uid);
+      const newQty = (existing?.quantity || 0) + qtyToAdd;
+      const newTotalGross = toCents(unitNetPrice * newQty * (1 + VAT_RATE));
+      if (existing) {
+        await client
+          .from('user_cart')
+          .update({ quantity: newQty, price: newTotalGross })
+          .eq('user_uid', userId)
+          .eq('product_uid', product_uid);
+      } else {
+        const initialGross = toCents(unitNetPrice * qtyToAdd * (1 + VAT_RATE));
+        await client
+          .from('user_cart')
+          .insert({ user_uid: userId, product_uid, quantity: qtyToAdd, price: initialGross, date_added_to_cart: new Date().toISOString() });
+      }
+    };
+    window.pcpickLastCartPromise = operation();
+    const promise = window.pcpickLastCartPromise;
+    // After the operation completes, fetch the new cart state and notify the UI
+    promise.then(async () => {
+      const rows = await getUserCartSnapshot();
+      document.dispatchEvent(new CustomEvent('pcpick:cart-snapshot', { detail: { rows } }));
     });
+    return promise;
   }
 
   // Set absolute quantity; delete if 0
@@ -175,107 +153,116 @@
     const qty = Math.max(0, Number(quantity || 0));
 
     if (qty <= 0) {
-      await client.from('user_cart').delete().eq('user_uid', userId).eq('product_uid', product_uid);
-      return;
+      await client.from('user_cart')
+        .delete()
+        .eq('user_uid', userId)
+        .eq('product_uid', product_uid);
+    } else {
+      const gross = toCents(unit * qty * (1 + VAT_RATE));
+      const existing = await cartSelect(userId, product_uid);
+      if (existing) {
+        await client
+          .from('user_cart')
+          .update({ quantity: qty, price: gross })
+          .eq('user_uid', userId)
+          .eq('product_uid', product_uid);
+      } else if (qty > 0) {
+        // Only insert if it doesn't exist and quantity is positive
+        await client
+          .from('user_cart')
+          .insert({ user_uid: userId, product_uid, quantity: qty, price: gross, date_added_to_cart: new Date().toISOString() });
+      }
+      // After updating, fetch the new cart state and notify the UI
+      const rows = await getUserCartSnapshot();
+      document.dispatchEvent(new CustomEvent('pcpick:cart-snapshot', { detail: { rows } }));
     }
-
-    const unit = Number(price || 0);
-    const gross = toCents(unit * qty * (1 + VAT_RATE));
-    
-    await client.from('user_cart').upsert({
-      user_uid: userId,
-      product_uid,
-      quantity: qty,
-      price: gross,
-      date_added_to_cart: new Date().toISOString(),
-    }, { onConflict: 'user_uid,product_uid' });
+    // After setting, fetch the new cart state and notify the UI
+    const rows = await getUserCartSnapshot();
+    document.dispatchEvent(new CustomEvent('pcpick:cart-snapshot', { detail: { rows } }));
   }
 
   window.pcpickCartAdd = cartAdd;
   window.pcpickCartSet = cartSet;
 
-  // Load user's cart snapshot and broadcast to pages
+    // Load user's cart snapshot and broadcast to pages
   async function getUserCartSnapshot() {
     try {
-      const { data: userData, error: userErr } = await client.auth.getUser();
-      if (userErr || !userData?.user) return [];
-      const userId = userData.user.id;
-      // Try view first
-      let rows = [];
-      try {
-        const { data, error } = await client
-          .from('v_user_cart')
-          .select('product_uid, product_name, price, quantity')
-          .eq('user_uid', userId);
-        if (!error && Array.isArray(data)) rows = data;
-      } catch { /* ignore */ }
-      if (!rows.length) {
-        const { data: base, error } = await client
-          .from('user_cart')
-          .select('product_uid, price, quantity')
-          .eq('user_uid', userId);
-        if (error || !Array.isArray(base)) return [];
-        rows = base;
+      const userId = await authUserId();
+      if (!userId) return [];
+
+      // 1. Fetch all cart items for the user
+      const { data: cartItems, error: cartError } = await client
+        .from('user_cart')
+        .select('product_uid, quantity')
+        .eq('user_uid', userId);
+
+      if (cartError || !cartItems || cartItems.length === 0) {
+        return [];
       }
-      const ids = rows.map(r => r.product_uid).filter(Boolean);
-      const { data: products } = ids.length ? await client
+
+      // 2. Get all product details for the items in the cart
+      const productIds = cartItems.map(item => item.product_uid);
+      const { data: products, error: productsError } = await client
         .from('products')
         .select('uid, product_name, price')
-        .in('uid', ids) : { data: [] };
-      const byId = Object.fromEntries((products || []).map(p => [p.uid, p]));
-      return rows.map(r => {
-        const total = Number(r.price || 0);
-        const qty = Math.max(1, Number(r.quantity || 1));
-        const unitGross = total / qty;
-        const unitNet = unitGross / (1 + VAT_RATE); // convert from VAT-inclusive to net unit
+        .in('uid', productIds);
+
+      if (productsError) {
+        return [];
+      }
+
+      // 3. Combine the data into a clean list for the checkout page
+      const productsById = Object.fromEntries(products.map(p => [p.uid, p]));
+
+      return cartItems.map(cartItem => {
+        const product = productsById[cartItem.product_uid] || {};
         return {
-          uid: r.product_uid,
-          name: r.product_name || byId[r.product_uid]?.product_name || 'Item',
-          price: Number.isFinite(unitNet) ? unitNet : (byId[r.product_uid]?.price ?? 0),
-          quantity: Math.max(0, Number(r.quantity || 0))
+          uid: cartItem.product_uid,
+          name: product.product_name || 'Unknown Item',
+          price: Number(product.price || 0), // This is the net unit price
+          quantity: Number(cartItem.quantity || 1),
         };
       });
-    } catch { return []; }
+    } catch {
+      return []; // Return an empty array on any error
+    }
   }
+
 
   window.pcpickGetCartSnapshot = getUserCartSnapshot;
 
   // Load user's build snapshot (v_user_build preferred), return [{ uid, name, category, price, quantity }]
   async function getUserBuildSnapshot() {
     try {
-      const { data: userData, error: userErr } = await client.auth.getUser();
-      if (userErr || !userData?.user) return [];
-      const userId = userData.user.id;
-      let rows = [];
-      try {
-        const { data, error } = await client
-          .from('v_user_build')
-          .select('product_uid, product_name, category, item_price, build_price')
-          .eq('user_uid', userId);
-        if (!error && Array.isArray(data)) rows = data;
-      } catch {}
-      if (!rows.length) {
-        const { data: base } = await client
-          .from('user_build')
-          .select('product_uid, item_price, build_price')
-          .eq('user_uid', userId);
-        rows = base || [];
-      }
-      const ids = rows.map(r => r.product_uid).filter(Boolean);
-      const { data: products } = ids.length ? await client
+      const userId = await authUserId();
+      if (!userId) return [];
+
+      // 1. Fetch all items from the user's build
+      const { data: buildItems, error: buildError } = await client
+        .from('user_build')
+        .select('product_uid, item_price')
+        .eq('user_uid', userId);
+
+      if (buildError || !buildItems || buildItems.length === 0) return [];
+
+      // 2. Get product details for all items in the build
+      const productIds = buildItems.map(item => item.product_uid).filter(Boolean);
+      const { data: products, error: productsError } = productIds.length ? await client
         .from('products')
         .select('uid, product_name, price, category')
-        .in('uid', ids) : { data: [] };
-      const byId = Object.fromEntries((products || []).map(p => [p.uid, p]));
-      return rows.map(r => {
-        const unitGross = Number(r.item_price || 0);
-        const unitNet = unitGross / (1 + VAT_RATE);
-        const p = byId[r.product_uid] || {};
+        .in('uid', productIds) : { data: [] };
+
+      if (productsError) return [];
+
+      const productsById = Object.fromEntries((products || []).map(p => [p.uid, p]));
+
+      return buildItems.map(item => {
+        const product = productsById[item.product_uid] || {};
         return {
-          uid: r.product_uid,
-          name: r.product_name || p.product_name || 'Item',
-          category: r.category || p.category || '',
-          price: Number.isFinite(unitNet) ? unitNet : (p.price ?? 0),
+          uid: item.product_uid,
+          name: product.product_name || 'Unknown Item',
+          category: product.category || '',
+          price: Number(product.price || 0), // Use the net price from the products table
           quantity: 1,
         };
       });
@@ -310,14 +297,16 @@
         .from('user_build')
         .update({ build_price: toCents(total) })
         .eq('user_uid', userId);
+      return total;
     } catch {}
+    return 0;
   }
 
   async function buildInsert({ product_uid, price }) {
     const userId = await authUserId();
     if (!userId || !product_uid) return;
     const unit = Number(price || 0);
-    const gross = toCents(unit * (1 + VAT_RATE)); // item_price (VAT-inclusive per item)
+    const gross = toCents(unit * (1 + VAT_RATE));
     const exists = await buildSelect(userId, product_uid);
     if (exists) {
       await client
@@ -325,13 +314,15 @@
         .update({ item_price: gross })
         .eq('user_uid', userId)
         .eq('product_uid', product_uid);
-      await recomputeBuildTotal(userId);
-      return;
     }
-    await client
-      .from('user_build')
-      .insert({ user_uid: userId, product_uid, created_at: new Date().toISOString(), item_price: gross });
+    else {
+      await client
+        .from('user_build')
+        .insert({ user_uid: userId, product_uid, created_at: new Date().toISOString(), item_price: gross });
+    }
     await recomputeBuildTotal(userId);
+    const buildRows = await getUserBuildSnapshot();
+    document.dispatchEvent(new CustomEvent('pcpick:build-snapshot', { detail: { rows: buildRows } }));
   }
 
   async function buildDelete({ product_uid }) {
@@ -343,6 +334,8 @@
       .eq('user_uid', userId)
       .eq('product_uid', product_uid);
     await recomputeBuildTotal(userId);
+    const buildRows = await getUserBuildSnapshot();
+    document.dispatchEvent(new CustomEvent('pcpick:build-snapshot', { detail: { rows: buildRows } }));
   }
 
   // Replace previous selection (if any) with a new one for a category
@@ -350,6 +343,8 @@
     try {
       if (prev_uid && prev_uid !== new_uid) await buildDelete({ product_uid: prev_uid });
       if (new_uid) await buildInsert({ product_uid: new_uid, price });
+      // If only deleting, the event is fired in buildDelete. If inserting/replacing,
+      // the event is fired in buildInsert, so no extra dispatch is needed here.
     } catch {}
   }
 
@@ -534,12 +529,40 @@
 })();
 
 // Publishes cart rows to checkout.html
-async function loadUserCartForCheckout() {
-  const rows = await getUserCartSnapshot();
+(function() {
+  async function loadUserCartForCheckout() {
+    const rows = await window.pcpickGetCartSnapshot();
+  
+    document.dispatchEvent(new CustomEvent("pcpick:checkout-cart", {
+      detail: { rows }
+    }));
+  }
+  
+  window.pcpickLoadUserCartForCheckout = loadUserCartForCheckout;
 
-  document.dispatchEvent(new CustomEvent("pcpick:checkout-cart", {
-    detail: { rows }
-  }));
-}
+  /**
+   * Takes all items from the user's current build (`user_build` table) and
+   * adds them to the main shopping cart (`user_cart` table).
+   */
+  async function addBuildToCart() {
+    const buildItems = await getUserBuildSnapshot();
+    if (!buildItems || buildItems.length === 0) {
+      console.warn("[PCPick] Build is empty, nothing to add to cart.");
+      return;
+    }
 
-window.pcpickLoadUserCartForCheckout = loadUserCartForCheckout;
+    // Create a promise for each item being added to the cart
+    const addPromises = buildItems.map(item => {
+      return cartAdd({
+        product_uid: item.uid,
+        price: item.price, // This is the net unit price from getUserBuildSnapshot
+        quantity: 1,       // Each component in a build has a quantity of 1
+      });
+    });
+
+    // Wait for all items to be added before proceeding
+    await Promise.all(addPromises);
+  }
+  window.pcpickAddBuildToCart = addBuildToCart;
+
+})();

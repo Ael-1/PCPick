@@ -757,7 +757,7 @@
       document.querySelectorAll(".pcbuilder .add-cart-btn").forEach((button) => {
         if (button.dataset.pcpickWired === '1') return;
         button.dataset.pcpickWired = '1';
-        button.addEventListener("click", () => {
+        button.addEventListener("click", async () => {
           const card = button.closest(".product-card");
           const section = button.closest(".product-grid");
           const productName =
@@ -771,7 +771,7 @@
             return;
           }
 
-          setSelectedCard(categoryKey, card, productName, priceValue);
+          await setSelectedCard(categoryKey, card, productName, priceValue);
           showToast(`${productName} added to Your Build!`);
           updateBuildCount();
           updateTotals();
@@ -783,6 +783,8 @@
       ensurePurchaseRow();
       wireNewBuilderButtons();
     });
+    document.addEventListener('pcpick:builder-populated', wireNewBuilderButtons);
+    wireNewBuilderButtons(); // Wire buttons for any static content on initial load
 
     // Restore build selections from server snapshot
     const applyBuildSnapshot = (rows=[]) => {
