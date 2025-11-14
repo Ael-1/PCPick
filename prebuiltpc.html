@@ -240,107 +240,6 @@
       const cartEmpty = document.getElementById('cart-empty');
       const toast = document.getElementById('product-toast');
 
-      const fmt = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2});
-      const parsePrice = (t)=>{const n=Number((t||'').replace(/[^0-9.]/g,''));return Number.isFinite(n)?n:0};
-
-      const cartItems = new Map();
-      const selectedQuantities = new Map();
-
-      const VAT_RATE = 0.12;
-      const renderTotals = () => {
-        const qtyTotal = Array.from(cartItems.values()).reduce((s,i)=>s+i.qty,0);
-        const subtotal = Array.from(cartItems.values()).reduce((s,i)=>s + (i.unit*i.qty),0);
-        const vat = subtotal * VAT_RATE;
-        const total = subtotal + vat;
-        cartCount.textContent = `(${qtyTotal})`;
-        if (cartEmpty) cartEmpty.hidden = qtyTotal > 0 ? true : false;
-        if (cartTotals) {
-          cartTotals.hidden = qtyTotal === 0;
-          if (cartSubtotalEl) cartSubtotalEl.textContent = fmt.format(subtotal);
-          if (cartVatEl) cartVatEl.textContent = fmt.format(vat);
-          if (cartTotalEl) cartTotalEl.textContent = fmt.format(total);
-        }
-      };
-
-      const productKey = (name, unit)=>`${name}|${unit}`;
-
-      const updateCartRowQty = (key) => {
-        const row = cartList?.querySelector(`li[data-key="${key}"]`);
-        if (!row) return;
-        const q = cartItems.get(key)?.qty ?? 0;
-        const input = row.querySelector('.cart-qty-input');
-        if (input) input.value = String(Math.max(1, q));
-      };
-
-      const ensureCartRow = (key, name, unit, uid) => {
-        let row = cartList?.querySelector(`li[data-key="${key}"]`);
-        if (row) return row;
-        row = document.createElement('li');
-        row.classList.add('has-selection');
-        row.dataset.key = key;
-        if (uid) row.dataset.uid = uid;
-        row.innerHTML = `
-          <span>Item</span>
-          <div class="summary-selection">
-            <strong class="has-selection">${name}</strong>
-            <span class="summary-price">${fmt.format(unit)}</span>
-          </div>
-          <div class="cart-qty-controls">
-            <button type="button" class="cart-qty-minus" aria-label="Decrease quantity">-</button>
-            <input type="number" class="cart-qty-input" aria-label="Quantity" value="1" min="1" inputmode="numeric">
-            <button type="button" class="cart-qty-plus" aria-label="Increase quantity">+</button>
-          </div>
-          <button class="summary-clear" type="button" aria-label="Remove from cart">x</button>`;
-        cartList?.appendChild(row);
-        row.querySelector('.summary-clear')?.addEventListener('click', ()=>{
-          cartItems.delete(key);
-          row.remove();
-          renderTotals();
-        });
-
-        const qtyInput = row.querySelector('.cart-qty-input');
-
-        row.querySelector('.cart-qty-plus')?.addEventListener('click', ()=>{
-          adjustCartQuantity(name, unit, 1);
-        });
-
-        row.querySelector('.cart-qty-minus')?.addEventListener('click', ()=>{
-          adjustCartQuantity(name, unit, -1);
-        });
-
-        qtyInput?.addEventListener('input', () => {
-          const value = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
-          qtyInput.value = String(value);
-          const key = productKey(name, unit);
-          const current = cartItems.get(key);
-          if (!current) return;
-          const delta = value - current.qty;
-          if (delta !== 0) {
-            adjustCartQuantity(name, unit, delta);
-          }
-        });
-        return row;
-      };
-
-      const adjustCartQuantity = (name, unit, delta, uid) => {
-        if (!delta) return;
-        const key = productKey(name, unit);
-        const current = cartItems.get(key) || { name, unit, qty: 0, uid };
-        if (uid && !current.uid) current.uid = uid;
-        current.qty = Math.max(0, current.qty + delta);
-        if (current.qty === 0) {
-          cartItems.delete(key);
-          cartList?.querySelector(`li[data-key="${key}"]`)?.remove();
-          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: 0 }); } catch {}
-        } else {
-          cartItems.set(key, current);
-          ensureCartRow(key, name, unit, current.uid);
-          updateCartRowQty(key);
-          try { if (current.uid) window.pcpickCartSet?.({ product_uid: current.uid, price: current.unit, quantity: current.qty }); } catch {}
-        }
-        renderTotals();
-      };
-
       const showToast = (msg) => {
         if (!toast) return;
         toast.textContent = msg;
@@ -389,7 +288,7 @@
         const qc = document.createElement('div');
         qc.className = 'qty-controls';
         qc.innerHTML = `<button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>
-                        <input type="number" class="qty-amount" value="0" min="0" inputmode="numeric" aria-label="Quantity">
+                        <input type="number" class="qty-amount" value="1" min="1" inputmode="numeric" aria-label="Quantity">
                         <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>`;
         row.appendChild(qc);
         row.appendChild(btn);
@@ -411,45 +310,28 @@
 
         const amountInput = qc.querySelector('.qty-amount');
 
-        const updateSelection = (key, next) => {
-          const value = Math.max(0, next);
-          selectedQuantities.set(key, value);
-          if (amountInput) amountInput.value = String(value);
-        };
-
         btn.addEventListener('click', ()=>{
           const {name, unit, uid} = getData();
-          const key = productKey(name, unit);
-          const qty = selectedQuantities.get(key) ?? 0;
+          const qty = Number(amountInput.value) || 0;
           if (qty <= 0) {
             showToast('Set a quantity first.');
             return;
           }
-          adjustCartQuantity(name, unit, qty, uid);
-          try { if (uid) window.pcpickCartAdd?.({ product_uid: uid, price: unit, quantity: qty }); } catch {}
+          window.pcpickCartAdd?.({ product_uid: uid, price: unit, quantity: qty });
           showToast(`${qty} × ${name} added to cart!`);
-          updateSelection(key, 0);
+          amountInput.value = '0'; // Reset UI
         });
 
         qc.querySelector('.qty-plus')?.addEventListener('click', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const current = selectedQuantities.get(key) ?? 0;
-          updateSelection(key, current + 1);
+          amountInput.value = String(Number(amountInput.value) + 1);
         });
         qc.querySelector('.qty-minus')?.addEventListener('click', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const current = selectedQuantities.get(key) ?? 0;
-          updateSelection(key, current - 1);
+          amountInput.value = String(Math.max(1, Number(amountInput.value) - 1));
         });
 
         amountInput?.addEventListener('input', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const parsed = Math.max(0, Math.floor(Number(amountInput.value) || 0));
+          const parsed = Math.max(1, Math.floor(Number(amountInput.value) || 1));
           amountInput.value = String(parsed);
-          updateSelection(key, parsed);
         });
         });
       };
@@ -459,39 +341,6 @@
       // Re-run after Supabase populates dynamic cards
       document.addEventListener('pcpick:prebuilt-populated', wireNewAddToCartButtons);
 
-      // Apply server cart snapshot (if any)
-      let snapshotApplied = false;
-      const applyCartSnapshot = (rows=[]) => {
-        if (snapshotApplied) return;
-        try {
-          let applied = 0;
-          rows.forEach((r) => {
-            const uid = r.uid;
-            let name = r.name;
-            let unit = Number(r.price || 0);
-            if (!name || !unit) {
-              const card = document.querySelector(`.product-card[data-uid="${uid}"]`);
-              const domName = card?.querySelector('.product-info h3')?.textContent?.trim();
-              const domUnit = parsePrice(card?.querySelector('.price')?.textContent?.trim() || '$0');
-              name = name || domName || 'Item';
-              if (!Number.isFinite(unit) || unit <= 0) unit = domUnit;
-            }
-            const qty = Math.max(0, Number(r.quantity || 0));
-            if (qty > 0) { adjustCartQuantity(name, unit, qty, uid); applied++; }
-          });
-          if (applied > 0) snapshotApplied = true;
-        } catch {}
-      };
-      document.addEventListener('pcpick:cart-snapshot', (e) => applyCartSnapshot(e.detail?.rows || []));
-      // Listen for cross-tab/cart updates via localStorage
-      window.addEventListener('storage', (e) => {
-        if (e.key === 'pcpick:cart' && typeof e.newValue === 'string') {
-          try { const parsed = JSON.parse(e.newValue || '{}'); applyCartSnapshot(parsed.rows || []); } catch {}
-        }
-      });
-      // Seed from localStorage (fast) then Supabase (authoritative)
-      try { const cached = JSON.parse(localStorage.getItem('pcpick:cart') || 'null'); if (cached?.rows) applyCartSnapshot(cached.rows); } catch {}
-      window.pcpickGetCartSnapshot?.().then(applyCartSnapshot);
     })();
   </script>
 
