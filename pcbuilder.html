@@ -85,7 +85,7 @@
           <button class="tab" data-cat="cooler-section">Cooler</button>
         </div>
         <div class="product-search">
-          <input class="product-search" type="search" placeholder="Search products..." aria-label="Search products">
+          <input id="pcbuilder-search" type="search" placeholder="Search products..." aria-label="Search products">
         </div>
       </div>
 
@@ -835,6 +835,22 @@
         try { if (uid) window.pcpickBuildDelete?.({ product_uid: uid }); } catch {}
       });
     });
+
+    // Search functionality
+    const searchInput = document.getElementById('pcbuilder-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        // The 'All' tab has a separate population function
+        if (typeof window.pcpickFilterAllProducts === 'function') {
+          window.pcpickFilterAllProducts(searchTerm);
+        }
+        // This filters the category-specific tabs
+        if (typeof window.pcpickFilterProducts === 'function') {
+          window.pcpickFilterProducts(searchTerm);
+        }
+      });
+    }
   </script>
 </body>
 </html>
