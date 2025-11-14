@@ -254,14 +254,29 @@ window.addEventListener('load', () => {
     } catch { return false; }
   };
 
-  candidates.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      // prevent default form submission or link navigation so we can route to checkout page
+  // script.js: REPLACE THE CLICK LISTENER FOR CANDIDATES (checkout buttons)
+
+  candidates.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      // navigate: if not logged in, go to login first
+
+      // First, check for login status.
       if (!isLoggedIn()) {
         window.location.href = 'login.html';
-      } else {
+        return;
+      }
+
+      // If on the PC Builder page, attempt to transfer the build to the cart.
+      if (window.location.pathname.includes('pcbuilder.html') && typeof window.pcpickAddBuildToCart === 'function') {
+        // We await the transfer, but use .catch() to ensure that even if it fails,
+        // we still proceed to the checkout page. This prevents the button from getting "stuck".
+        await window.pcpickAddBuildToCart().catch(err => {
+          console.error("Failed to add build to cart, proceeding to checkout anyway:", err);
+        });
+      }
+
+      // Finally, always navigate to the checkout page if not already there.
+      if (window.location.pathname.indexOf('checkout.html') === -1) {
         window.location.href = 'checkout.html';
       }
     });

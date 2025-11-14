@@ -408,7 +408,7 @@
         const qc = document.createElement('div');
         qc.className = 'qty-controls';
         qc.innerHTML = `<button type="button" class="qty-minus" aria-label="Decrease quantity">-</button>
-                        <input type="number" class="qty-amount" value="0" min="0" inputmode="numeric" aria-label="Quantity">
+                        <input type="number" class="qty-amount" value="1" min="1" inputmode="numeric" aria-label="Quantity">
                         <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>`;
         row.appendChild(qc);
         row.appendChild(btn);
@@ -430,45 +430,28 @@
 
         const amountInput = qc.querySelector('.qty-amount');
 
-        const updateSelection = (key, next) => {
-          const value = Math.max(0, next);
-          selectedQuantities.set(key, value);
-          if (amountInput) amountInput.value = String(value);
-        };
-
         btn.addEventListener('click', ()=>{
           const {name, unit, uid} = getData();
-          const key = productKey(name, unit);
-          const qty = selectedQuantities.get(key) ?? 0;
+          const qty = Number(amountInput.value) || 0;
           if (qty <= 0) {
             showToast('Set a quantity first.');
             return;
           }
-          adjustCartQuantity(name, unit, qty, uid);
-          try { if (uid) window.pcpickCartAdd?.({ product_uid: uid, price: unit, quantity: qty }); } catch {}
+          window.pcpickCartAdd?.({ product_uid: uid, price: unit, quantity: qty });
           showToast(`${qty} × ${name} added to cart!`);
-          updateSelection(key, 0);
+          amountInput.value = '0'; // Reset UI
         });
 
         qc.querySelector('.qty-plus')?.addEventListener('click', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const current = selectedQuantities.get(key) ?? 0;
-          updateSelection(key, current + 1);
+          amountInput.value = String(Number(amountInput.value) + 1);
         });
         qc.querySelector('.qty-minus')?.addEventListener('click', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const current = selectedQuantities.get(key) ?? 0;
-          updateSelection(key, current - 1);
+          amountInput.value = String(Math.max(1, Number(amountInput.value) - 1));
         });
 
         amountInput?.addEventListener('input', ()=>{
-          const {name, unit} = getData();
-          const key = productKey(name, unit);
-          const parsed = Math.max(0, Math.floor(Number(amountInput.value) || 0));
+          const parsed = Math.max(1, Math.floor(Number(amountInput.value) || 1));
           amountInput.value = String(parsed);
-          updateSelection(key, parsed);
         });
         });
       };
