@@ -203,6 +203,8 @@ window.addEventListener('load', () => {
   toggles.forEach((btn) => {
     const selector = btn.getAttribute('data-password-toggle');
     const input = selector ? document.querySelector(selector) : null;
+
+    // If target input isn't found, skip this toggle button to avoid runtime errors
     if (!input) return;
 
     const icons = {
@@ -252,14 +254,29 @@ window.addEventListener('load', () => {
     } catch { return false; }
   };
 
-  candidates.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      // prevent default form submission or link navigation so we can route to checkout page
+  // script.js: REPLACE THE CLICK LISTENER FOR CANDIDATES (checkout buttons)
+
+  candidates.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      // navigate: if not logged in, go to login first
+
+      // First, check for login status.
       if (!isLoggedIn()) {
         window.location.href = 'login.html';
-      } else {
+        return;
+      }
+
+      // If on the PC Builder page, attempt to transfer the build to the cart.
+      if (window.location.pathname.includes('pcbuilder.html') && typeof window.pcpickAddBuildToCart === 'function') {
+        // We await the transfer, but use .catch() to ensure that even if it fails,
+        // we still proceed to the checkout page. This prevents the button from getting "stuck".
+        await window.pcpickAddBuildToCart().catch(err => {
+          console.error("Failed to add build to cart, proceeding to checkout anyway:", err);
+        });
+      }
+
+      // Finally, always navigate to the checkout page if not already there.
+      if (window.location.pathname.indexOf('checkout.html') === -1) {
         window.location.href = 'checkout.html';
       }
     });
@@ -356,6 +373,23 @@ window.addEventListener('load', () => {
     const accountBtn = createMenuButton('Account Settings', 'account');
     const logoutBtn = createMenuButton('Log Out', 'logout');
     logoutBtn.setAttribute('data-temp-logout', '');
+
+    
+    // ✅ Add navigation when clicked
+    ordersBtn.addEventListener('click', () => {
+      window.location.href = 'orders.html';
+    });
+
+    accountBtn.addEventListener('click', () => {
+      window.location.href = 'account.html';
+    });
+
+    // (Optional) logout redirect
+    logoutBtn.addEventListener('click', () => {
+      // Example: clear stored session or data if needed
+      localStorage.removeItem('userSession');
+      window.location.href = 'login.html'; // change to your actual login page if any
+    });
 
     list.appendChild(ordersBtn);
     list.appendChild(accountBtn);
@@ -563,3 +597,4 @@ window.addEventListener('load', () => {
     }
   });
 })();
+
