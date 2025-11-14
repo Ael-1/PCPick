@@ -104,12 +104,35 @@ body.auth-page{
 }
 .dark-mode .user-badge__menu-header{border-color:rgba(255,255,255,0.08);color:#f8fafc}
 .dark-mode .user-badge__menu-item{background:rgba(255,255,255,0.04);color:#f1f5f9}
-.dark-mode .user-badge__menu-item:hover{background:rgba(59,130,246,0.25);color:#fff}
+.dark-mode .user-badge__menu-item:hover{background:rgba(59,130,246,0.25);color:var(--accent)}
 .drawer-actions .user-badge{width:100%;justify-content:flex-start;margin-top:10px}
-.drawer-actions .user-badge__menu{position:static;margin-top:10px;box-shadow:0 8px 18px rgba(15,23,36,0.12)}
+.drawer-actions .user-badge__menu{
+  /* Anchor to the top of the user badge toggle */
+  position: absolute;
+  top: 100%;
+  bottom: 100%; /* Position it above the toggle */
+  top: auto; /* Override the default 'top' property */
+  left: 0;
+  margin-bottom: 8px; /* Add space between menu and button */
+  box-shadow:0 8px 18px rgba(15,23,36,0.12); /* Keep existing shadow */
+}
 .drawer-actions .user-badge__toggle{width:100%;justify-content:space-between}
 .drawer-actions .user-badge__menu-item{background:rgba(15,23,36,0.04)}
 .dark-mode .drawer-actions .user-badge__menu-item{background:rgba(255,255,255,0.06)}
+
+/* Name inside the drawer user badge toggle */
+.user-badge__drawer-name {
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text);
+}
+
+[data-theme="dark"] .user-badge__drawer-name {
+  color: var(--text-primary);
+}
 
 /* Hero */
 .hero{padding:56px 0 40px}
@@ -747,6 +770,7 @@ body.auth-page{
   display: flex;
   flex-direction: column;
   gap: 24px;
+  justify-content: space-between; /* Push actions to bottom */
   transition: right 0.3s ease;
   z-index: 200;
 }
@@ -771,16 +795,20 @@ body.auth-page{
   cursor: pointer;
   color: var(--text);
 }
+.drawer-close:hover {
+  color: var(--accent);
+  transition: color 0.2s ease;
+}
 .drawer-links {
   list-style: none;
   margin: 0;
   padding: 0;
+  margin-top: 16px; /* Add some space below the header */
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
 .drawer-links a {
-  color: var(--muted);
   font-size: 18px;
   text-decoration: none;
   font-weight: 500;
@@ -793,7 +821,7 @@ body.auth-page{
 }
 
 .drawer-actions {
-  margin-top: auto;
+  position: relative; /* Needed for the floating user menu */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -803,7 +831,6 @@ body.auth-page{
 .drawer-actions,
 [data-theme="dark"] .drawer-actions {
   border-radius: 12px;
-  overflow: hidden; /* prevent children spilling outside the radius */
 }
 
 .drawer-overlay {
@@ -1708,8 +1735,9 @@ textarea {
   .nav-actions{margin-right:0;gap:10px}
   .nav-actions .login{display:none;}
   .nav-actions .btn.signup{display:none;}
+  .nav-actions .user-badge {display: none;}
   .nav{display:none}
-  .menu-toggle{display:inline-flex;align-items:center;justify-content:center;margin-right:0;font-size:26px;padding:6px 10px;border-radius:10px;border:1px solid rgba(15,23,36,0.08);background:#fff;color:var(--text);box-shadow:0 4px 12px rgba(12,15,20,0.08)}
+  .menu-toggle{display:inline-flex;align-items:center;justify-content:center;margin-right:30px;font-size:26px;padding:6px 10px;border-radius:10px;border:1px solid rgba(15,23,36,0.08);background:#fff;color:var(--text);box-shadow:0 4px 12px rgba(12,15,20,0.08)}
   .menu-toggle:focus{outline:none;box-shadow:0 0 0 3px rgba(var(--accent),0.15)}
   .hero-grid{grid-template-columns:1fr;gap:28px}
   .hero-right{justify-content:center}
@@ -2138,8 +2166,19 @@ body.dark-mode .featured-info .price,
 /* 🌙 Dark Mode — Mobile Drawer */
 [data-theme="dark"] #mobile-drawer {
   background-color: #111827; /* Matches dark background */
+  background-color: var(--bg); /* Matches dark background */
   color: #f1f5f9;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Drawer close button visibility in dark mode */
+[data-theme="dark"] .drawer-close {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .drawer-close:hover {
+  color: var(--accent);
+  transition: color 0.2s ease;
 }
 
 /* Drawer links (Home, Products, PC Builder, etc.) */
@@ -2148,7 +2187,7 @@ body.dark-mode .featured-info .price,
 }
 
 [data-theme="dark"] #mobile-drawer a:hover {
-  color: #60a5fa; /* Soft blue hover */
+  color: var(--accent); /* Soft blue hover */
 }
 
 /* Drawer actions (Log In / Sign Up section) */

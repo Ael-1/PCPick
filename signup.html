@@ -125,6 +125,25 @@
           return;
         }
 
+        // --- NEW LOGIC ---
+        // After successful sign-up, `data.user` contains the new user object.
+        // Let's create their blank profile in `user_info`.
+        if (data.user) {
+          const { error: profileError } = await supabase
+            .from('user_info')
+            .insert([
+              // Only insert the user_uid, other fields are nullable
+              { user_uid: data.user.id } 
+            ]);
+
+          if (profileError) {
+            // Log the error, but don't stop the user.
+            // Their auth account was created, they can fix their profile later.
+            console.error('Error creating user_info entry:', profileError.message);
+          }
+        }
+        // --- END NEW LOGIC ---
+
         alert('Account created successfully.');
         window.location.href = 'index.html';
       });

@@ -72,6 +72,12 @@
       <h2 class="section-title">Pre-built PCs</h2>
       <p class="section-description">Browse brand new and expertly configured systems. No hassle!</p>
 
+      <div class="product-search">
+        <input id="prebuilt-search" type="search" 
+        placeholder="Search products..." 
+        aria-label="Search products">
+      </div>
+
       <!-- CPU PRODUCTS -->
        <div id="prebuilt-section" class="product-grid"></div>
       <div id="cpu-section" class="product-grid">
@@ -228,6 +234,18 @@
   <!-- Supabase client (UMD) and data loader -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="supabase-data.js"></script>
+  <script>
+    // Search functionality
+    const searchInput = document.getElementById('prebuilt-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        if (typeof window.pcpickFilterPrebuilt === 'function') {
+          window.pcpickFilterPrebuilt(searchTerm);
+        }
+      });
+    }
+  </script>
   <script>
     (function(){
       const cartToggle = document.getElementById('cart-toggle');
