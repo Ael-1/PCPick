@@ -85,9 +85,8 @@
           <button class="tab" data-cat="case-section">Cases</button>
           <button class="tab" data-cat="cooler-section">Cooler</button>
         </div>
-
         <div class="product-search">
-          <input type="search" placeholder="Search products..." aria-label="Search products">
+          <input id="products-search" type="search" placeholder="Search products..." aria-label="Search products">
         </div>
       </div>
 
@@ -512,6 +511,22 @@
       });
 
       showProductSection(productTabs[0]?.dataset.cat ?? productSections[0]?.id);
+    }
+
+    // Search functionality
+    const searchInput = document.getElementById('products-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        // The 'All' tab has a separate population function
+        if (typeof window.pcpickFilterAllProducts === 'function') {
+          window.pcpickFilterAllProducts(searchTerm);
+        }
+        // This filters the category-specific tabs
+        if (typeof window.pcpickFilterProducts === 'function') {
+          window.pcpickFilterProducts(searchTerm);
+        }
+      });
     }
   </script>
   <script>

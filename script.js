@@ -506,6 +506,14 @@ window.addEventListener('load', () => {
         if (before) root.insertBefore(badge, before); else root.appendChild(badge);
         attachUserBadgeMenu(badge);
       } else if (user) {
+        // If badge exists, ensure drawer version has the name element
+        const isDrawer = root.classList.contains('drawer-actions');
+        const toggle = badge.querySelector('.user-badge__toggle');
+        let nameSpan = toggle?.querySelector('.user-badge__drawer-name');
+        if (isDrawer && !nameSpan) {
+          addNameToDrawerBadge(badge, getDisplay(user).name);
+        }
+
         const info = getDisplay(user);
         const nameTarget = badge.querySelector('.user-badge__name');
         const avatar = badge.querySelector('.user-badge__avatar');
@@ -513,6 +521,12 @@ window.addEventListener('load', () => {
         if (avatar) avatar.textContent = info.initials;
       }
       badge.style.display = 'inline-flex';
+
+      // Special handling for drawer: add user name to the toggle button
+      if (root.classList.contains('drawer-actions')) {
+        const info = getDisplay(user);
+        addNameToDrawerBadge(badge, info.name);
+      }
     };
 
     if (user) {
@@ -525,6 +539,20 @@ window.addEventListener('load', () => {
       closeAllUserMenus();
     }
     wireTemporaryLogout();
+  };
+
+  const addNameToDrawerBadge = (badge, name) => {
+    if (!badge || !name) return;
+    const toggle = badge.querySelector('.user-badge__toggle');
+    if (!toggle) return;
+    // Avoid adding it twice
+    if (toggle.querySelector('.user-badge__drawer-name')) return;
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'user-badge__drawer-name';
+    nameSpan.textContent = name;
+    // Insert name between avatar and caret
+    toggle.insertBefore(nameSpan, toggle.querySelector('.user-badge__caret'));
   };
 
   const performSupabaseLogout = async (session) => {
