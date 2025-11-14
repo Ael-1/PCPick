@@ -203,6 +203,8 @@ window.addEventListener('load', () => {
   toggles.forEach((btn) => {
     const selector = btn.getAttribute('data-password-toggle');
     const input = selector ? document.querySelector(selector) : null;
+
+    // If target input isn't found, skip this toggle button to avoid runtime errors
     if (!input) return;
 
     const icons = {
@@ -356,6 +358,23 @@ window.addEventListener('load', () => {
     const accountBtn = createMenuButton('Account Settings', 'account');
     const logoutBtn = createMenuButton('Log Out', 'logout');
     logoutBtn.setAttribute('data-temp-logout', '');
+
+    
+    // ✅ Add navigation when clicked
+    ordersBtn.addEventListener('click', () => {
+      window.location.href = 'orders.html';
+    });
+
+    accountBtn.addEventListener('click', () => {
+      window.location.href = 'account.html';
+    });
+
+    // (Optional) logout redirect
+    logoutBtn.addEventListener('click', () => {
+      // Example: clear stored session or data if needed
+      localStorage.removeItem('userSession');
+      window.location.href = 'login.html'; // change to your actual login page if any
+    });
 
     list.appendChild(ordersBtn);
     list.appendChild(accountBtn);
@@ -563,3 +582,4 @@ window.addEventListener('load', () => {
     }
   });
 })();
+

@@ -532,3 +532,14 @@
     document.addEventListener('DOMContentLoaded', runOnce);
   }
 })();
+
+// Publishes cart rows to checkout.html
+async function loadUserCartForCheckout() {
+  const rows = await getUserCartSnapshot();
+
+  document.dispatchEvent(new CustomEvent("pcpick:checkout-cart", {
+    detail: { rows }
+  }));
+}
+
+window.pcpickLoadUserCartForCheckout = loadUserCartForCheckout;
