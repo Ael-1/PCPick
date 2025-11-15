@@ -152,20 +152,23 @@
   // Add-to-cart: create if new, else add quantity to existing row.
   // This now requires a database function to handle the quantity increment atomically.
   async function cartAdd({ product_uid, price, quantity }) {
-    const userId = await authUserId();
-    if (!userId || !product_uid) return;
-    const unit = Number(price || 0);
-    const qty = Math.max(1, Number(quantity || 1));
-    const gross = toCents(unit * qty * (1 + VAT_RATE));
+    try {
+      const userId = await authUserId();
+      if (!userId || !product_uid) return;
 
-    // Upsert can't atomically increment, so we call a remote procedure
-    // that can perform this logic safely on the database side.
-    await client.rpc('upsert_cart_item', {
-      p_user_uid: userId,
-      p_product_uid: product_uid,
-      p_quantity_delta: qty,
-      p_price_per_unit: unit,
-    });
+      const unit = Number(price || 0);
+      const qty = Math.max(1, Number(quantity || 1));
+      const gross = toCents(unit * qty * (1 + VAT_RATE)); // Total price for this instance, VAT-inclusive
+
+      const { error } = await client.from('user_cart').insert({
+        user_uid: userId,
+        product_uid: product_uid,
+        date_added_to_cart: new Date().toISOString(),
+        price: gross,
+        quantity: qty,
+      });
+      if (error) console.warn('[PCPick] Failed to insert into user_cart:', error.message || error);
+    } catch (e) { console.warn('[PCPick] cartAdd error:', e?.message || e); }
   }
 
   // Set absolute quantity; delete if 0
