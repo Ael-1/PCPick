@@ -2,8 +2,8 @@
 // Uses global `window.supabase` from the CDN UMD build
 
 (function () {
-  const SUPABASE_URL = 'https://wuxcglaecmmpdtoxgchu.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1eGNnbGFlY21tcGR0b3hnY2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MjYsImV4cCI6MjA3NzQ1NDQyNn0.9yPYnqnTmc_aIES9GhwYK2tC5SVgp8D3J-iZYZ7hpvU';
+  const SUPABASE_URL = window.SUPABASE_CONFIG.URL;
+  const SUPABASE_ANON_KEY = window.SUPABASE_CONFIG.ANON_KEY;
 
   if (!window.supabase) {
     console.warn('[PCPick] Supabase library not found on window.supabase.');
@@ -316,24 +316,29 @@
     } catch {}
   }
 
+  /**
+   * Inserts or updates a product in the user's build.
+   * If the product exists, it updates the price. If not, it inserts a new row.
+   * After insertion or update, it recomputes the total build price.
+   * @param {object} params - The parameters for the build insert.
+   * @param {string} params.product_uid - The unique identifier of the product.
+   * @param {number} params.price - The net price of the product.
+   */
   async function buildInsert({ product_uid, price }) {
     const userId = await authUserId();
     if (!userId || !product_uid) return;
+
     const unit = Number(price || 0);
     const gross = toCents(unit * (1 + VAT_RATE)); // item_price (VAT-inclusive per item)
-    const exists = await buildSelect(userId, product_uid);
-    if (exists) {
-      await client
-        .from('user_build')
-        .update({ item_price: gross })
-        .eq('user_uid', userId)
-        .eq('product_uid', product_uid);
-      await recomputeBuildTotal(userId);
-      return;
-    }
+
     await client
       .from('user_build')
-      .insert({ user_uid: userId, product_uid, created_at: new Date().toISOString(), item_price: gross });
+      .upsert({
+        user_uid: userId,
+        product_uid: product_uid,
+        item_price: gross
+      }, { onConflict: 'user_uid,product_uid' });
+
     await recomputeBuildTotal(userId);
   }
 
