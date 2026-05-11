@@ -241,7 +241,7 @@ window.addEventListener('load', () => {
 
   if (candidates.length === 0) return;
 
-  const REF = 'wuxcglaecmmpdtoxgchu';
+  const REF = window.SUPABASE_CONFIG.PROJECT_REF;
   const STORAGE_KEY = `sb-${REF}-auth-token`;
   const isLoggedIn = () => {
     try {
@@ -287,9 +287,9 @@ window.addEventListener('load', () => {
 
 // Auth-aware nav toggling: hide login/signup and show user badge when logged in
 (function () {
-  const REF = 'wuxcglaecmmpdtoxgchu';
-  const SUPABASE_URL = 'https://wuxcglaecmmpdtoxgchu.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1eGNnbGFlY21tcGR0b3hnY2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Nzg0MjYsImV4cCI6MjA3NzQ1NDQyNn0.9yPYnqnTmc_aIES9GhwYK2tC5SVgp8D3J-iZYZ7hpvU';
+  const REF = window.SUPABASE_CONFIG.PROJECT_REF;
+  const SUPABASE_URL = window.SUPABASE_CONFIG.URL;
+  const SUPABASE_ANON_KEY = window.SUPABASE_CONFIG.ANON_KEY;
   const STORAGE_KEY = `sb-${REF}-auth-token`;
 
   const parseSession = () => {
